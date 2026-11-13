@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengumuman — Admin CMS HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>Pengumuman</h1>
+<p class="admin-sub">Pengumuman tampil di panel khusus pada beranda website.</p>
+<div class="panel"><h2 id="pg-form-title">Tambah Pengumuman</h2>
+<form id="form" class="form-grid">
+  <div class="field"><label for="f-judul">Judul *</label><input id="f-judul" required maxlength="80"></div>
+  <div class="field"><label for="f-href">Tautan tujuan</label><input id="f-href" maxlength="200" placeholder="/pendataan/ atau https://…"></div>
+  <div class="field full"><label for="f-isi">Isi singkat *</label><textarea id="f-isi" rows="2" required maxlength="220"></textarea></div>
+  <div class="field"><label for="f-ikon">Ikon</label><select id="f-ikon"><option value="mega">Pengumuman</option><option value="users">Alumni</option><option value="calendar">Agenda</option><option value="pin">Lokasi</option><option value="news">Berita</option></select></div>
+  <div class="field"><label style="display:flex;gap:11px;align-items:center">Tampilkan di website <span class="switch"><input type="checkbox" id="f-aktif" checked><i></i></span></label></div>
+  <div class="field full" style="display:flex;gap:10px"><button class="btn btn-teal" type="submit" style="padding:11px 22px">Simpan Pengumuman</button><button class="abtn" type="button" id="btn-batal" style="display:none;padding:11px 18px">Batal Ubah</button></div>
+</form></div>
+<div class="panel"><h2>Daftar Pengumuman</h2><div id="list"><p>Memuat…</p></div></div></main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/pengumuman/');</script>
+<script>
+(async () => {
+  await HisaData.load();
+  const { esc } = HisaData;
+  let editId = '';
+  const list = document.getElementById('list');
+  function render(){
+    list.innerHTML = HisaData.cache.pengumuman.map(p => `
+      <div style="display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)">
+        <span class="badge ${p.is_published ? 'terbit' : 'draf'}">${p.is_published ? 'Tampil' : 'Sembunyi'}</span>
+        <div style="flex:1"><strong>${esc(p.judul)}</strong><p style="color:var(--ink-soft);font-size:14.5px">${esc(p.isi)}</p></div>
+        <div class="row-actions"><button class="abtn" data-edit="${esc(p.Pengumuman_ID)}">Ubah</button><button class="abtn danger" data-del="${esc(p.Pengumuman_ID)}">Hapus</button></div>
+      </div>`).join('') || '<p>Belum ada pengumuman.</p>';
+  }
+  list.addEventListener('click', e => {
+    const ed = e.target.closest('[data-edit]'), del = e.target.closest('[data-del]');
+    if (ed) { const p = HisaData.cache.pengumuman.find(x => x.Pengumuman_ID === ed.dataset.edit); editId = p.Pengumuman_ID;
+      document.getElementById('f-judul').value = p.judul; document.getElementById('f-isi').value = p.isi;
+      document.getElementById('f-href').value = p.target_href || ''; document.getElementById('f-ikon').value = p.ikon || 'mega';
+      document.getElementById('f-aktif').checked = !!p.is_published;
+      document.getElementById('pg-form-title').textContent = 'Ubah Pengumuman'; document.getElementById('btn-batal').style.display = ''; window.scrollTo({top:0,behavior:'smooth'}); }
+    if (del) { const p = HisaData.cache.pengumuman.find(x => x.Pengumuman_ID === del.dataset.del);
+      if (confirm('Hapus pengumuman "' + p.judul + '"?')) { HisaData.hapusPengumuman(p.Pengumuman_ID); toast('Pengumuman dihapus'); render(); } }
+  });
+  document.getElementById('btn-batal').addEventListener('click', () => { editId = ''; document.getElementById('form').reset(); document.getElementById('f-aktif').checked = true; document.getElementById('pg-form-title').textContent = 'Tambah Pengumuman'; document.getElementById('btn-batal').style.display = 'none'; });
+  document.getElementById('form').addEventListener('submit', e => {
+    e.preventDefault();
+    HisaData.upsertPengumuman({ Pengumuman_ID: editId, judul: document.getElementById('f-judul').value.trim(),
+      isi: document.getElementById('f-isi').value.trim(), target: 'halaman', target_href: document.getElementById('f-href').value.trim() || '/berita/',
+      ikon: document.getElementById('f-ikon').value, is_published: document.getElementById('f-aktif').checked });
+    toast('Pengumuman disimpan'); editId = ''; e.target.reset(); document.getElementById('f-aktif').checked = true;
+    document.getElementById('pg-form-title').textContent = 'Tambah Pengumuman'; document.getElementById('btn-batal').style.display = 'none'; render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
