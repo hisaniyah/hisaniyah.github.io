@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengguna & Peran — Admin HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>Pengguna & Peran</h1>
+<p class="admin-sub">Peran hanya diatur Super Admin. Admin KORDA wajib terhubung ke satu KORDA. Menonaktifkan akun mencabut semua sesinya.</p>
+<div id="isi"><div class="panel"><p>Memuat pengguna…</p></div></div>
+</main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/pengurus/pengguna/');</script>
+<script>
+(async () => {
+
+  const box = document.getElementById('isi');
+  const { esc } = HisaData;
+  function gagal(e){ box.innerHTML = '<div class="panel"><h2>Belum dapat dimuat</h2><p style="color:var(--ink-soft)">' + esc(e.message || 'Panel pengurus memerlukan koneksi ke database dan sesi pengurus yang masuk.') + '</p></div>'; }
+
+  const superAdmin = (HisaData.getSession() || {}).user && HisaData.getSession().user.Role === 'super_admin';
+  await HisaData.load();
+  const kordaOpts = (sel) => '<option value="">— pilih KORDA —</option>' + (HisaData.cache.korda || []).map(k => `<option value="${esc(k.Korda_ID)}"${k.Korda_ID === sel ? ' selected' : ''}>${esc(k.nama_korda)}</option>`).join('');
+  async function muat(){
+    try {
+      const users = await HisaData.apiCall('pengurus.pengguna.list', {});
+      box.innerHTML = `<div class="panel"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Pengguna</th><th>Peran</th><th>Penugasan</th><th>Terakhir Masuk</th><th>Status</th>${superAdmin ? '<th>Atur</th>' : ''}</tr></thead><tbody>
+      ${users.map(u => `<tr>
+        <td><b>${esc(u.Nama)}</b><br><span style="color:var(--ink-soft)">${esc(u.Email)}</span></td>
+        <td>${esc({ super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', alumni: 'Alumni' }[u.Role] || u.Role)}</td>
+        <td>${u.penugasan ? esc(u.penugasan.jabatan) + (u.penugasan.korda_label ? ' — ' + esc(u.penugasan.korda_label) : '') : '-'}</td>
+        <td>${esc(String(u.terakhir_login || '-').slice(0, 16).replace('T', ' '))}</td>
+        <td>${u.Status_Akun === 'aktif' ? '<span class="badge">Aktif</span>' : '<span class="badge" style="background:#FDE3E3;color:#B03A3A">Nonaktif</span>'}</td>
+        ${superAdmin ? `<td><div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+          <select data-role="${esc(u.User_ID)}" style="font-family:inherit;padding:8px;border:1.6px solid var(--line);border-radius:9px">
+            ${['alumni','admin_korda','pengurus_pusat','super_admin'].map(r => `<option value="${r}"${u.Role === r ? ' selected' : ''}>${r}</option>`).join('')}
+          </select>
+          <select data-korda="${esc(u.User_ID)}" style="font-family:inherit;padding:8px;border:1.6px solid var(--line);border-radius:9px">${kordaOpts(u.penugasan ? u.penugasan.Korda_ID : '')}</select>
+          <button class="abtn" data-simpan="${esc(u.User_ID)}">Simpan</button>
+          <button class="abtn" data-aktif="${esc(u.User_ID)}" data-on="${u.Status_Akun === 'aktif' ? '0' : '1'}">${u.Status_Akun === 'aktif' ? 'Nonaktifkan' : 'Aktifkan'}</button>
+        </div></td>` : ''}
+      </tr>`).join('')}
+      </tbody></table></div>${superAdmin ? '' : '<p style="color:var(--ink-soft);margin-top:10px">Anda masuk sebagai Pengurus Pusat: daftar ini hanya-lihat. Pengaturan peran adalah wewenang Super Admin.</p>'}</div>`;
+      box.querySelectorAll('[data-simpan]').forEach(b => b.addEventListener('click', async () => {
+        const id = b.dataset.simpan;
+        const role = box.querySelector(`[data-role="${id}"]`).value;
+        const korda = box.querySelector(`[data-korda="${id}"]`).value;
+        try { await HisaData.apiCall('pengurus.aturPeran', { User_ID: id, Role: role, Korda_ID: korda }); toast('Peran diperbarui'); muat(); }
+        catch(e){ toast('Gagal: ' + e.message); }
+      }));
+      box.querySelectorAll('[data-aktif]').forEach(b => b.addEventListener('click', async () => {
+        try { await HisaData.apiCall('pengurus.nonaktif', { User_ID: b.dataset.aktif, aktif: b.dataset.on === '1' }); toast('Status akun diperbarui'); muat(); }
+        catch(e){ toast('Gagal: ' + e.message); }
+      }));
+    } catch(e){ gagal(e); }
+  }
+  muat();
+})();
+</script>
+</body>
+</html>
