@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifikasi Kartu Anggota — HISANIYAH</title>
+<meta name="description" content="Halaman verifikasi kartu anggota digital HISANIYAH.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Verifikasi Kartu</span></nav>
+  <h1>Verifikasi Kartu Anggota</h1>
+  <p>Halaman ini adalah tujuan resmi kode QR pada kartu anggota digital HISANIYAH.</p>
+</div></section>
+<section class="section"><div class="container">
+ <div class="card info-card" style="max-width:640px">
+   <h3><span class="ic"><span data-ic="id"></span></span>Cara verifikasi</h3>
+   <p>Pindai kode QR pada kartu anggota digital alumni. Sistem akan menampilkan informasi yang memang boleh dilihat publik: <strong>nama, angkatan, KORDA, dan status keanggotaan</strong>. Data pribadi lainnya tidak ditampilkan.</p>
+   <p style="margin-top:10px">Setiap kartu memiliki kode acak unik yang tidak dapat ditebak. Bila Anda membuka halaman ini dari kode QR, hasil verifikasi tampil otomatis di bawah.</p>
+   <form id="vform" style="display:flex;gap:9px;flex-wrap:wrap;margin-top:16px">
+     <input id="vkode" placeholder="Ketik kode pada kartu (mis. HIS-XXXXXXXXXX)" style="flex:1;min-width:230px;font-family:inherit;font-size:15.5px;padding:11px 14px;border:1.6px solid var(--line);border-radius:11px">
+     <button class="btn btn-teal" type="submit" style="padding:11px 20px">Periksa</button>
+   </form>
+   <div id="vhasil" style="margin-top:16px"></div>
+ </div></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+(async () => {
+  const box = document.getElementById('vhasil');
+  const { esc } = HisaData;
+  async function periksa(kode){
+    if (!kode) return;
+    box.innerHTML = '<p style="font-weight:600;color:var(--ink-soft)">Memeriksa…</p>';
+    try {
+      const r = await HisaData.apiCall('public.verifikasi', { kode });
+      if (!r.ditemukan) { box.innerHTML = '<div class="notice">Kode tidak ditemukan. Periksa kembali kode pada kartu anggota.</div>'; return; }
+      const label = { menunggu: 'Menunggu Verifikasi', terverifikasi: 'Terverifikasi', ditolak: 'Ditolak', perlu_perbaikan: 'Perlu Perbaikan' }[r.status] || r.status;
+      box.innerHTML = `<div class="panel-putih" style="border:1px solid var(--line);border-radius:14px;padding:20px 22px">
+        <h4 style="font-size:19px;font-weight:800">${esc(r.nama)}</h4>
+        <p style="color:var(--ink-soft)">${esc(r.angkatan || '')}${r.korda ? ' · ' + esc(r.korda) : ''}${r.no_anggota ? ' · No. Anggota ' + esc(r.no_anggota) : ''}</p>
+        <p style="margin-top:8px">Status keanggotaan: <b>${esc(label)}</b></p></div>`;
+    } catch(e){ box.innerHTML = '<div class="notice">Layanan verifikasi belum dapat dihubungi. Coba lagi nanti.</div>'; }
+  }
+  document.getElementById('vform').addEventListener('submit', e => { e.preventDefault(); periksa(document.getElementById('vkode').value.trim()); });
+  const kode = new URLSearchParams(location.search).get('kode');
+  if (kode) { document.getElementById('vkode').value = kode; periksa(kode); }
+})();
+</script>
+<link rel="stylesheet" href="/assets/css/pages/akun.css">
+<script>document.querySelectorAll('[data-ic]').forEach(el=>{el.innerHTML=icon(el.dataset.ic);});</script>
+</body>
+</html>
