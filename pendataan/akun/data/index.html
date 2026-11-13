@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Alumni — HISANIYAH</title>
+<meta name="description" content="Formulir data alumni HISANIYAH.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+<link rel="stylesheet" href="/assets/css/pages/akun.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Data Alumni</span></nav>
+  <h1>Data Alumni</h1>
+  <p>Isi data dengan benar sesuai ijazah/dokumen. Data akan diverifikasi pengurus.</p>
+</div></section>
+<section class="section"><div class="container">
+<div class="panel-putih">
+<h2 id="form-title" style="font-size:21px;font-weight:800;margin-bottom:16px">Tambah Data Alumni</h2>
+<form id="form" class="form-grid">
+  <div class="field full"><label for="f-nama">Nama lengkap *</label><input id="f-nama" required maxlength="120"></div>
+  <div class="field"><label for="f-tempat">Tempat lahir</label><input id="f-tempat" maxlength="60"></div>
+  <div class="field"><label for="f-lahir">Tanggal lahir</label><input id="f-lahir" type="date"></div>
+  <div class="field"><label for="f-jk">Jenis kelamin</label><select id="f-jk"><option value="">— pilih —</option><option>Laki-laki</option><option>Perempuan</option></select></div>
+  <div class="field"><label for="f-hub">Hubungan dengan pemilik akun</label><select id="f-hub"><option>Diri sendiri</option><option>Anak</option><option>Orang tua</option><option>Saudara</option><option>Suami/Istri</option><option>Keluarga lain</option></select></div>
+  <div class="field"><label for="f-masuk">Tahun masuk pesantren</label><input id="f-masuk" type="number" min="1950" max="2100" placeholder="2014"></div>
+  <div class="field"><label for="f-lulus">Tahun lulus *</label><input id="f-lulus" type="number" min="1950" max="2100" required placeholder="2020"></div>
+  <div class="field"><label for="f-korda">KORDA / wilayah</label><select id="f-korda"><option value="">— belum ada / tidak tahu —</option></select></div>
+  <div class="field"><label for="f-wa">No. WhatsApp</label><input id="f-wa" maxlength="20" placeholder="08…"></div>
+  <div class="field full"><label for="f-alamat">Alamat sekarang</label><textarea id="f-alamat" rows="2" maxlength="300"></textarea></div>
+  <div class="field"><label for="f-kab">Kabupaten/Kota</label><input id="f-kab" maxlength="60"></div>
+  <div class="field"><label for="f-prov">Provinsi</label><input id="f-prov" maxlength="60"></div>
+  <div class="field"><label for="f-pendidikan">Pendidikan terakhir</label><input id="f-pendidikan" maxlength="80"></div>
+  <div class="field"><label for="f-pekerjaan">Pekerjaan</label><input id="f-pekerjaan" maxlength="80"></div>
+  <div class="field full"><label for="f-email">Email alumni (bila berbeda)</label><input id="f-email" type="email" maxlength="120"></div>
+  <div class="field full" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+    <button class="btn btn-teal" type="submit">Simpan Data</button>
+    <a class="btn btn-outline" href="/pendataan/akun/">Batal</a>
+  </div>
+  <p id="form-status" class="field full" style="font-weight:600;color:var(--ink-soft)"></p>
+</form>
+</div>
+</div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+(async () => {
+  const $ = x => document.getElementById(x);
+  const ses = HisaData.getSession();
+  if (!ses) { location.href = '/pendataan/masuk/'; return; }
+  const id = new URLSearchParams(location.search).get('id') || '';
+  await HisaData.load();
+  (HisaData.cache.korda || []).forEach(k => { const o = document.createElement('option'); o.value = k.Korda_ID; o.textContent = k.nama_korda; $('f-korda').appendChild(o); });
+  let rec = null;
+  if (id) {
+    $('form-title').textContent = 'Ubah Data Alumni';
+    try { const me = await HisaData.apiCall('auth.me', {}); rec = (me.kelola.find(k => k.alumni.Alumni_ID === id) || {}).alumni || null; } catch(e){}
+    if (!rec) { $('form-status').textContent = 'Data tidak ditemukan atau bukan Anda yang mengelola.'; return; }
+    $('f-nama').value = rec.Nama || ''; $('f-tempat').value = rec.Tempat_Lahir || ''; $('f-lahir').value = (rec.Tanggal_Lahir || '').slice(0,10);
+    $('f-jk').value = rec.Jenis_Kelamin || ''; $('f-masuk').value = rec.Tahun_Masuk || ''; $('f-korda').value = rec.Korda_ID || '';
+    $('f-wa').value = rec.WhatsApp || ''; $('f-alamat').value = rec.Alamat || ''; $('f-kab').value = rec.Kabupaten || '';
+    $('f-prov').value = rec.Provinsi || ''; $('f-pendidikan').value = rec.Pendidikan || ''; $('f-pekerjaan').value = rec.Pekerjaan || ''; $('f-email').value = rec.Email || '';
+    $('f-hub').closest('.field').style.display = 'none';
+    const ang = (HisaData.cache.angkatan || []).find(a => a.Angkatan_ID === rec.Angkatan_ID);
+    if (ang) $('f-lulus').value = ang.tahun_lulus || '';
+  }
+  $('form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const data = { Nama: $('f-nama').value.trim(), Tempat_Lahir: $('f-tempat').value.trim(), Tanggal_Lahir: $('f-lahir').value,
+      Jenis_Kelamin: $('f-jk').value, Tahun_Masuk: $('f-masuk').value, tahun_lulus: $('f-lulus').value,
+      Korda_ID: $('f-korda').value, WhatsApp: $('f-wa').value.trim(), Alamat: $('f-alamat').value.trim(),
+      Kabupaten: $('f-kab').value.trim(), Provinsi: $('f-prov').value.trim(), Pendidikan: $('f-pendidikan').value.trim(),
+      Pekerjaan: $('f-pekerjaan').value.trim(), Email: $('f-email').value.trim() };
+    $('form-status').textContent = 'Menyimpan…';
+    try {
+      if (id) await HisaData.apiCall('alumni.ubah', { Alumni_ID: id, data });
+      else await HisaData.apiCall('alumni.daftar', { hubungan: $('f-hub').value, data });
+      sessionStorage.setItem('hisa_toast', 'Data alumni tersimpan');
+      location.href = '/pendataan/akun/';
+    } catch(err){ $('form-status').textContent = 'Gagal menyimpan: ' + err.message; }
+  });
+})();
+</script>
+</body>
+</html>
