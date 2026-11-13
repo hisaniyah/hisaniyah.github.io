@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baca Berita — HISANIYAH</title>
+<meta name="description" content="Artikel berita HISANIYAH.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Berita</span></nav>
+  <h1>Berita HISANIYAH</h1>
+  <p>Artikel resmi dari portal berita HISANIYAH.</p>
+</div></section>
+<section class="section"><div class="container" id="article-box"><p class="lead">Memuat artikel…</p></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+(async () => {
+  await HisaData.load();
+  const { esc, fmtDate, sanitize } = HisaData;
+  const slug = new URLSearchParams(location.search).get('slug') || '';
+  const box = document.getElementById('article-box');
+  const b = HisaData.cache.berita.find(x => x.slug === slug && x.status === 'terbit');
+  if (!b) { box.innerHTML = '<div class="notice">Artikel tidak ditemukan atau belum diterbitkan. Kembali ke <a href="/berita/" style="text-decoration:underline">daftar berita</a>.</div>'; return; }
+  document.title = b.meta_title || b.judul + ' — HISANIYAH';
+  const others = HisaData.terbit().filter(x => x.Berita_ID !== b.Berita_ID).slice(0,3);
+  box.innerHTML = `
+    <span class="chip">${esc(HisaData.kategoriNama(b.Kategori_ID))}</span>
+    <h2 style="font-size:clamp(26px,3.6vw,38px);font-weight:800;line-height:1.25;margin:14px 0 10px;max-width:860px">${esc(b.judul)}</h2>
+    <p class="meta-date">${icon('calendar')}${esc(fmtDate(b.publish_at))} &nbsp;·&nbsp; ${esc(b.penulis || 'Admin Media HISANIYAH')}</p>
+    <div style="border-radius:18px;overflow:hidden;aspect-ratio:16/7;margin:22px 0;max-width:960px">${HisaData.thumbHTML(b)}</div>
+    <div class="article-body" style="max-width:760px;font-size:17.5px">${sanitize(b.isi)}</div>
+    <div style="height:34px"></div>
+    <h3 class="section-title" style="margin-bottom:18px">Berita Lainnya</h3>
+    <div class="grid-3">${others.map(o => `
+      <article class="card article-card"><a class="thumb" href="/berita/detail/?slug=${encodeURIComponent(o.slug)}">${HisaData.thumbHTML(o)}</a>
+      <div class="body"><span class="meta-date">${icon('calendar')}${esc(fmtDate(o.publish_at))}</span><h3>${esc(o.judul)}</h3>
+      <a class="link-more" href="/berita/detail/?slug=${encodeURIComponent(o.slug)}">Baca Selengkapnya ${icon('arrowR')}</a></div></article>`).join('')}
+    </div>`;
+  box.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = icon(el.dataset.ic); });
+  HisaData.hydrateMedia(box);
+})();
+</script>
+</body>
+</html>
