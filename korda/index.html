@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KORDA — Koordinator Daerah — HISANIYAH</title>
+<meta name="description" content="Daftar Koordinator Daerah (KORDA) HISANIYAH.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>KORDA</span></nav>
+  <h1>KORDA — Koordinator Daerah</h1>
+  <p>KORDA adalah perpanjangan tangan pengurus pusat di daerah: mengoordinasikan alumni, kegiatan, dan pendataan di wilayahnya.</p>
+</div></section>
+<section class="section"><div class="container"><div class="grid-3" id="grid-korda"><article class="card korda-card"><h3><span data-ic="pin"></span>KORDA Malang Raya</h3><dl><div><dt>Wilayah:</dt><dd>Malang dan sekitarnya</dd></div><div><dt>Koordinator:</dt><dd>(menyusul)</dd></div><div><dt>Jumlah alumni:</dt><dd>terdata melalui pendataan resmi</dd></div></dl></article><article class="card korda-card"><h3><span data-ic="pin"></span>KORDA Jawa Timur</h3><dl><div><dt>Wilayah:</dt><dd>Wilayah Jawa Timur di luar Malang Raya</dd></div><div><dt>Koordinator:</dt><dd>(menyusul)</dd></div><div><dt>Jumlah alumni:</dt><dd>terdata melalui pendataan resmi</dd></div></dl></article><article class="card korda-card"><h3><span data-ic="pin"></span>KORDA Jabodetabek</h3><dl><div><dt>Wilayah:</dt><dd>Jakarta, Bogor, Depok, Tangerang, Bekasi</dd></div><div><dt>Koordinator:</dt><dd>(menyusul)</dd></div><div><dt>Jumlah alumni:</dt><dd>terdata melalui pendataan resmi</dd></div></dl></article><article class="card korda-card"><h3><span data-ic="pin"></span>KORDA Jawa Tengah</h3><dl><div><dt>Wilayah:</dt><dd>Wilayah Jawa Tengah</dd></div><div><dt>Koordinator:</dt><dd>(menyusul)</dd></div><div><dt>Jumlah alumni:</dt><dd>terdata melalui pendataan resmi</dd></div></dl></article><article class="card korda-card"><h3><span data-ic="pin"></span>KORDA Jawa Barat</h3><dl><div><dt>Wilayah:</dt><dd>Wilayah Jawa Barat</dd></div><div><dt>Koordinator:</dt><dd>(menyusul)</dd></div><div><dt>Jumlah alumni:</dt><dd>terdata melalui pendataan resmi</dd></div></dl></article><article class="card korda-card"><h3><span data-ic="pin"></span>KORDA Luar Jawa</h3><dl><div><dt>Wilayah:</dt><dd>Wilayah di luar Pulau Jawa</dd></div><div><dt>Koordinator:</dt><dd>(menyusul)</dd></div><div><dt>Jumlah alumni:</dt><dd>terdata melalui pendataan resmi</dd></div></dl></article></div><div style="height:26px"></div><div class="notice">Konten resmi halaman ini sedang disiapkan oleh pengurus dan akan dimuat setelah ditetapkan secara resmi. Struktur halaman sudah final sesuai rancangan.</div></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+(async () => {
+  await HisaData.load();
+  const ks = HisaData.cache.korda || [];
+  if (!ks.length) return;
+  const { esc } = HisaData;
+  document.getElementById('grid-korda').innerHTML = ks.map(k => `
+   <article class="card korda-card"><h3><span data-ic="pin"></span>${esc(k.nama_korda)}</h3><dl>
+   <div><dt>Wilayah:</dt><dd>${esc(k.provinsi || '—')}</dd></div>
+   <div><dt>Koordinator:</dt><dd>ditetapkan pengurus pusat</dd></div>
+   <div><dt>Jumlah alumni:</dt><dd>terdata melalui pendataan resmi</dd></div></dl></article>`).join('');
+  if (window.renderIcons) renderIcons();
+})();
+</script>
+<script>document.querySelectorAll('[data-ic]').forEach(el=>{el.innerHTML=icon(el.dataset.ic);});</script>
+</body>
+</html>
