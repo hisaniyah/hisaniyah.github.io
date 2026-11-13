@@ -1,0 +1,5 @@
+# Cloudflare Pages — HISANIYAH
+# Folder berisi index.html dilayani sebagai URL bersih secara bawaan.
+# Aturan tambahan (slugs berita, dsb.) ditambahkan pada Tahap 3 (CMS).
+/home / 301
+/index.html / 301
