@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pendataan Alumni — HISANIYAH</title>
+<meta name="description" content="Pendataan alumni HISANIYAH — satu akun Google dapat mengelola beberapa data alumni keluarga.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Pendataan Alumni</span></nav>
+  <h1>Pendataan Alumni HISANIYAH</h1>
+  <p>Satu data terpusat untuk seluruh alumni. Pendataan resmi dibuka bersamaan dengan peluncuran sistem akun — halaman ini menjelaskan alurnya dari sekarang.</p>
+</div></section>
+<section class="section"><div class="container">
+ <div class="steps">
+   <article class="card step"><span class="num">1</span><h3>Masuk dengan Google</h3><p>Tidak perlu membuat password baru — cukup gunakan akun Google Anda.</p></article>
+   <article class="card step"><span class="num">2</span><h3>Isi Data Alumni</h3><p>Lengkapi data diri, angkatan, domisili, dan KORDA. Satu akun dapat membantu mengelola data alumni keluarga (ayah, ibu, paman, dan lainnya).</p></article>
+   <article class="card step"><span class="num">3</span><h3>Verifikasi Pengurus</h3><p>Pengurus memeriksa data Anda. Status dapat berupa menunggu, terverifikasi, ditolak, atau perlu perbaikan data.</p></article>
+   <article class="card step"><span class="num">4</span><h3>Kartu Anggota Digital</h3><p>Setelah terverifikasi, Anda mendapatkan kartu anggota digital dengan QR verifikasi resmi.</p></article>
+ </div>
+ <div style="height:26px"></div>
+ <div class="notice"><strong>Pendataan online sudah dibuka.</strong> Masuk dengan akun Google Anda untuk mengisi data alumni — satu akun boleh mengelola data beberapa anggota keluarga. Data yang masuk akan diverifikasi pengurus sebelum dinyatakan sah.</div>
+ <div style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 6px">
+   <a class="btn btn-teal" href="/pendataan/masuk/">Masuk dengan Google</a>
+   <a class="btn btn-outline" href="/pendataan/akun/">Ke Akun Saya</a>
+ </div>
+ <div style="height:26px"></div>
+ <div class="grid-3">
+   <article class="card info-card"><h3><span class="ic"><span data-ic="id"></span></span>Satu Alumni, Satu Data</h3><p>Setiap alumni memiliki satu identitas unik. Sistem memeriksa duplikasi berdasarkan email, nomor WhatsApp, serta nama dan tanggal lahir.</p></article>
+   <article class="card info-card"><h3><span class="ic"><span data-ic="users"></span></span>Dibantu Keluarga</h3><p>Alumni senior yang tidak terbiasa memakai HP dapat dibantu anak/keluarganya — satu akun Google boleh mengelola beberapa data alumni dengan mencantumkan hubungan.</p></article>
+   <article class="card info-card"><h3><span class="ic"><span data-ic="check"></span></span>Data Terlindungi</h3><p>Data pribadi alumni tidak ditampilkan ke publik. Hanya pengurus berwenang yang dapat melihat dan memverifikasi data.</p></article>
+ </div></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>document.querySelectorAll('[data-ic]').forEach(el=>{el.innerHTML=icon(el.dataset.ic);});</script>
+</body>
+</html>
