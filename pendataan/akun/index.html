@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akun Saya — HISANIYAH</title>
+<meta name="description" content="Dashboard akun alumni HISANIYAH.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+<link rel="stylesheet" href="/assets/css/pages/akun.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Akun Saya</span></nav>
+  <h1>Akun Saya</h1>
+  <p>Kelola data alumni Anda dan keluarga yang Anda bantu daftarkan.</p>
+</div></section>
+<section class="section"><div class="container">
+<div id="akun-box"><p class="lead">Memuat akun…</p></div>
+</div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+(async () => {
+  const box = document.getElementById('akun-box');
+  const { esc } = HisaData;
+  const ses = HisaData.getSession();
+  if (!ses) { location.href = '/pendataan/masuk/'; return; }
+  let me;
+  try { me = await HisaData.apiCall('auth.me', {}); }
+  catch(e) {
+    if (/Token|token/.test(e.message)) { HisaData.clearSession(); location.href = '/pendataan/masuk/'; return; }
+    box.innerHTML = '<div class="notice">Tidak dapat terhubung ke server akun saat ini. Coba muat ulang halaman.</div>'; return;
+  }
+  const u = me.user;
+  const peran = { super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', alumni: 'Alumni' }[u.Role] || u.Role;
+  const stLabel = s => ({ menunggu: 'Menunggu Verifikasi', terverifikasi: 'Terverifikasi', ditolak: 'Ditolak', perlu_perbaikan: 'Perlu Perbaikan' }[s] || s);
+  box.innerHTML = `
+  <div class="akun-grid">
+    <div class="profil-card">
+      ${u.Foto ? `<img src="${esc(u.Foto)}" alt="Foto profil">` : `<div class="inisial">${esc((u.Nama || 'A').slice(0,1))}</div>`}
+      <h3>${esc(u.Nama)}</h3><p>${esc(u.Email)}</p>
+      <span class="role-badge">${esc(peran)}</span>
+      <div style="margin-top:18px;display:grid;gap:9px">
+        ${['super_admin','pengurus_pusat'].includes(u.Role) ? '<a class="btn btn-orange" href="/pendataan/admin/" style="justify-content:center">Buka Panel Admin CMS</a>' : ''}
+        <button class="btn btn-outline" id="btn-keluar" style="justify-content:center">Keluar</button>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+        <h2 style="font-size:22px;font-weight:800">Data Alumni yang Anda Kelola (${me.kelola.length})</h2>
+        <a class="btn btn-teal" href="/pendataan/akun/data/" style="padding:11px 18px">+ Tambah Data Alumni</a>
+      </div>
+      ${me.kelola.length ? me.kelola.map(k => `
+      <div class="alumni-card">
+        <div style="flex:1">
+          <h4>${esc(k.alumni.Nama)}</h4>
+          <p>${esc(k.alumni.angkatan_label || '')}${k.alumni.korda_label ? ' · ' + esc(k.alumni.korda_label) : ''} · Hubungan: ${esc(k.relasi.Hubungan)}${k.relasi.Status_Akses !== 'aktif' ? ' · Akses: ' + esc(k.relasi.Status_Akses) : ''}</p>
+          ${k.alumni.no_anggota ? `<p>No. Anggota: <b>${esc(k.alumni.no_anggota)}</b></p>` : ''}
+        </div>
+        <span class="st ${esc(k.alumni.Status_Verifikasi)}">${esc(stLabel(k.alumni.Status_Verifikasi))}</span>
+        ${k.relasi.is_pengelola_utama ? `<a class="btn btn-outline" href="/pendataan/akun/data/?id=${encodeURIComponent(k.alumni.Alumni_ID)}" style="padding:9px 15px">Ubah</a>` : ''}
+      </div>
+      ${k.alumni.Status_Verifikasi === 'terverifikasi' ? `
+      <div class="kartu-anggota">
+        <img class="logo" src="/assets/img/logo-hisaniyah-trans-256.png" alt="Logo HISANIYAH">
+        <div><p style="font-weight:800;letter-spacing:.6px;font-size:12px">KARTU ANGGOTA DIGITAL — HISANIYAH</p>
+        <h4>${esc(k.alumni.Nama)}</h4>
+        <p>No. Anggota ${esc(k.alumni.no_anggota || '-')} · ${esc(k.alumni.angkatan_label || '')}${k.alumni.korda_label ? ' · ' + esc(k.alumni.korda_label) : ''}</p></div>
+        <img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}">
+      </div>` : ''}`).join('') : '<div class="notice">Belum ada data alumni. Tekan "Tambah Data Alumni" untuk mendaftarkan diri Anda atau anggota keluarga.</div>'}
+      <p style="color:var(--ink-soft);font-size:14.5px;margin-top:8px">Satu akun Google boleh mengelola beberapa data alumni (misalnya untuk orang tua/saudara). Setiap data diverifikasi pengurus satu per satu.</p>
+    </div>
+  </div>`;
+  document.getElementById('btn-keluar').addEventListener('click', async () => {
+    try { await HisaData.apiCall('auth.logout', {}); } catch(e){}
+    HisaData.clearSession(); location.href = '/';
+  });
+})();
+</script>
+</body>
+</html>
