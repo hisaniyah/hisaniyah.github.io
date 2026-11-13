@@ -1,0 +1,27 @@
+/* HISANIYAH — Design tokens
+   Warna DIUKUR dari gambar referensi resmi (Rancangan Tahap 1 v2, Bagian 2.1) */
+:root{
+  --teal:#016767;          /* header, judul — terukur #016767 */
+  --teal-dark:#014F4F;
+  --teal-panel:#017775;     /* kepala panel Pengumuman */
+  --teal-wave:#027C78;      /* gelombang hero */
+  --teal-mid:#0E8A84;
+  --teal-light:#E6F4F4;     /* latar kartu pendukung */
+  --teal-pale:#DAF5F1;      /* pil menu aktif / pil terang */
+  --bg-soft:#DCF3F3;        /* latar bawah halaman */
+  --sky-1:#ABE8F4;          /* langit hero */
+  --sky-2:#F2FBFD;
+  --orange:#FE880D;         /* aksen: tombol sorotan, garis, tautan */
+  --orange-dark:#E56F00;
+  --ink:#10222B;            /* teks utama navy-hitam */
+  --ink-soft:#3D545F;
+  --white:#FFFFFF;
+  --line:#D9E9E9;
+  --radius:16px;
+  --radius-lg:24px;
+  --shadow:0 10px 30px rgba(1,80,80,.10);
+  --shadow-card:0 6px 18px rgba(1,80,80,.08);
+  --font:'Plus Jakarta Sans','Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --header-h:92px;
+  --maxw:1240px;
+}

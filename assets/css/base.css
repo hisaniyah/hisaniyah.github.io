@@ -1,0 +1,40 @@
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);color:var(--ink);background:var(--white);line-height:1.6;font-size:16.5px;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;font-weight:700;font-size:16px;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.btn svg{width:20px;height:20px;flex:none}
+.btn-teal{background:var(--teal);color:#fff;box-shadow:0 8px 20px rgba(1,103,103,.35)}
+.btn-teal:hover{background:var(--teal-dark);transform:translateY(-2px)}
+.btn-outline{border:2px solid var(--teal);color:var(--teal);background:rgba(255,255,255,.65)}
+.btn-outline:hover{background:var(--teal-pale);transform:translateY(-2px)}
+.btn-orange{background:var(--orange);color:#fff;box-shadow:0 8px 20px rgba(254,136,13,.35)}
+.btn-orange:hover{background:var(--orange-dark);transform:translateY(-2px)}
+.section{padding:72px 0}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+.section-title{display:flex;align-items:center;gap:14px;font-size:clamp(24px,3vw,32px);font-weight:800;color:var(--ink)}
+.section-title::before{content:"";width:8px;height:38px;border-radius:6px;background:var(--teal)}
+.link-more{color:var(--orange);font-weight:800;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.link-more:hover{color:var(--orange-dark)}
+.chip{display:inline-flex;padding:7px 16px;border-radius:999px;background:var(--teal-light);color:var(--teal);font-weight:700;font-size:14px}
+.meta-date{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-size:14.5px;font-weight:600}
+.meta-date svg{width:17px;height:17px;color:var(--teal)}
+/* Kepala halaman dalam (selain beranda) */
+.page-hero{background:linear-gradient(120deg,var(--teal) 0%,var(--teal-wave) 60%,var(--teal-mid) 100%);color:#fff;padding:56px 0 64px;position:relative;overflow:hidden}
+.page-hero::after{content:"";position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.07)}
+.page-hero h1{font-size:clamp(30px,4.4vw,44px);font-weight:800;line-height:1.15}
+.page-hero p{max-width:640px;color:#D9F2F0;margin-top:10px}
+.crumb{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:600;color:#BFE6E3;margin-bottom:14px}
+.crumb a:hover{color:#fff}
+.notice{background:#FFF6E9;border:1.5px dashed var(--orange);color:#7A4A00;border-radius:var(--radius);padding:16px 20px;font-weight:600}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-card);border:1px solid var(--line)}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+@media (max-width:640px){.section{padding:52px 0}body{font-size:16px}}
+[data-ic]{display:inline-flex;flex:none}
+[data-ic] svg{width:20px;height:20px}
+
+@media (max-width:640px){.section-head{align-items:flex-start}.section-title{font-size:23px}.section-title::before{height:32px}}
