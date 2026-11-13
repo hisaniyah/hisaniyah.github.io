@@ -1,0 +1,190 @@
+{
+ "kategori": [
+  {
+   "Kategori_ID": "KT01",
+   "nama": "Kegiatan HISANIYAH",
+   "slug": "kegiatan-hisaniyah",
+   "urutan": 1
+  },
+  {
+   "Kategori_ID": "KT02",
+   "nama": "Kegiatan Alumni",
+   "slug": "kegiatan-alumni",
+   "urutan": 2
+  },
+  {
+   "Kategori_ID": "KT03",
+   "nama": "Organisasi",
+   "slug": "organisasi",
+   "urutan": 3
+  },
+  {
+   "Kategori_ID": "KT04",
+   "nama": "KORDA",
+   "slug": "korda",
+   "urutan": 4
+  },
+  {
+   "Kategori_ID": "KT05",
+   "nama": "Pengumuman",
+   "slug": "pengumuman",
+   "urutan": 5
+  },
+  {
+   "Kategori_ID": "KT06",
+   "nama": "Pendidikan",
+   "slug": "pendidikan",
+   "urutan": 6
+  }
+ ],
+ "berita": [
+  {
+   "Berita_ID": "BR001",
+   "judul": "Seminar Keilmuan HISANIYAH",
+   "slug": "seminar-keilmuan-hisaniyah",
+   "ringkasan": "Kegiatan Seminar Keilmuan yang diselenggarakan oleh HISANIYAH dengan tema “Peran Alumni dalam Penguatan Umat”.",
+   "isi": "<p>HISANIYAH menyelenggarakan Seminar Keilmuan dengan tema “Peran Alumni dalam Penguatan Umat”. Kegiatan ini menghadirkan para kiai, asatidz, dan alumni dari berbagai daerah untuk membahas kontribusi nyata alumni bagi umat dan almamater.</p><p>Dalam sambutannya, pengurus pusat menekankan bahwa kekuatan HISANIYAH terletak pada silaturahmi yang terjaga dan data alumni yang tertib. Karena itu, pendataan alumni menjadi program prioritas yang mengiringi kegiatan keilmuan seperti seminar ini.</p><p>Seminar ditutup dengan komitmen bersama untuk memperkuat KORDA di daerah masing-masing serta menghidupkan kajian rutin alumni.</p>",
+   "Kategori_ID": "KT01",
+   "tags": "hisaniyah, alumni",
+   "gambar_utama_file_id": "",
+   "gambar_grad": "linear-gradient(135deg,#016767,#0E8A84)",
+   "gambar_ikon": "landmark",
+   "penulis": "Admin Media HISANIYAH",
+   "unggulan": true,
+   "status": "terbit",
+   "publish_at": "2026-10-21",
+   "meta_title": "Seminar Keilmuan HISANIYAH",
+   "meta_description": "Kegiatan Seminar Keilmuan yang diselenggarakan oleh HISANIYAH dengan tema “Peran Alumni dalam Penguatan Umat”.",
+   "alt_gambar": "Seminar Keilmuan HISANIYAH",
+   "created_at": "2026-10-21",
+   "updated_at": "2026-10-21"
+  },
+  {
+   "Berita_ID": "BR002",
+   "judul": "Silaturahmi Akbar Alumni Se-Jawa Timur",
+   "slug": "silaturahmi-akbar-alumni-se-jawa-timur",
+   "ringkasan": "Ratusan alumni dari berbagai daerah berkumpul mempererat ukhuwah dan memperbarui data keanggotaan.",
+   "isi": "<p>Silaturahmi Akbar Alumni Se-Jawa Timur berlangsung meriah. Alumni lintas angkatan dan lintas daerah berkumpul untuk mempererat ukhuwah serta memperbarui data keanggotaan.</p><p>Panitia menyediakan meja pendataan di lokasi acara agar alumni yang belum terdata dapat langsung melengkapi datanya dibantu petugas dan relawan KORDA.</p>",
+   "Kategori_ID": "KT02",
+   "tags": "hisaniyah, alumni",
+   "gambar_utama_file_id": "",
+   "gambar_grad": "linear-gradient(135deg,#027C78,#3AA79F)",
+   "gambar_ikon": "users",
+   "penulis": "Admin Media HISANIYAH",
+   "unggulan": false,
+   "status": "terbit",
+   "publish_at": "2026-10-10",
+   "meta_title": "Silaturahmi Akbar Alumni Se-Jawa Timur",
+   "meta_description": "Ratusan alumni dari berbagai daerah berkumpul mempererat ukhuwah dan memperbarui data keanggotaan.",
+   "alt_gambar": "Silaturahmi Akbar Alumni Se-Jawa Timur",
+   "created_at": "2026-10-10",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "Berita_ID": "BR003",
+   "judul": "Rapat Koordinasi Pengurus Pusat",
+   "slug": "rapat-koordinasi-pengurus-pusat",
+   "ringkasan": "Pengurus pusat membahas program kerja, pendataan alumni, dan penguatan KORDA.",
+   "isi": "<p>Pengurus pusat HISANIYAH menggelar rapat koordinasi untuk mengevaluasi program kerja yang berjalan dan menyusun langkah berikutnya.</p><p>Tiga agenda utama yang dibahas adalah percepatan pendataan alumni, penguatan koordinator daerah (KORDA), dan penyiapan platform digital organisasi.</p>",
+   "Kategori_ID": "KT03",
+   "tags": "hisaniyah, alumni",
+   "gambar_utama_file_id": "",
+   "gambar_grad": "linear-gradient(135deg,#FE880D,#FFB25E)",
+   "gambar_ikon": "sitemap",
+   "penulis": "Admin Media HISANIYAH",
+   "unggulan": false,
+   "status": "terbit",
+   "publish_at": "2026-09-28",
+   "meta_title": "Rapat Koordinasi Pengurus Pusat",
+   "meta_description": "Pengurus pusat membahas program kerja, pendataan alumni, dan penguatan KORDA.",
+   "alt_gambar": "Rapat Koordinasi Pengurus Pusat",
+   "created_at": "2026-09-28",
+   "updated_at": "2026-09-28"
+  },
+  {
+   "Berita_ID": "BR004",
+   "judul": "Pembentukan KORDA Baru di Malang",
+   "slug": "pembentukan-korda-baru-di-malang",
+   "ringkasan": "Musyawarah alumni Malang menetapkan koordinator daerah baru untuk memperkuat pelayanan alumni setempat.",
+   "isi": "<p>Alumni HISANIYAH di Malang bermusyawarah dan menetapkan kepengurusan KORDA Malang.</p><p>Kehadiran KORDA baru ini diharapkan mempermudah koordinasi kegiatan dan pendataan alumni di wilayah Malang Raya.</p>",
+   "Kategori_ID": "KT04",
+   "tags": "hisaniyah, alumni",
+   "gambar_utama_file_id": "",
+   "gambar_grad": "linear-gradient(135deg,#014F4F,#016767)",
+   "gambar_ikon": "pin",
+   "penulis": "Admin Media HISANIYAH",
+   "unggulan": false,
+   "status": "terbit",
+   "publish_at": "2026-09-15",
+   "meta_title": "Pembentukan KORDA Baru di Malang",
+   "meta_description": "Musyawarah alumni Malang menetapkan koordinator daerah baru untuk memperkuat pelayanan alumni setempat.",
+   "alt_gambar": "Pembentukan KORDA Baru di Malang",
+   "created_at": "2026-09-15",
+   "updated_at": "2026-09-15"
+  },
+  {
+   "Berita_ID": "BR005",
+   "judul": "Pendataan Alumni Dibuka untuk Seluruh Angkatan",
+   "slug": "pendataan-alumni-dibuka-untuk-seluruh-angkatan",
+   "ringkasan": "Seluruh alumni diimbau melengkapi pendataan resmi melalui website HISANIYAH.",
+   "isi": "<p>HISANIYAH membuka pendataan alumni untuk seluruh angkatan. Pendataan ini menjadi dasar pelayanan organisasi: undangan kegiatan, informasi KORDA, dan kartu anggota digital.</p><p>Alumni yang tidak terbiasa menggunakan gawai dapat dibantu oleh keluarga — satu akun Google dapat mengelola beberapa data alumni keluarga.</p>",
+   "Kategori_ID": "KT05",
+   "tags": "hisaniyah, alumni",
+   "gambar_utama_file_id": "",
+   "gambar_grad": "linear-gradient(135deg,#0E8A84,#5BC0B7)",
+   "gambar_ikon": "mega",
+   "penulis": "Admin Media HISANIYAH",
+   "unggulan": false,
+   "status": "terbit",
+   "publish_at": "2026-09-02",
+   "meta_title": "Pendataan Alumni Dibuka untuk Seluruh Angkatan",
+   "meta_description": "Seluruh alumni diimbau melengkapi pendataan resmi melalui website HISANIYAH.",
+   "alt_gambar": "Pendataan Alumni Dibuka untuk Seluruh Angkatan",
+   "created_at": "2026-09-02",
+   "updated_at": "2026-09-02"
+  },
+  {
+   "Berita_ID": "BR006",
+   "judul": "Peran Alumni dalam Penguatan Pendidikan Pesantren",
+   "slug": "peran-alumni-dalam-penguatan-pendidikan-pesantren",
+   "ringkasan": "Catatan gagasan dari seminar keilmuan mengenai kontribusi alumni bagi pendidikan pesantren.",
+   "isi": "<p>Salah satu gagasan yang mengemuka dalam seminar keilmuan adalah pentingnya peran alumni dalam menguatkan pendidikan pesantren — dari dukungan keilmuan, jejaring, hingga keteladanan di tengah masyarakat.</p><p>Catatan lengkap gagasan ini akan diterbitkan bertahap sebagai artikel berseri di portal berita HISANIYAH.</p>",
+   "Kategori_ID": "KT06",
+   "tags": "hisaniyah, alumni",
+   "gambar_utama_file_id": "",
+   "gambar_grad": "linear-gradient(135deg,#5B7C99,#8FB0C9)",
+   "gambar_ikon": "book",
+   "penulis": "Admin Media HISANIYAH",
+   "unggulan": false,
+   "status": "terbit",
+   "publish_at": "2026-08-21",
+   "meta_title": "Peran Alumni dalam Penguatan Pendidikan Pesantren",
+   "meta_description": "Catatan gagasan dari seminar keilmuan mengenai kontribusi alumni bagi pendidikan pesantren.",
+   "alt_gambar": "Peran Alumni dalam Penguatan Pendidikan Pesantren",
+   "created_at": "2026-08-21",
+   "updated_at": "2026-08-21"
+  }
+ ],
+ "pengumuman": [
+  {
+   "Pengumuman_ID": "PG01",
+   "judul": "Pendataan Alumni",
+   "isi": "Mari lengkapi data alumni untuk memperbarui database HISANIYAH.",
+   "target": "halaman",
+   "target_href": "/pendataan/",
+   "ikon": "users",
+   "is_published": true,
+   "published_at": "2026-10-01"
+  },
+  {
+   "Pengumuman_ID": "PG02",
+   "judul": "Agenda Kegiatan",
+   "isi": "Informasi agenda dan kegiatan HISANIYAH terbaru.",
+   "target": "halaman",
+   "target_href": "/program/",
+   "ikon": "calendar",
+   "is_published": true,
+   "published_at": "2026-10-01"
+  }
+ ]
+}
