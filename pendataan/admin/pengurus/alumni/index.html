@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Alumni — Admin HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>Data Alumni</h1>
+<p class="admin-sub">Cari, saring, ekspor, dan perbaiki data alumni. Lingkup Admin KORDA terbatas pada KORDA-nya.</p>
+<div class="panel"><div style="display:flex;gap:10px;flex-wrap:wrap">
+  <input id="q" placeholder="Cari nama / no. anggota / pengelola…" style="flex:1;min-width:220px;font-family:inherit;font-size:15px;padding:11px 14px;border:1.6px solid var(--line);border-radius:11px">
+  <select id="f-status" style="font-family:inherit;font-size:15px;padding:11px;border:1.6px solid var(--line);border-radius:11px"><option value="">Semua status</option><option value="menunggu">Menunggu</option><option value="terverifikasi">Terverifikasi</option><option value="perlu_perbaikan">Perlu Perbaikan</option><option value="ditolak">Ditolak</option></select>
+  <button class="abtn" id="btn-csv" style="padding:11px 18px">Ekspor CSV</button></div></div>
+<div id="isi"><div class="panel"><p>Memuat data…</p></div></div>
+<div class="panel" id="panel-ubah" style="display:none"><h2>Ubah Data Alumni</h2>
+<form id="form" class="form-grid">
+  <div class="field full"><label>Nama lengkap</label><input id="u-nama" required maxlength="120"></div>
+  <div class="field"><label>Tempat lahir</label><input id="u-tempat" maxlength="60"></div>
+  <div class="field"><label>Tanggal lahir</label><input id="u-lahir" type="date"></div>
+  <div class="field"><label>Jenis kelamin</label><select id="u-jk"><option value="">—</option><option>Laki-laki</option><option>Perempuan</option></select></div>
+  <div class="field"><label>WhatsApp</label><input id="u-wa" maxlength="20"></div>
+  <div class="field"><label>Tahun masuk</label><input id="u-masuk" type="number" min="1950" max="2100"></div>
+  <div class="field"><label>Tahun lulus</label><input id="u-lulus" type="number" min="1950" max="2100"></div>
+  <div class="field"><label>KORDA</label><select id="u-korda"><option value="">— belum ada —</option></select></div>
+  <div class="field"><label>Email</label><input id="u-email" type="email" maxlength="120"></div>
+  <div class="field full"><label>Alamat</label><textarea id="u-alamat" rows="2" maxlength="300"></textarea></div>
+  <div class="field"><label>Kabupaten/Kota</label><input id="u-kab" maxlength="60"></div>
+  <div class="field"><label>Provinsi</label><input id="u-prov" maxlength="60"></div>
+  <div class="field"><label>Pendidikan</label><input id="u-pendidikan" maxlength="80"></div>
+  <div class="field"><label>Pekerjaan</label><input id="u-pekerjaan" maxlength="80"></div>
+  <div class="field full" style="display:flex;gap:10px"><button class="btn btn-teal" type="submit" style="padding:11px 22px">Simpan Perubahan</button><button class="abtn" type="button" id="u-batal" style="padding:11px 18px">Batal</button></div>
+</form></div>
+</main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/pengurus/alumni/');</script>
+<script>
+(async () => {
+
+  const box = document.getElementById('isi');
+  const { esc } = HisaData;
+  function gagal(e){ box.innerHTML = '<div class="panel"><h2>Belum dapat dimuat</h2><p style="color:var(--ink-soft)">' + esc(e.message || 'Panel pengurus memerlukan koneksi ke database dan sesi pengurus yang masuk.') + '</p></div>'; }
+
+  const $ = x => document.getElementById(x);
+  let data = [], editId = '';
+  await HisaData.load();
+  (HisaData.cache.korda || []).forEach(k => { const o = document.createElement('option'); o.value = k.Korda_ID; o.textContent = k.nama_korda; $('u-korda').appendChild(o); });
+  const stLabel = s => ({ menunggu: 'Menunggu', terverifikasi: 'Terverifikasi', ditolak: 'Ditolak', perlu_perbaikan: 'Perlu Perbaikan' }[s] || s);
+  async function muat(){
+    try {
+      data = await HisaData.apiCall('pengurus.alumni.list', { q: $('q').value.trim(), status: $('f-status').value });
+      if (!data.length) { box.innerHTML = '<div class="panel"><p style="color:var(--ink-soft)">Tidak ada data yang cocok.</p></div>'; return; }
+      box.innerHTML = `<div class="panel"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Nama</th><th>Angkatan</th><th>KORDA</th><th>Pengelola</th><th>Status</th><th>No. Anggota</th><th></th></tr></thead><tbody>
+      ${data.map(a => `<tr><td><b>${esc(a.Nama)}</b></td><td>${esc(a.angkatan_label || '-')}</td><td>${esc(a.korda_label || '-')}</td><td>${a.pengelola ? esc(a.pengelola.nama) : '-'}</td><td><span class="st ${esc(a.Status_Verifikasi)}">${esc(stLabel(a.Status_Verifikasi))}</span></td><td>${esc(a.no_anggota || '-')}</td><td><button class="abtn" data-ubah="${esc(a.Alumni_ID)}">Ubah</button></td></tr>`).join('')}
+      </tbody></table></div><p style="color:var(--ink-soft);margin-top:10px">${data.length} data tampil.</p></div>`;
+      box.querySelectorAll('[data-ubah]').forEach(b => b.addEventListener('click', () => bukaUbah(b.dataset.ubah)));
+    } catch(e){ gagal(e); }
+  }
+  function bukaUbah(id){
+    const a = data.find(x => x.Alumni_ID === id); if (!a) return;
+    editId = id;
+    $('u-nama').value = a.Nama || ''; $('u-tempat').value = a.Tempat_Lahir || ''; $('u-lahir').value = String(a.Tanggal_Lahir || '').slice(0,10);
+    $('u-jk').value = a.Jenis_Kelamin || ''; $('u-wa').value = a.WhatsApp || ''; $('u-masuk').value = a.Tahun_Masuk || '';
+    $('u-lulus').value = a.tahun_lulus || ''; $('u-korda').value = a.Korda_ID || ''; $('u-email').value = a.Email || '';
+    $('u-alamat').value = a.Alamat || ''; $('u-kab').value = a.Kabupaten || ''; $('u-prov').value = a.Provinsi || '';
+    $('u-pendidikan').value = a.Pendidikan || ''; $('u-pekerjaan').value = a.Pekerjaan || '';
+    $('panel-ubah').style.display = 'block'; $('panel-ubah').scrollIntoView({ behavior: 'smooth' });
+  }
+  $('u-batal').addEventListener('click', () => $('panel-ubah').style.display = 'none');
+  $('form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const d = { Nama: $('u-nama').value.trim(), Tempat_Lahir: $('u-tempat').value.trim(), Tanggal_Lahir: $('u-lahir').value, Jenis_Kelamin: $('u-jk').value,
+      WhatsApp: $('u-wa').value.trim(), Tahun_Masuk: $('u-masuk').value, tahun_lulus: $('u-lulus').value, Korda_ID: $('u-korda').value,
+      Email: $('u-email').value.trim(), Alamat: $('u-alamat').value.trim(), Kabupaten: $('u-kab').value.trim(), Provinsi: $('u-prov').value.trim(),
+      Pendidikan: $('u-pendidikan').value.trim(), Pekerjaan: $('u-pekerjaan').value.trim() };
+    try { await HisaData.apiCall('pengurus.alumni.ubah', { Alumni_ID: editId, data: d }); toast('Data alumni diperbarui'); $('panel-ubah').style.display = 'none'; muat(); }
+    catch(err){ toast('Gagal: ' + err.message); }
+  });
+  let t; $('q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(muat, 350); });
+  $('f-status').addEventListener('change', muat);
+  $('btn-csv').addEventListener('click', () => {
+    const kolom = ['Nama','Status_Verifikasi','no_anggota','angkatan_label','korda_label','WhatsApp','Email','Kabupaten','Provinsi','Pendidikan','Pekerjaan'];
+    const csv = [kolom.join(';')].concat(data.map(a => kolom.map(k => '"' + String(a[k] === undefined ? '' : a[k]).replace(/"/g, '""') + '"').join(';'))).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' })); a.download = 'data-alumni-hisaniyah.csv'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  });
+  muat();
+})();
+</script>
+</body>
+</html>
