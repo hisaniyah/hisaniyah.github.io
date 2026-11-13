@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor Berita — Admin CMS HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1 id="ed-title">Tulis Berita</h1>
+<p class="admin-sub">Isi formulir berikut. Judul akan menjadi alamat berita secara otomatis.</p>
+<div class="panel"><form id="form" class="form-grid">
+  <div class="field full"><label for="f-judul">Judul berita *</label><input id="f-judul" required maxlength="160" placeholder="Contoh: Silaturahmi Akbar Alumni"></div>
+  <div class="field"><label for="f-kat">Kategori *</label><select id="f-kat" required></select></div>
+  <div class="field"><label for="f-tgl">Tanggal terbit</label><input id="f-tgl" type="date"></div>
+  <div class="field full"><label for="f-ringkas">Ringkasan *</label><textarea id="f-ringkas" rows="2" required maxlength="300" placeholder="Satu-dua kalimat pembuka yang tampil di daftar berita"></textarea></div>
+  <div class="field full"><label>Isi berita *</label>
+    <div class="rte"><div class="rte-bar">
+      <button type="button" data-cmd="bold"><b>B</b></button>
+      <button type="button" data-cmd="italic"><i>I</i></button>
+      <button type="button" data-cmd="underline"><u>U</u></button>
+      <button type="button" data-blk="H2">Judul Kecil</button>
+      <button type="button" data-blk="H3">Subjudul</button>
+      <button type="button" data-blk="P">Paragraf</button>
+      <button type="button" data-cmd="insertUnorderedList">• Daftar</button>
+      <button type="button" data-cmd="insertOrderedList">1. Daftar</button>
+      <button type="button" id="rte-link">Tautan</button>
+      <button type="button" data-cmd="removeFormat">Bersihkan</button>
+    </div><div class="rte-area" id="f-isi" contenteditable="true"></div></div>
+  </div>
+  <div class="field"><label>Gambar utama</label>
+    <div class="upload-box" id="up-box">
+      <input type="file" id="f-file" accept="image/*" hidden>
+      <div id="up-empty" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button type="button" class="abtn solid" id="up-btn" style="padding:11px 20px">Unggah Gambar</button>
+        <small>atau seret berkas gambar ke kotak ini (JPG/PNG/WebP)</small>
+      </div>
+      <div id="up-preview" style="display:none">
+        <img id="up-img" alt="Pratinjau gambar utama" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px">
+        <div class="row-actions" style="margin-top:10px;align-items:center">
+          <span id="up-name" style="font-weight:600;font-size:14px"></span>
+          <button type="button" class="abtn" id="up-change">Ganti</button>
+          <button type="button" class="abtn danger" id="up-remove">Hapus</button>
+        </div>
+      </div>
+    </div>
+    <small>Mode uji: foto tersimpan di peramban ini. Setelah Tahap 4, foto yang diunggah di sini tersimpan otomatis ke Google Drive organisasi — folder WEB Hisaniyah › Media.</small>
+  </div>
+  <div class="field"><label for="f-alt">Teks alternatif gambar</label><input id="f-alt" maxlength="120" placeholder="Deskripsi singkat gambar"></div>
+  <div class="field"><label for="f-tags">Kata kunci (pisahkan koma)</label><input id="f-tags" maxlength="120" placeholder="alumni, kegiatan"></div>
+  <div class="field"><label for="f-penulis">Penulis</label><input id="f-penulis" maxlength="80"></div>
+  <div class="field"><label style="display:flex;gap:11px;align-items:center">Jadikan berita unggulan <span class="switch"><input type="checkbox" id="f-unggulan"><i></i></span></label><small>Berita unggulan tampil besar di beranda.</small></div>
+  <div class="field"><label for="f-grad">Pola warna sampul (bila tanpa foto)</label><select id="f-grad">
+    <option value="linear-gradient(135deg,#016767,#0E8A84)">Teal tua</option>
+    <option value="linear-gradient(135deg,#027C78,#3AA79F)">Teal terang</option>
+    <option value="linear-gradient(135deg,#FE880D,#FFB25E)">Oranye</option>
+    <option value="linear-gradient(135deg,#014F4F,#016767)">Teal gelap</option>
+    <option value="linear-gradient(135deg,#5B7C99,#8FB0C9)">Biru keabuan</option></select></div>
+  <div class="field full" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+    <button type="submit" class="btn btn-teal" data-status="terbit">Terbitkan</button>
+    <button type="submit" class="btn btn-outline" data-status="draf">Simpan sebagai Draf</button>
+    <button type="button" class="abtn" id="btn-preview" style="padding:12px 20px">Pratinjau</button>
+    <a class="abtn" href="/pendataan/admin/berita/" style="padding:12px 20px">Batal</a>
+  </div>
+</form></div>
+<div class="panel" id="preview" style="display:none"><h2>Pratinjau</h2><div id="preview-body"></div></div></main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/berita/');</script>
+<script>
+(async () => {
+  await HisaData.load();
+  const { esc, sanitize } = HisaData;
+  const id = new URLSearchParams(location.search).get('id');
+  const rec = id ? HisaData.cache.berita.find(b => b.Berita_ID === id) : null;
+  if (id && !rec) { alert('Berita tidak ditemukan'); location.href = '/pendataan/admin/berita/'; return; }
+  document.getElementById('ed-title').textContent = rec ? 'Ubah Berita' : 'Tulis Berita';
+  const kat = document.getElementById('f-kat');
+  kat.innerHTML = HisaData.cache.kategori.map(k => `<option value="${esc(k.Kategori_ID)}">${esc(k.nama)}</option>`).join('');
+  const $ = x => document.getElementById(x);
+  if (rec) {
+    $('f-judul').value = rec.judul; kat.value = rec.Kategori_ID; $('f-tgl').value = (rec.publish_at || '').slice(0,10);
+    $('f-ringkas').value = rec.ringkasan; $('f-isi').innerHTML = sanitize(rec.isi);
+    $('f-alt').value = rec.alt_gambar || ''; $('f-tags').value = rec.tags || ''; $('f-penulis').value = rec.penulis || '';
+    $('f-unggulan').checked = !!rec.unggulan; $('f-grad').value = rec.gambar_grad || $('f-grad').value;
+  } else { $('f-tgl').value = new Date().toISOString().slice(0,10); $('f-penulis').value = 'Admin Media HISANIYAH'; }
+  /* ===== Unggah gambar utama ===== */
+  let mediaId = rec ? (rec.gambar_media_id || '') : '';
+  let driveUrl = rec && /^https?:/.test(rec.gambar_utama_file_id || '') ? rec.gambar_utama_file_id : '';
+  const upBox = $('up-box'), upFile = $('f-file');
+  async function showPreview(){
+    if (!mediaId && driveUrl) { $('up-img').src = driveUrl; $('up-name').textContent = 'Gambar dari Drive'; $('up-empty').style.display = 'none'; $('up-preview').style.display = 'block'; return; }
+    if (!mediaId) { $('up-empty').style.display = 'flex'; $('up-preview').style.display = 'none'; return; }
+    const u = await HisaData.mediaURL(mediaId);
+    if (u) { $('up-img').src = u; $('up-name').textContent = 'Gambar tersimpan'; $('up-empty').style.display = 'none'; $('up-preview').style.display = 'block'; }
+  }
+  async function acceptFile(file){
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { toast('Berkas harus berupa gambar'); return; }
+    if (HisaData.apiMode() && HisaData.sesiAdmin()) {
+      toast('Mengunggah ke Drive…');
+      const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.readAsDataURL(file); });
+      try {
+        const up = await HisaData.apiCall('admin.media.upload', { nama: file.name, mime: file.type, base64: b64 });
+        driveUrl = up.url_tampil; mediaId = '';
+        showPreview(); toast('Gambar terunggah ke Drive');
+      } catch(e){ toast('Unggah ke Drive gagal: ' + e.message); }
+      return;
+    }
+    const baru = await HisaData.mediaPut(file);
+    if (mediaId && (!rec || mediaId !== rec.gambar_media_id)) await HisaData.mediaDel(mediaId);
+    mediaId = baru;
+    $('up-name').textContent = file.name;
+    showPreview(); toast('Gambar terunggah');
+  }
+  $('up-btn').addEventListener('click', () => upFile.click());
+  $('up-change').addEventListener('click', () => upFile.click());
+  $('up-remove').addEventListener('click', async () => { if (mediaId && (!rec || mediaId !== rec.gambar_media_id)) await HisaData.mediaDel(mediaId); mediaId = ''; driveUrl = ''; showPreview(); });
+  upFile.addEventListener('change', () => acceptFile(upFile.files[0]));
+  ['dragover','dragenter'].forEach(ev => upBox.addEventListener(ev, e => { e.preventDefault(); upBox.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => upBox.addEventListener(ev, e => { e.preventDefault(); upBox.classList.remove('drag'); }));
+  upBox.addEventListener('drop', e => acceptFile(e.dataTransfer.files && e.dataTransfer.files[0]));
+  showPreview();
+  document.querySelectorAll('[data-cmd]').forEach(b => b.addEventListener('click', () => { document.execCommand(b.dataset.cmd, false, null); $('f-isi').focus(); }));
+  document.querySelectorAll('[data-blk]').forEach(b => b.addEventListener('click', () => { document.execCommand('formatBlock', false, b.dataset.blk); $('f-isi').focus(); }));
+  $('rte-link').addEventListener('click', () => { const u = prompt('Alamat tautan (https://…)'); if (u) document.execCommand('createLink', false, u); $('f-isi').focus(); });
+  let submitStatus = 'terbit';
+  document.querySelectorAll('[data-status]').forEach(b => b.addEventListener('click', () => submitStatus = b.dataset.status));
+  function collect(){
+    return { Berita_ID: rec ? rec.Berita_ID : '', judul: $('f-judul').value.trim(), slug: rec ? rec.slug : '',
+      ringkasan: $('f-ringkas').value.trim(), isi: sanitize($('f-isi').innerHTML), Kategori_ID: kat.value,
+      tags: $('f-tags').value.trim(), gambar_utama_file_id: driveUrl || '',
+      gambar_media_id: mediaId,
+      gambar_grad: $('f-grad').value, gambar_ikon: rec ? rec.gambar_ikon : 'news',
+      penulis: $('f-penulis').value.trim() || 'Admin Media HISANIYAH', unggulan: $('f-unggulan').checked,
+      status: submitStatus, publish_at: $('f-tgl').value || new Date().toISOString().slice(0,10),
+      meta_title: $('f-judul').value.trim(), meta_description: $('f-ringkas').value.trim(), alt_gambar: $('f-alt').value.trim(),
+      created_at: rec ? rec.created_at : '' };
+  }
+  $('form').addEventListener('submit', e => {
+    e.preventDefault();
+    const r = collect();
+    if (!r.judul || !r.ringkasan || !$('f-isi').textContent.trim()) { toast('Judul, ringkasan, dan isi berita wajib diisi'); return; }
+    if (rec && rec.gambar_media_id && rec.gambar_media_id !== r.gambar_media_id) HisaData.mediaDel(rec.gambar_media_id);
+    if (r.unggulan) HisaData.cache.berita.forEach(b => { if (b.Berita_ID !== r.Berita_ID) b.unggulan = false; });
+    HisaData.upsertBerita(r);
+    sessionStorage.setItem('hisa_toast', r.status === 'terbit' ? 'Berita diterbitkan: ' + r.judul : 'Draf disimpan: ' + r.judul);
+    location.href = '/pendataan/admin/berita/';
+  });
+  $('btn-preview').addEventListener('click', () => {
+    const r = collect();
+    const pv = $('preview'); pv.style.display = 'block';
+    $('preview-body').innerHTML = `<span class="chip">${esc(HisaData.kategoriNama(r.Kategori_ID))}</span>
+      <h2 style="font-size:30px;font-weight:800;margin:12px 0 8px">${esc(r.judul)}</h2>
+      <p style="color:var(--ink-soft);margin-bottom:14px">${esc(r.ringkasan)}</p>
+      <div style="font-size:17px;line-height:1.7">${sanitize(r.isi)}</div>`;
+    pv.scrollIntoView({behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
