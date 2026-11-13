@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifikasi Alumni — Admin HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>Verifikasi Alumni</h1>
+<p class="admin-sub">Periksa data yang masuk, lalu putuskan: terverifikasi, perlu perbaikan, atau ditolak. Keputusan tercatat beserta nama pemeriksa.</p>
+<div class="chips" id="chips">
+  <button class="chip on" data-st="">Semua</button><button class="chip" data-st="menunggu">Menunggu</button>
+  <button class="chip" data-st="terverifikasi">Terverifikasi</button><button class="chip" data-st="perlu_perbaikan">Perlu Perbaikan</button>
+  <button class="chip" data-st="ditolak">Ditolak</button></div>
+<div id="isi"><div class="panel"><p>Memuat antrean…</p></div></div>
+</main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/pengurus/verifikasi/');</script>
+<script>
+(async () => {
+
+  const box = document.getElementById('isi');
+  const { esc } = HisaData;
+  function gagal(e){ box.innerHTML = '<div class="panel"><h2>Belum dapat dimuat</h2><p style="color:var(--ink-soft)">' + esc(e.message || 'Panel pengurus memerlukan koneksi ke database dan sesi pengurus yang masuk.') + '</p></div>'; }
+
+  const stLabel = s => ({ menunggu: 'Menunggu', terverifikasi: 'Terverifikasi', ditolak: 'Ditolak', perlu_perbaikan: 'Perlu Perbaikan' }[s] || s);
+  let statusAktif = '';
+  async function muat(){
+    box.innerHTML = '<div class="panel"><p>Memuat antrean…</p></div>';
+    try {
+      const list = await HisaData.apiCall('pengurus.verifikasi.list', statusAktif ? { status: statusAktif } : {});
+      if (!list.length) { box.innerHTML = '<div class="panel"><p style="color:var(--ink-soft)">Tidak ada data pada saringan ini.</p></div>'; return; }
+      box.innerHTML = list.map(a => `
+      <div class="panel" data-kartu="${esc(a.Alumni_ID)}">
+        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start">
+          <div><h2 style="margin-bottom:4px">${esc(a.Nama)}</h2>
+          <p style="color:var(--ink-soft)">${esc(a.angkatan_label || '')}${a.korda_label ? ' · ' + esc(a.korda_label) : ''} · WA: ${esc(a.WhatsApp || '-')} · Dikelola: ${a.pengelola ? esc(a.pengelola.nama) + ' (' + esc(a.pengelola.email) + ')' : '-'}</p>
+          ${a.no_anggota ? `<p style="color:var(--ink-soft)">No. Anggota: <b>${esc(a.no_anggota)}</b></p>` : ''}</div>
+          <span class="st ${esc(a.Status_Verifikasi)}">${esc(stLabel(a.Status_Verifikasi))}</span>
+        </div>
+        <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:700">Lihat data lengkap</summary>
+          <div class="tbl-wrap" style="margin-top:10px"><table class="tbl"><tbody>
+          ${[['Tempat/Tanggal Lahir', (a.Tempat_Lahir || '') + (a.Tanggal_Lahir ? ', ' + String(a.Tanggal_Lahir).slice(0,10) : '')], ['Jenis Kelamin', a.Jenis_Kelamin], ['Tahun Masuk', a.Tahun_Masuk], ['Alamat', a.Alamat], ['Kabupaten/Provinsi', [a.Kabupaten, a.Provinsi].filter(Boolean).join(', ')], ['Email', a.Email], ['Pendidikan', a.Pendidikan], ['Pekerjaan', a.Pekerjaan], ['Kode Kartu (QR)', a.kode_verifikasi_qr]].map(([k,v]) => `<tr><th style="width:210px">${k}</th><td>${esc(v || '-')}</td></tr>`).join('')}
+          </tbody></table></div></details>
+        <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px;align-items:center">
+          <input placeholder="Catatan pemeriksa (opsional)" data-cat style="flex:1;min-width:200px;font-family:inherit;font-size:14.5px;padding:10px 13px;border:1.6px solid var(--line);border-radius:10px">
+          <button class="btn btn-teal" data-put="terverifikasi" style="padding:10px 16px">Terverifikasi</button>
+          <button class="chip" data-put="perlu_perbaikan">Perlu Perbaikan</button>
+          <button class="chip" data-put="ditolak">Tolak</button>
+        </div>
+      </div>`).join('');
+      box.querySelectorAll('[data-put]').forEach(btn => btn.addEventListener('click', async () => {
+        const kartu = btn.closest('[data-kartu]');
+        const id = kartu.dataset.kartu;
+        const catatan = kartu.querySelector('[data-cat]').value.trim();
+        btn.disabled = true; btn.textContent = 'Memproses…';
+        try {
+          const r = await HisaData.apiCall('pengurus.verifikasi.putus', { Alumni_ID: id, keputusan: btn.dataset.put, catatan });
+          sessionStorage.setItem('hisa_toast', 'Keputusan tersimpan' + (r.no_anggota ? ' — No. Anggota ' + r.no_anggota : ''));
+          muat();
+        } catch(e){ toast('Gagal: ' + e.message); btn.disabled = false; }
+      }));
+    } catch(e){ gagal(e); }
+  }
+  document.getElementById('chips').addEventListener('click', e => {
+    const c = e.target.closest('.chip'); if (!c) return;
+    document.querySelectorAll('#chips .chip').forEach(x => x.classList.remove('on')); c.classList.add('on');
+    statusAktif = c.dataset.st; muat();
+  });
+  muat();
+})();
+</script>
+</body>
+</html>
