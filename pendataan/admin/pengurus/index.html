@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistik Pengurus — Admin HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>Statistik Pengurus</h1>
+<p class="admin-sub">Ringkasan data alumni sesuai lingkup Anda.</p>
+<div id="isi"><div class="panel"><p>Memuat statistik…</p></div></div>
+</main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/pengurus/');</script>
+<script>
+(async () => {
+
+  const box = document.getElementById('isi');
+  const { esc } = HisaData;
+  function gagal(e){ box.innerHTML = '<div class="panel"><h2>Belum dapat dimuat</h2><p style="color:var(--ink-soft)">' + esc(e.message || 'Panel pengurus memerlukan koneksi ke database dan sesi pengurus yang masuk.') + '</p></div>'; }
+
+  try {
+    const s = await HisaData.apiCall('pengurus.statistik', {});
+    const bar = (obj) => {
+      const ent = Object.entries(obj).sort((a,b) => b[1]-a[1]);
+      const maks = Math.max(1, ...ent.map(e => e[1]));
+      return ent.length ? ent.map(([k,v]) => `<div class="bar-row"><span>${esc(k)}</span><span class="bar-track"><span class="bar-fill" style="width:${Math.round(v/maks*100)}%"></span></span><b>${v}</b></div>`).join('') : '<p style="color:var(--ink-soft)">Belum ada data.</p>';
+    };
+    box.innerHTML = `
+    ${s.korda_saya ? `<div class="notice">Lingkup Anda: Admin KORDA <b>${esc(s.korda_saya.nama_korda)}</b> — statistik dan antrean hanya dari KORDA ini.</div>` : ''}
+    <div class="stat-grid">
+      <div class="stat"><b>${s.total_alumni}</b><span>Total alumni (lingkup Anda)</span></div>
+      <div class="stat"><b>${s.menunggu}</b><span>Menunggu verifikasi</span></div>
+      <div class="stat"><b>${s.terverifikasi}</b><span>Terverifikasi</span></div>
+      <div class="stat"><b>${s.perlu_perbaikan}</b><span>Perlu perbaikan</span></div>
+      <div class="stat"><b>${s.ditolak}</b><span>Ditolak</span></div>
+      ${s.total_pengguna !== null && s.total_pengguna !== undefined ? `<div class="stat"><b>${s.total_pengguna}</b><span>Akun pengguna</span></div><div class="stat"><b>${s.total_berita}</b><span>Berita di CMS</span></div>` : ''}
+    </div>
+    <div class="panel"><h2>Per Angkatan</h2>${bar(s.per_angkatan)}</div>
+    <div class="panel"><h2>Per KORDA</h2>${bar(s.per_korda)}</div>
+    <div class="panel"><h2>Langkah berikutnya</h2><p style="color:var(--ink-soft)">${s.menunggu > 0 ? 'Ada <b>' + s.menunggu + ' data menunggu</b> — periksa di menu <a href="/pendataan/admin/pengurus/verifikasi/" style="text-decoration:underline">Verifikasi Alumni</a>.' : 'Tidak ada antrean verifikasi saat ini.'}</p></div>`;
+  } catch(e){ gagal(e); }
+})();
+</script>
+</body>
+</html>
