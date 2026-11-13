@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Berita & Artikel — HISANIYAH</title>
+<meta name="description" content="Portal berita dan artikel resmi HISANIYAH.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Berita</span></nav>
+  <h1>Berita & Artikel</h1>
+  <p>Kabar resmi kegiatan HISANIYAH, alumni, dan KORDA — dikelola melalui CMS oleh pengurus media.</p>
+</div></section>
+<section class="section"><div class="container">
+<div class="cat-row" id="cat-row"></div>
+<div class="grid-3" id="article-grid"><p class="lead">Memuat berita…</p></div>
+<p id="no-result" class="lead" style="display:none;margin-top:20px">Belum ada artikel pada kategori ini.</p>
+</div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+(async () => {
+  await HisaData.load();
+  const { esc, fmtDate } = HisaData;
+  const link = b => '/berita/detail/?slug=' + encodeURIComponent(b.slug);
+  const row = document.getElementById('cat-row');
+  const grid = document.getElementById('article-grid');
+  const cats = [{Kategori_ID:'', nama:'Semua'}, ...HisaData.cache.kategori];
+  row.innerHTML = cats.map((c,i) => `<button class="cat-btn${i===0?' active':''}" data-filter="${esc(c.Kategori_ID)}">${esc(c.nama)}</button>`).join('');
+  function render(fid){
+    const items = HisaData.terbit().filter(b => !fid || b.Kategori_ID === fid);
+    grid.innerHTML = items.map(b => `
+      <article class="card article-card">
+        <a class="thumb" href="${link(b)}">${HisaData.thumbHTML(b)}</a>
+        <div class="body">
+          <span class="meta-date">${icon('calendar')}${esc(fmtDate(b.publish_at))} &nbsp;·&nbsp; ${esc(HisaData.kategoriNama(b.Kategori_ID))}</span>
+          <h3>${esc(b.judul)}</h3><p>${esc(b.ringkasan)}</p>
+          <a class="link-more" href="${link(b)}">Baca Selengkapnya ${icon('arrowR')}</a>
+        </div>
+      </article>`).join('');
+    document.getElementById('no-result').style.display = items.length ? 'none' : 'block';
+    grid.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = icon(el.dataset.ic); });
+    HisaData.hydrateMedia(grid);
+  }
+  row.addEventListener('click', e => {
+    const b = e.target.closest('[data-filter]'); if (!b) return;
+    row.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); render(b.dataset.filter);
+  });
+  render('');
+})();
+</script>
+</body>
+</html>
