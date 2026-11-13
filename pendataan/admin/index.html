@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Admin CMS HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>Dashboard CMS</h1>
+<p class="admin-sub">Kelola berita, kategori, dan pengumuman yang tampil di website publik HISANIYAH.</p>
+<div class="stat-grid">
+  <div class="stat"><b id="st-total">–</b><span>Total berita</span></div>
+  <div class="stat"><b id="st-terbit">–</b><span>Sudah terbit</span></div>
+  <div class="stat"><b id="st-draf">–</b><span>Masih draf</span></div>
+  <div class="stat"><b id="st-peng">–</b><span>Pengumuman aktif</span></div>
+</div>
+<div class="panel"><h2>Berita Terbaru</h2><div id="recent"><p>Memuat…</p></div></div>
+<div class="panel"><h2>Data &amp; Cadangan</h2>
+<p style="color:var(--ink-soft);margin-bottom:14px" id="backup-desc">Data CMS tersimpan di database organisasi (Google Sheets). Unduh cadangan JSON secara berkala sebagai arsip tambahan; backup resmi berkala tersimpan di folder Drive organisasi.</p>
+<div class="row-actions">
+  <button class="abtn solid" id="btn-export">Unduh Cadangan (JSON)</button>
+  <label class="abtn" style="cursor:pointer">Impor Cadangan<input type="file" id="file-import" accept="application/json" hidden></label>
+  <button class="abtn danger" id="btn-reset">Kembalikan Data Awal</button>
+</div>
+<p style="margin-top:12px"><small id="mode-info" style="color:var(--ink-soft)"></small></p>
+</div></main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/');</script>
+<script>
+(async () => {
+  await HisaData.load();
+  const c = HisaData.cache;
+  const { esc, fmtDate } = HisaData;
+  document.getElementById('st-total').textContent = c.berita.length;
+  document.getElementById('st-terbit').textContent = c.berita.filter(b => b.status === 'terbit').length;
+  document.getElementById('st-draf').textContent = c.berita.filter(b => b.status !== 'terbit').length;
+  document.getElementById('st-peng').textContent = c.pengumuman.filter(p => p.is_published).length;
+  document.getElementById('mode-info').textContent = HisaData.apiMode() ? 'Status: terhubung ke database HISANIYAH — semua perubahan tersimpan di server organisasi.' : 'Status: mode lokal — data tersimpan di peramban ini.';
+  if (!HisaData.apiMode()) document.getElementById('backup-desc').textContent = 'Pada mode lokal, seluruh data CMS tersimpan di peramban ini. Unduh cadangan secara berkala.';
+  document.getElementById('recent').innerHTML = [...c.berita].sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||'')).slice(0,5).map(b => `
+    <div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">
+      <span class="badge ${b.status === 'terbit' ? 'terbit' : 'draf'}">${b.status === 'terbit' ? 'Terbit' : 'Draf'}</span>
+      <strong style="flex:1">${esc(b.judul)}</strong>
+      <small style="color:var(--ink-soft)">${esc(fmtDate(b.updated_at))}</small>
+      <a class="abtn" href="/pendataan/admin/berita/editor/?id=${encodeURIComponent(b.Berita_ID)}">Ubah</a>
+    </div>`).join('') || '<p>Belum ada berita.</p>';
+  document.getElementById('btn-export').addEventListener('click', () => {
+    const blob = new Blob([HisaData.exportJSON()], {type:'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'cadangan-cms-hisaniyah-' + new Date().toISOString().slice(0,10) + '.json'; a.click();
+    URL.revokeObjectURL(a.href); toast('Cadangan diunduh');
+  });
+  document.getElementById('file-import').addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { HisaData.importJSON(await f.text()); sessionStorage.setItem('hisa_toast','Cadangan berhasil diimpor'); location.reload(); }
+    catch(err){ toast('Impor gagal: ' + err.message); }
+  });
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    if (confirm('Kembalikan seluruh data CMS ke data awal bawaan? Perubahan lokal akan hilang.')) { HisaData.resetLocal(); sessionStorage.setItem('hisa_toast','Data dikembalikan ke awal'); location.reload(); }
+  });
+})();
+</script>
+</body>
+</html>
