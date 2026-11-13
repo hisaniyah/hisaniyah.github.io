@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masuk — HISANIYAH</title>
+<meta name="description" content="Masuk ke akun HISANIYAH dengan Google.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+<link rel="stylesheet" href="/assets/css/pages/akun.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Masuk</span></nav>
+  <h1>Masuk ke HISANIYAH</h1>
+  <p>Gunakan akun Google Anda. Tidak ada kata sandi yang disimpan HISANIYAH.</p>
+</div></section>
+<section class="section"><div class="container">
+<div class="login-card">
+  <img class="logo" src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH">
+  <h2 style="font-size:22px;font-weight:800">Selamat datang</h2>
+  <p style="color:var(--ink-soft);margin-top:6px">Masuk untuk mengelola data alumni Anda dan keluarga yang Anda bantu daftarkan.</p>
+  <div id="gis-btn"></div>
+  <p id="login-status" style="font-weight:600;color:var(--ink-soft);min-height:22px"></p>
+  <p style="font-size:13.5px;color:var(--ink-soft);margin-top:10px">Dengan masuk, Anda menyetujui pengelolaan data sesuai ketentuan HISANIYAH. Masuk dengan Google <b>tidak otomatis</b> berarti terverifikasi sebagai alumni — verifikasi dilakukan pengurus dari data yang Anda kirim.</p>
+</div>
+</div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+(async () => {
+  const st = document.getElementById('login-status');
+  await HisaData.load();
+  if (HisaData.getSession()) { location.href = '/pendataan/akun/'; return; }
+  const cid = window.HISA_GIS_CLIENT_ID || '';
+  if (!cid) { st.textContent = 'Login Google belum diaktifkan pengurus. Coba lagi nanti.'; return; }
+  if (!HisaData.apiMode()) { st.textContent = 'Layanan akun belum terhubung ke server.'; return; }
+  function initGIS(){
+    if (!window.google || !google.accounts || !google.accounts.id) { setTimeout(initGIS, 400); return; }
+    google.accounts.id.initialize({ client_id: cid, callback: async (resp) => {
+      st.textContent = 'Memeriksa akun Google Anda…';
+      try {
+        const hasil = await HisaData.apiCall('auth.login', { id_token: resp.credential });
+        HisaData.setSession({ token: hasil.token, user: hasil.user });
+        st.textContent = 'Berhasil masuk. Mengalihkan…';
+        location.href = '/pendataan/akun/';
+      } catch(e){ st.textContent = 'Gagal masuk: ' + e.message; }
+    } });
+    google.accounts.id.renderButton(document.getElementById('gis-btn'), { theme: 'outline', size: 'large', text: 'signin_with', shape: 'pill', width: 280 });
+  }
+  initGIS();
+})();
+</script>
+</body>
+</html>
