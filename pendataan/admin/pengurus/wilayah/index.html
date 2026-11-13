@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KORDA & Angkatan — Admin HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>KORDA & Angkatan</h1>
+<p class="admin-sub">Kelola daftar KORDA (wilayah) dan angkatan. KORDA aktif tampil di formulir pendataan dan halaman KORDA.</p>
+<div class="panel"><h2>KORDA</h2>
+<form id="form-korda" class="form-grid">
+  <div class="field"><label>Nama KORDA *</label><input id="k-nama" required maxlength="80" placeholder="KORDA Jember"></div>
+  <div class="field"><label>Wilayah cakupan</label><input id="k-wilayah" maxlength="120"></div>
+  <div class="field"><label>Provinsi</label><input id="k-prov" maxlength="60"></div>
+  <div class="field"><label>Koordinator</label><input id="k-koord" maxlength="80"></div>
+  <div class="field"><label>WhatsApp koordinator</label><input id="k-wa" maxlength="20"></div>
+  <div class="field"><label style="display:flex;gap:11px;align-items:center">Aktif <span class="switch"><input type="checkbox" id="k-aktif" checked><i></i></span></label></div>
+  <div class="field full"><label>Keterangan</label><input id="k-ket" maxlength="200"></div>
+  <div class="field full" style="display:flex;gap:10px"><button class="btn btn-teal" type="submit" style="padding:11px 22px">Simpan KORDA</button><button class="abtn" type="button" id="k-batal" style="display:none;padding:11px 18px">Batal Ubah</button></div>
+</form>
+<div id="list-korda" style="margin-top:16px"><p>Memuat…</p></div></div>
+<div class="panel"><h2>Angkatan</h2>
+<form id="form-angkatan" class="form-grid">
+  <div class="field"><label>Tahun lulus *</label><input id="a-tahun" type="number" min="1950" max="2100" required></div>
+  <div class="field"><label>Nama angkatan</label><input id="a-nama" maxlength="80" placeholder="Otomatis: Angkatan 20XX"></div>
+  <div class="field full"><label>Keterangan</label><input id="a-ket" maxlength="200"></div>
+  <div class="field full" style="display:flex;gap:10px"><button class="btn btn-teal" type="submit" style="padding:11px 22px">Simpan Angkatan</button><button class="abtn" type="button" id="a-batal" style="display:none;padding:11px 18px">Batal Ubah</button></div>
+</form>
+<div id="list-angkatan" style="margin-top:16px"><p>Memuat…</p></div></div>
+</main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/pengurus/wilayah/');</script>
+<script>
+(async () => {
+  const { esc } = HisaData;
+  const $ = x => document.getElementById(x);
+  let editK = '', editA = '';
+  async function muat(){
+    let w;
+    try { w = await HisaData.apiCall('pengurus.wilayah.list', {}); }
+    catch(e){ $('list-korda').innerHTML = '<p style="color:var(--ink-soft)">' + esc(e.message) + '</p>'; $('list-angkatan').innerHTML = ''; return; }
+    const ks = w.korda || [];
+    $('list-korda').innerHTML = ks.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Nama</th><th>Provinsi</th><th>Koordinator</th><th>Aktif</th><th></th></tr></thead><tbody>
+      ${ks.map(k => `<tr><td><b>${esc(k.nama_korda)}</b></td><td>${esc(k.provinsi || '-')}</td><td>${esc(k.koordinator_nama || '-')}</td><td>${String(k.is_active) === 'TRUE' || k.is_active === true ? 'Ya' : 'Tidak'}</td><td style="white-space:nowrap"><button class="abtn" data-uk="${esc(k.Korda_ID)}">Ubah</button> <button class="abtn danger" data-hk="${esc(k.Korda_ID)}">Hapus</button></td></tr>`).join('')}</tbody></table></div>` : '<p style="color:var(--ink-soft)">Belum ada KORDA.</p>';
+    const angs = w.angkatan || [];
+    $('list-angkatan').innerHTML = angs.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Tahun Lulus</th><th>Nama</th><th></th></tr></thead><tbody>
+      ${angs.map(a => `<tr><td><b>${esc(a.tahun_lulus)}</b></td><td>${esc(a.nama_angkatan || '')}</td><td style="white-space:nowrap"><button class="abtn" data-ua="${esc(a.Angkatan_ID)}">Ubah</button> <button class="abtn danger" data-ha="${esc(a.Angkatan_ID)}">Hapus</button></td></tr>`).join('')}</tbody></table></div>` : '<p style="color:var(--ink-soft)">Belum ada angkatan.</p>';
+    $('list-korda').querySelectorAll('[data-uk]').forEach(b => b.addEventListener('click', () => {
+      const k = ks.find(x => x.Korda_ID === b.dataset.uk); if (!k) return;
+      editK = k.Korda_ID; $('k-nama').value = k.nama_korda || ''; $('k-wilayah').value = k.wilayah || ''; $('k-prov').value = k.provinsi || '';
+      $('k-koord').value = k.koordinator_nama || ''; $('k-wa').value = k.koordinator_whatsapp || ''; $('k-ket').value = k.keterangan || '';
+      $('k-aktif').checked = String(k.is_active) === 'TRUE' || k.is_active === true; $('k-batal').style.display = 'inline-block';
+    }));
+    $('list-korda').querySelectorAll('[data-hk]').forEach(b => b.addEventListener('click', async () => {
+      if (!confirm('Hapus KORDA ini?')) return;
+      try { await HisaData.apiCall('pengurus.korda.delete', { Korda_ID: b.dataset.hk }); toast('KORDA dihapus'); muat(); } catch(e){ toast('Gagal: ' + e.message); }
+    }));
+    $('list-angkatan').querySelectorAll('[data-ua]').forEach(b => b.addEventListener('click', () => {
+      const a = angs.find(x => x.Angkatan_ID === b.dataset.ua); if (!a) return;
+      editA = a.Angkatan_ID; $('a-tahun').value = a.tahun_lulus || ''; $('a-nama').value = a.nama_angkatan || ''; $('a-ket').value = a.keterangan || ''; $('a-batal').style.display = 'inline-block';
+    }));
+    $('list-angkatan').querySelectorAll('[data-ha]').forEach(b => b.addEventListener('click', async () => {
+      if (!confirm('Hapus angkatan ini?')) return;
+      try { await HisaData.apiCall('pengurus.angkatan.delete', { Angkatan_ID: b.dataset.ha }); toast('Angkatan dihapus'); muat(); } catch(e){ toast('Gagal: ' + e.message); }
+    }));
+  }
+  $('k-batal').addEventListener('click', () => { editK = ''; $('form-korda').reset(); $('k-aktif').checked = true; $('k-batal').style.display = 'none'; });
+  $('a-batal').addEventListener('click', () => { editA = ''; $('form-angkatan').reset(); $('a-batal').style.display = 'none'; });
+  $('form-korda').addEventListener('submit', async e => {
+    e.preventDefault();
+    try { await HisaData.apiCall('pengurus.korda.save', { Korda_ID: editK, nama_korda: $('k-nama').value.trim(), wilayah: $('k-wilayah').value.trim(), provinsi: $('k-prov').value.trim(), koordinator_nama: $('k-koord').value.trim(), koordinator_whatsapp: $('k-wa').value.trim(), keterangan: $('k-ket').value.trim(), is_active: $('k-aktif').checked });
+      toast('KORDA tersimpan'); editK = ''; $('form-korda').reset(); $('k-aktif').checked = true; muat(); } catch(err){ toast('Gagal: ' + err.message); }
+  });
+  $('form-angkatan').addEventListener('submit', async e => {
+    e.preventDefault();
+    try { await HisaData.apiCall('pengurus.angkatan.save', { Angkatan_ID: editA, tahun_lulus: $('a-tahun').value, nama_angkatan: $('a-nama').value.trim(), keterangan: $('a-ket').value.trim() });
+      toast('Angkatan tersimpan'); editA = ''; $('form-angkatan').reset(); muat(); } catch(err){ toast('Gagal: ' + err.message); }
+  });
+  muat();
+})();
+</script>
+</body>
+</html>
