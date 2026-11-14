@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /pendataan/admin/
+Disallow: /pendataan/akun/
+
+Sitemap: https://hisaniyah.or.id/sitemap.xml
