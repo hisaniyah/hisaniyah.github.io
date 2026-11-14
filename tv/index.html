@@ -4,12 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HISANIYAH TV — HISANIYAH</title>
-<meta name="description" content="HISANIYAH TV — video dokumentasi dan kajian.">
+<meta name="description" content="HISANIYAH TV — kanal YouTube resmi HISANIYAH.">
+<meta http-equiv="refresh" content="0; url=https://youtube.com/@hisaniyahtv">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/variables.css">
 <link rel="stylesheet" href="/assets/css/base.css">
 <link rel="stylesheet" href="/assets/css/components.css">
@@ -18,24 +16,15 @@
 <body>
 <div id="site-header"></div>
 <main>
-<section class="page-hero"><div class="container">
-  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>HISANIYAH TV</span></nav>
-  <h1>HISANIYAH TV</h1>
-  <p>Dokumentasi video kegiatan, kajian, dan sambutan HISANIYAH — terintegrasi dengan kanal YouTube resmi.</p>
+<section class="section"><div class="container" style="text-align:center;padding:40px 0">
+  <h1 style="margin-bottom:12px">HISANIYAH TV</h1>
+  <p class="lead" style="margin:0 auto 22px">Anda sedang dialihkan ke kanal YouTube resmi HISANIYAH TV…</p>
+  <a class="btn btn-orange" href="https://youtube.com/@hisaniyahtv">Buka YouTube HISANIYAH TV</a>
 </div></section>
-<section class="section"><div class="container">
- <div class="tv-feature"><div class="tv-screen"><div><span class="play"><span data-ic="play"></span></span><h3 id="tv-title">Video Unggulan HISANIYAH TV</h3><p style="color:#CDEDEA" id="tv-cat">Pilih video di bawah untuk melihat judulnya di sini. Pemutaran video akan terhubung ke kanal YouTube resmi HISANIYAH.</p></div></div></div>
- <div class="tv-grid"><button class="card tv-card" data-vtitle="Dokumentasi Silaturahmi Akbar Alumni" data-vcat="Dokumentasi kegiatan"><span class="thumb"><span class="thumb-ph" style="background:linear-gradient(135deg,#014F4F,#027C78);height:100%"><span data-ic="play"></span></span><span class="dur">12:40</span></span><span class="body"><span class="chip">Dokumentasi kegiatan</span><h3>Dokumentasi Silaturahmi Akbar Alumni</h3></span></button><button class="card tv-card" data-vtitle="Sambutan Ketua Umum HISANIYAH" data-vcat="Sambutan"><span class="thumb"><span class="thumb-ph" style="background:linear-gradient(135deg,#014F4F,#027C78);height:100%"><span data-ic="play"></span></span><span class="dur">06:15</span></span><span class="body"><span class="chip">Sambutan</span><h3>Sambutan Ketua Umum HISANIYAH</h3></span></button><button class="card tv-card" data-vtitle="Kajian: Peran Alumni untuk Umat" data-vcat="Kajian"><span class="thumb"><span class="thumb-ph" style="background:linear-gradient(135deg,#014F4F,#027C78);height:100%"><span data-ic="play"></span></span><span class="dur">38:02</span></span><span class="body"><span class="chip">Kajian</span><h3>Kajian: Peran Alumni untuk Umat</h3></span></button><button class="card tv-card" data-vtitle="Profil Singkat HISANIYAH" data-vcat="Dokumentasi organisasi"><span class="thumb"><span class="thumb-ph" style="background:linear-gradient(135deg,#014F4F,#027C78);height:100%"><span data-ic="play"></span></span><span class="dur">04:47</span></span><span class="body"><span class="chip">Dokumentasi organisasi</span><h3>Profil Singkat HISANIYAH</h3></span></button><button class="card tv-card" data-vtitle="Pembentukan KORDA Malang" data-vcat="Dokumentasi kegiatan"><span class="thumb"><span class="thumb-ph" style="background:linear-gradient(135deg,#014F4F,#027C78);height:100%"><span data-ic="play"></span></span><span class="dur">09:31</span></span><span class="body"><span class="chip">Dokumentasi kegiatan</span><h3>Pembentukan KORDA Malang</h3></span></button><button class="card tv-card" data-vtitle="Seminar Keilmuan — Sesi Materi" data-vcat="Seminar"><span class="thumb"><span class="thumb-ph" style="background:linear-gradient(135deg,#014F4F,#027C78);height:100%"><span data-ic="play"></span></span><span class="dur">45:20</span></span><span class="body"><span class="chip">Seminar</span><h3>Seminar Keilmuan — Sesi Materi</h3></span></button></div>
- <div style="height:26px"></div><p class="lead"><em>Daftar di atas adalah contoh tampilan Tahap 2. Video tidak diunggah ke hosting website — seluruh video diputar melalui YouTube.</em></p></div></section>
 </main>
 <div id="site-footer"></div>
 <script src="/assets/js/components.js"></script>
 <script src="/assets/js/main.js"></script>
-<script>document.querySelectorAll('[data-ic]').forEach(el=>{el.innerHTML=icon(el.dataset.ic);});
-document.querySelectorAll('.tv-card').forEach(b=>b.addEventListener('click',()=>{
-  document.getElementById('tv-title').textContent=b.dataset.vtitle;
-  document.getElementById('tv-cat').textContent='Kategori: '+b.dataset.vcat+' — video diputar melalui YouTube HISANIYAH TV setelah kanal resmi terhubung.';
-  window.scrollTo({top:120,behavior:'smooth'});
-}));</script>
+<script>location.replace('https://youtube.com/@hisaniyahtv');</script>
 </body>
 </html>
