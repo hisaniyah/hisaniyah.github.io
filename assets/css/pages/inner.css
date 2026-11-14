@@ -74,6 +74,7 @@
 .leader-card{text-align:center;padding:22px 18px}
 .leader-photo{width:104px;height:104px;margin:0 auto 14px;border-radius:50%;background:linear-gradient(150deg,var(--teal) 0%,#027C78 100%);display:grid;place-items:center;border:3px solid var(--teal-pale);box-shadow:0 6px 18px rgba(1,103,103,.25)}
 .leader-photo span{font-size:34px;font-weight:800;color:#fff;letter-spacing:1px}
+.leader-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;border-radius:50%;display:block}
 .leader-card .role{color:var(--orange);font-weight:800;font-size:13.5px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
 .leader-card h3{font-size:18.5px;margin-bottom:6px}
 .leader-card p{color:var(--ink-soft);font-size:14.5px}
