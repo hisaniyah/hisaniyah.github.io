@@ -25,8 +25,13 @@
 </div></section>
 <section class="section"><div class="container">
 <div class="cat-row" id="cat-row"></div>
-<div class="grid-3" id="article-grid"><p class="lead">Memuat berita…</p></div>
+<div class="news-layout">
+<div>
+<div class="grid-3" id="article-grid" style="grid-template-columns:repeat(auto-fill,minmax(250px,1fr))"><p class="lead">Memuat berita…</p></div>
 <p id="no-result" class="lead" style="display:none;margin-top:20px">Belum ada artikel pada kategori ini.</p>
+</div>
+<div id="populer-box"></div>
+</div>
 </div></section>
 </main>
 <div id="site-footer"></div>
@@ -63,6 +68,14 @@
     row.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
     b.classList.add('active'); render(b.dataset.filter);
   });
+
+  function populerHTML(excludeId){
+    const items = HisaData.terbit().filter(x => x.Berita_ID !== excludeId)
+      .sort((a,b) => (String(b.unggulan)==='TRUE') - (String(a.unggulan)==='TRUE') || String(b.publish_at).localeCompare(String(a.publish_at))).slice(0,5);
+    return '<aside class="card pop-card"><h3>Berita Populer</h3><ol class="pop-list">' + items.map((o,i) =>
+      '<li><span class="pop-num">' + String(i+1).padStart(2,'0') + '</span><div><a href="/berita/detail/?slug=' + encodeURIComponent(o.slug) + '">' + esc(o.judul) + '</a><span class="pop-meta">' + esc(fmtDate(o.publish_at)) + ' \u00B7 ' + esc(HisaData.kategoriNama(o.Kategori_ID)) + '</span></div></li>').join('') + '</ol></aside>';
+  }
+  document.getElementById('populer-box').innerHTML = populerHTML('');
   render('');
 })();
 </script>
