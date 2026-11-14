@@ -42,7 +42,7 @@
         <p class="hero-desc">Wadah silaturahmi, sinergi, dan pengabdian para santri dan alumni untuk kemaslahatan umat dan almamater.</p>
         <div class="hero-cta">
           <a class="btn btn-teal" href="/pendataan/"><span data-ic="users"></span>Pendataan Alumni <span data-ic="arrowR"></span></a>
-          <a class="btn btn-outline" href="/tv/"><span data-ic="play"></span>HISANIYAH TV</a>
+          <a class="btn btn-outline" href="https://youtube.com/@hisaniyahtv"><span data-ic="play"></span>HISANIYAH TV</a>
         </div>
       </div>
       <div class="hero-logo">
@@ -60,7 +60,7 @@
 
   <div class="hero-actions">
     <a class="btn btn-teal" href="/pendataan/"><span data-ic="users"></span>Pendataan Alumni <span data-ic="arrowR"></span></a>
-    <a class="btn btn-outline" href="/tv/"><span data-ic="play"></span>HISANIYAH TV</a>
+    <a class="btn btn-outline" href="https://youtube.com/@hisaniyahtv"><span data-ic="play"></span>HISANIYAH TV</a>
   </div>
 
   <!-- MENU SHORTCUT — 8 kartu persis referensi -->
@@ -141,7 +141,7 @@ const SHORTCUTS = [
   {t:'Program &', s:'Kegiatan', href:'/program/', ic:'calendar'},
   {t:'Berita &', s:'Artikel', href:'/berita/', ic:'news'},
   {t:'Galeri', s:'Kegiatan', href:'/galeri/', ic:'gallery'},
-  {t:'HISANIYAH', s:'TV', href:'/tv/', ic:'tv'}
+  {t:'HISANIYAH', s:'TV', href:'https://youtube.com/@hisaniyahtv', ic:'tv'}
 ];
 document.getElementById('shortcut-grid').innerHTML = SHORTCUTS.map(x =>
   `<a class="shortcut" href="${x.href}"><span class="ic">${icon(x.ic)}</span><strong>${x.t}</strong>${x.s?`<small>${x.s}</small>`:''}</a>`).join('');
