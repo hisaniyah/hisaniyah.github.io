@@ -76,11 +76,21 @@
       </div>
       ${k.alumni.Status_Verifikasi === 'terverifikasi' ? `
       <div class="kartu-anggota">
-        <img class="logo" src="/assets/img/logo-hisaniyah-trans-256.png" alt="Logo HISANIYAH">
-        <div><p style="font-weight:800;letter-spacing:.6px;font-size:12px">KARTU ANGGOTA DIGITAL — HISANIYAH</p>
-        <h4>${esc(k.alumni.Nama)}</h4>
-        <p>No. Anggota ${esc(k.alumni.no_anggota || '-')} · ${esc(k.alumni.angkatan_label || '')}${k.alumni.korda_label ? ' · ' + esc(k.alumni.korda_label) : ''}</p></div>
-        <img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}">
+        <div class="ka-head">
+          <img class="logo" src="/assets/img/logo-hisaniyah-trans-256.png" alt="Logo HISANIYAH">
+          <div class="ka-org"><strong>HISANIYAH</strong><span>Himpunan Santri-Alumni K.H. Yahya Syabrawi</span></div>
+          <span class="ka-badge">KARTU ANGGOTA</span>
+        </div>
+        <div class="ka-body">
+          <div class="ka-info">
+            <span class="ka-label">Nama Anggota</span>
+            <h4>${esc(k.alumni.Nama)}</h4>
+            <span class="ka-label">Nomor Anggota</span>
+            <p class="ka-nomor">${esc(k.alumni.no_anggota || '-')}</p>
+            <p class="ka-meta">${esc(k.alumni.angkatan_label || '')}${k.alumni.korda_label ? ' · ' + esc(k.alumni.korda_label) : ''}</p>
+          </div>
+          <div class="ka-qr"><img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}"><span>Pindai untuk verifikasi</span></div>
+        </div>
       </div>` : ''}`).join('') : '<div class="notice">Belum ada data alumni. Tekan "Tambah Data Alumni" untuk mendaftarkan diri Anda atau anggota keluarga.</div>'}
       <p style="color:var(--ink-soft);font-size:14.5px;margin-top:8px">Satu akun Google boleh mengelola beberapa data alumni (misalnya untuk orang tua/saudara). Setiap data diverifikasi pengurus satu per satu.</p>
     </div>
