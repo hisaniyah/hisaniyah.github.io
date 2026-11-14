@@ -14,6 +14,7 @@ const ICONS = {
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
   chevD:'<svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
   chevR:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+  arrowD:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
   arrowR:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
   play:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 8.5v7l6-3.5-6-3.5Z"/></svg>',
   mega:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>',
@@ -30,7 +31,8 @@ const ICONS = {
   yt:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.5 7.2a2.8 2.8 0 0 0-2-2C18.9 4.8 12 4.8 12 4.8s-6.9 0-8.5.4a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1 11.8a29 29 0 0 0 .5 4.6 2.8 2.8 0 0 0 2 2c1.6.4 8.5.4 8.5.4s6.9 0 8.5-.4a2.8 2.8 0 0 0 2-2 29 29 0 0 0 .5-4.6 29 29 0 0 0-.5-4.6ZM9.8 15.1V8.5l5.9 3.3-5.9 3.3Z"/></svg>',
   ig:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".6" fill="currentColor"/></svg>',
   fb:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V6.8c0-.8.5-1 .9-1H17V2.5h-2.9C11.2 2.5 10 4.4 10 6.5v2H7.5V12H10v9.5h4V12h2.7l.4-3.5H14Z"/></svg>',
-  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l1-1.2c.2-.3.4-.2.7-.1l2.1 1c.3.2.5.3.6.4 0 .1 0 .7-.2 1.2Z"/></svg>'
+  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l1-1.2c.2-.3.4-.2.7-.1l2.1 1c.3.2.5.3.6.4 0 .1 0 .7-.2 1.2Z"/></svg>',
+  tt:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 3c.4 2 1.8 3.6 3.9 3.9v3c-1.6 0-3-.5-3.9-1.3v6.6c0 3.4-2.6 5.8-5.8 5.8A5.7 5.7 0 0 1 5 15.3c0-3.2 2.6-5.8 5.9-5.7c.3 0 .7 0 1 .1v3.1c-.3-.1-.6-.2-1-.2-1.5 0-2.7 1.2-2.7 2.7s1.2 2.7 2.7 2.7c1.6 0 2.8-1.2 2.8-2.9V3h2.9Z"/></svg>'
 };
 function icon(name){ return ICONS[name] || ''; }
 
@@ -49,7 +51,7 @@ const NAV = [
   {label:'Program', href:'/program/'},
   {label:'Berita', href:'/berita/'},
   {label:'Galeri', href:'/galeri/'},
-  {label:'HISANIYAH TV', href:'/tv/', icon:'tv'}
+  {label:'HISANIYAH TV', href:'https://youtube.com/@hisaniyahtv', icon:'tv'}
 ];
 
 function isActive(href){
@@ -112,10 +114,10 @@ function renderFooter(){
         </div>
         <p>Wadah silaturahmi, sinergi, dan pengabdian para santri dan alumni untuk kemaslahatan umat dan almamater.</p>
         <div class="socials">
-          <a href="/tv/" aria-label="YouTube HISANIYAH TV">${icon('yt')}</a>
-          <a href="/berita/" aria-label="Instagram HISANIYAH">${icon('ig')}</a>
-          <a href="/berita/" aria-label="Facebook HISANIYAH">${icon('fb')}</a>
-          <a href="/pendataan/" aria-label="WhatsApp HISANIYAH">${icon('wa')}</a>
+          <a href="https://youtube.com/@hisaniyahtv" aria-label="YouTube HISANIYAH TV">${icon('yt')}</a>
+          <a href="https://www.instagram.com/hisaniyah.tv" aria-label="Instagram HISANIYAH">${icon('ig')}</a>
+          <a href="https://www.facebook.com/share/19a8uf34xT/" aria-label="Facebook HISANIYAH">${icon('fb')}</a>
+          <a href="https://www.tiktok.com/@hisaniyah.tv" aria-label="TikTok HISANIYAH">${icon('tt')}</a>
         </div>
       </div>
       <div>
@@ -137,15 +139,14 @@ function renderFooter(){
           <li><a href="/program/">Program &amp; Kegiatan</a></li>
           <li><a href="/berita/">Berita &amp; Artikel</a></li>
           <li><a href="/galeri/">Galeri Kegiatan</a></li>
-          <li><a href="/tv/">HISANIYAH TV</a></li>
+          <li><a href="https://youtube.com/@hisaniyahtv">HISANIYAH TV</a></li>
         </ul>
       </div>
       <div>
         <h3>Kontak Resmi</h3>
         <ul class="footer-contact">
-          <li>${icon('pin')}<span>Sekretariat HISANIYAH<br><em>(alamat resmi menyusul)</em></span></li>
+          <li>${icon('pin')}<span>Sekretariat HISANIYAH<br>Jl. Sumber Ilmu No. 127, Ganjaran,<br>Gondanglegi, Malang, Jawa Timur 65174</span></li>
           <li>${icon('mail')}<span>info@hisaniyah.or.id</span></li>
-          <li>${icon('phone')}<span><em>(nomor resmi menyusul)</em></span></li>
           <li>${icon('clock')}<span>Layanan sekretariat mengikuti agenda organisasi</span></li>
         </ul>
       </div>
@@ -165,7 +166,7 @@ const SEARCH_INDEX = [
   {t:'Program & Kegiatan', d:'Program kerja dan agenda kegiatan', href:'/program/'},
   {t:'Berita & Artikel', d:'Portal berita dan artikel HISANIYAH', href:'/berita/'},
   {t:'Galeri Kegiatan', d:'Dokumentasi foto kegiatan', href:'/galeri/'},
-  {t:'HISANIYAH TV', d:'Video dokumentasi dan kajian', href:'/tv/'},
+  {t:'HISANIYAH TV', d:'Kanal YouTube resmi HISANIYAH', href:'https://youtube.com/@hisaniyahtv'},
   {t:'Pendataan Alumni', d:'Pendaftaran dan pengelolaan data alumni', href:'/pendataan/'},
   {t:'Seminar Keilmuan HISANIYAH', d:'Berita — tema Peran Alumni dalam Penguatan Umat', href:'/berita/'},
   {t:'Silaturahmi Akbar Alumni Se-Jawa Timur', d:'Berita kegiatan alumni', href:'/berita/'},
@@ -176,7 +177,7 @@ const SEARCH_INDEX = [
 const BOTTOM_NAV = [
   {label:'Beranda', href:'/', icon:'home', match:['/']},
   {label:'Berita', href:'/berita/', icon:'news', match:['/berita/']},
-  {label:'HISANIYAH TV', href:'/tv/', icon:'tv', match:['/tv/']},
+  {label:'HISANIYAH TV', href:'https://youtube.com/@hisaniyahtv', icon:'tv', match:['/tv/']},
   {label:'Alumni', href:'/pendataan/', icon:'users', match:['/pendataan/']},
   {label:'Akun', href:'/pendataan/akun/', icon:'user', match:['/pendataan/akun','/pendataan/masuk']}
 ];
