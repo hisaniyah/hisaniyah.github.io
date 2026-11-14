@@ -40,12 +40,21 @@
   if (!b) { box.innerHTML = '<div class="notice">Artikel tidak ditemukan atau belum diterbitkan. Kembali ke <a href="/berita/" style="text-decoration:underline">daftar berita</a>.</div>'; return; }
   document.title = b.meta_title || b.judul + ' — HISANIYAH';
   const others = HisaData.terbit().filter(x => x.Berita_ID !== b.Berita_ID).slice(0,3);
+
+  function populerHTML(excludeId){
+    const items = HisaData.terbit().filter(x => x.Berita_ID !== excludeId)
+      .sort((a,b) => (String(b.unggulan)==='TRUE') - (String(a.unggulan)==='TRUE') || String(b.publish_at).localeCompare(String(a.publish_at))).slice(0,5);
+    return '<aside class="card pop-card"><h3>Berita Populer</h3><ol class="pop-list">' + items.map((o,i) =>
+      '<li><span class="pop-num">' + String(i+1).padStart(2,'0') + '</span><div><a href="/berita/detail/?slug=' + encodeURIComponent(o.slug) + '">' + esc(o.judul) + '</a><span class="pop-meta">' + esc(fmtDate(o.publish_at)) + ' \u00B7 ' + esc(HisaData.kategoriNama(o.Kategori_ID)) + '</span></div></li>').join('') + '</ol></aside>';
+  }
   box.innerHTML = `
+    <div class="news-layout"><div>
     <span class="chip">${esc(HisaData.kategoriNama(b.Kategori_ID))}</span>
     <h2 style="font-size:clamp(26px,3.6vw,38px);font-weight:800;line-height:1.25;margin:14px 0 10px;max-width:860px">${esc(b.judul)}</h2>
     <p class="meta-date">${icon('calendar')}${esc(fmtDate(b.publish_at))} &nbsp;·&nbsp; ${esc(b.penulis || 'Admin Media HISANIYAH')}</p>
     <div style="border-radius:18px;overflow:hidden;aspect-ratio:16/7;margin:22px 0;max-width:960px">${HisaData.thumbHTML(b)}</div>
     <div class="article-body" style="max-width:760px;font-size:17.5px">${sanitize(b.isi)}</div>
+    </div><div>${populerHTML(b.Berita_ID)}</div></div>
     <div style="height:34px"></div>
     <h3 class="section-title" style="margin-bottom:18px">Berita Lainnya</h3>
     <div class="grid-3">${others.map(o => `
