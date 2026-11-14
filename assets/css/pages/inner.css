@@ -59,3 +59,12 @@
 .thumb-ph{width:100%;height:100%;display:grid;place-items:center;color:#fff;text-align:center;padding:14px;font-weight:700}
 .thumb-ph svg{width:44px;height:44px}
 .gallery-item .thumb-ph{position:absolute;inset:0}
+
+/* Isi artikel berita (halaman detail): spasi antarparagraf & kutipan */
+.article-body p{margin:0 0 1.15em;line-height:1.75}
+.article-body h2,.article-body h3{margin:1.5em 0 .55em;font-weight:800;line-height:1.3;color:var(--ink)}
+.article-body h3{font-size:21px}
+.article-body blockquote{margin:1.5em 0;padding:16px 20px;background:var(--teal-pale,#E6F4F3);border-left:4px solid var(--teal);border-radius:0 12px 12px 0;font-style:italic;line-height:1.7}
+.article-body ul,.article-body ol{margin:0 0 1.15em;padding-left:1.4em}
+.article-body li{margin-bottom:.4em}
+.article-body img{border-radius:12px;margin:1.2em 0}
