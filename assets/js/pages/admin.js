@@ -4,6 +4,7 @@ const ADMIN_NAV = [
   {label:'Berita', href:'/pendataan/admin/berita/', icon:'news', match:'/pendataan/admin/berita/', cms:true},
   {label:'Kategori', href:'/pendataan/admin/kategori/', icon:'gallery', match:'/pendataan/admin/kategori/', cms:true},
   {label:'Pengumuman', href:'/pendataan/admin/pengumuman/', icon:'mega', match:'/pendataan/admin/pengumuman/', cms:true},
+  {label:'Foto Pimpinan', href:'/pendataan/admin/pimpinan/', icon:'gallery', match:'/pendataan/admin/pimpinan/', cms:true, super:true},
   {label:'Statistik Pengurus', href:'/pendataan/admin/pengurus/', icon:'chart', match:'/pendataan/admin/pengurus/'},
   {label:'Verifikasi Alumni', href:'/pendataan/admin/pengurus/verifikasi/', icon:'shield', match:'/pendataan/admin/pengurus/verifikasi/'},
   {label:'Data Alumni', href:'/pendataan/admin/pengurus/alumni/', icon:'users', match:'/pendataan/admin/pengurus/alumni/'},
@@ -26,6 +27,7 @@ function renderAdminShell(activeMatch){
       if (!role) return true;
       if (n.cms && role === 'admin_korda') return false;
       if (n.pusat && !pusat) return false;
+      if (n.super && role !== 'super_admin') return false;
       return true;
     });
     side.innerHTML = tampil.map(n =>
