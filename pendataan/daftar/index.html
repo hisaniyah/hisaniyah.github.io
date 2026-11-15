@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar — HISANIYAH</title>
+<meta name="description" content="Daftar akun HISANIYAH dengan email.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+<link rel="stylesheet" href="/assets/css/pages/akun.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Daftar</span></nav>
+  <h1>Daftar Akun HISANIYAH</h1>
+  <p>Buat akun dengan email Anda untuk mengelola data alumni.</p>
+</div></section>
+<section class="section"><div class="container">
+<div class="login-card">
+  <img class="logo" src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH">
+  <h2 style="font-size:22px;font-weight:800">Daftar Akun Baru</h2>
+  <p style="color:var(--ink-soft);margin-top:6px">Buat akun dengan email Anda. Setelah daftar, periksa email untuk verifikasi sebelum masuk.</p>
+  <form id="form" style="display:grid;gap:11px;text-align:left;margin-top:16px">
+    <div class="field"><label for="f-nama">Nama Lengkap *</label><input id="f-nama" required maxlength="80" autocomplete="name" placeholder="Nama Anda"></div>
+    <div class="field"><label for="f-email">Email *</label><input id="f-email" type="email" required autocomplete="email" placeholder="nama@email.com"></div>
+    <div class="field"><label for="f-sandi">Kata Sandi *</label><input id="f-sandi" type="password" required minlength="8" autocomplete="new-password" placeholder="Minimal 8 karakter"></div>
+    <div class="field"><label for="f-sandi2">Ulangi Kata Sandi *</label><input id="f-sandi2" type="password" required minlength="8" autocomplete="new-password" placeholder="Ulangi kata sandi"></div>
+    <button class="btn btn-teal" type="submit" style="justify-content:center;padding:12px">Daftar</button>
+  </form>
+  <p id="status" style="font-weight:600;color:var(--ink-soft);min-height:22px;margin-top:10px"></p>
+  <p style="font-size:14px;margin-top:2px">Sudah punya akun? <a href="/pendataan/masuk/">Masuk</a></p>
+  <p style="font-size:13.5px;color:var(--ink-soft);margin-top:10px">Kata sandi tersimpan terenkripsi (hash), tidak pernah dalam bentuk asli. Punya akun Google? Anda juga bisa langsung masuk dengan tombol Google di halaman Masuk. Mendaftar akun <b>tidak otomatis</b> berarti terverifikasi sebagai alumni.</p>
+</div>
+</div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+document.getElementById('form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const st = document.getElementById('status');
+  const sandi = document.getElementById('f-sandi').value;
+  if (sandi !== document.getElementById('f-sandi2').value) { st.textContent = 'Ulangi kata sandi tidak sama.'; return; }
+  st.textContent = 'Memproses pendaftaran…';
+  try {
+    await HisaData.apiCall('auth.daftar.email', { nama: document.getElementById('f-nama').value.trim(), email: document.getElementById('f-email').value.trim(), kata_sandi: sandi });
+    document.querySelector('.login-card').innerHTML = '<img class="logo" src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH">' +
+      '<h2 style="font-size:22px;font-weight:800">Pendaftaran Diterima</h2>' +
+      '<p style="color:var(--ink-soft);margin-top:8px">Kami sudah mengirim <b>tautan verifikasi</b> ke email Anda. Klik tautan itu, lalu masuk dengan email dan kata sandi yang baru dibuat.</p>' +
+      '<p style="color:var(--ink-soft);margin-top:8px">Tidak menemukan emailnya? Periksa folder Spam/Promosi. Email dikirim dari akun Google organisasi HISANIYAH.</p>' +
+      '<a class="btn btn-teal" href="/pendataan/masuk/" style="justify-content:center;padding:12px;margin-top:14px">Ke Halaman Masuk</a>';
+  } catch(err){ st.textContent = 'Gagal daftar: ' + err.message; }
+});
+</script>
+</body>
+</html>
