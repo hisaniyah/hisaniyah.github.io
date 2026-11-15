@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Masuk — HISANIYAH</title>
-<meta name="description" content="Masuk ke akun HISANIYAH dengan Google.">
+<meta name="description" content="Masuk ke akun HISANIYAH dengan Google atau email.">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
 <section class="page-hero"><div class="container">
   <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Masuk</span></nav>
   <h1>Masuk ke HISANIYAH</h1>
-  <p>Gunakan akun Google Anda. Tidak ada kata sandi yang disimpan HISANIYAH.</p>
+  <p>Masuk dengan akun Google atau dengan email dan kata sandi Anda.</p>
 </div></section>
 <section class="section"><div class="container">
 <div class="login-card">
@@ -31,6 +31,14 @@
   <p style="color:var(--ink-soft);margin-top:6px">Masuk untuk mengelola data alumni Anda dan keluarga yang Anda bantu daftarkan.</p>
   <div id="gis-btn"></div>
   <p id="login-status" style="font-weight:600;color:var(--ink-soft);min-height:22px"></p>
+  <div style="display:flex;align-items:center;gap:12px;margin:16px 0 2px"><span style="flex:1;height:1px;background:var(--line)"></span><span style="font-size:13px;font-weight:700;color:var(--ink-soft)">atau masuk dengan email</span><span style="flex:1;height:1px;background:var(--line)"></span></div>
+  <form id="form-email" style="display:grid;gap:11px;text-align:left;margin-top:10px">
+    <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" required autocomplete="email" placeholder="nama@email.com"></div>
+    <div class="field"><label for="f-sandi">Kata Sandi</label><input id="f-sandi" type="password" required autocomplete="current-password" placeholder="Kata sandi Anda"></div>
+    <button class="btn btn-teal" type="submit" style="justify-content:center;padding:12px">Masuk dengan Email</button>
+  </form>
+  <p id="email-status" style="font-weight:600;color:var(--ink-soft);min-height:22px;margin-top:8px"></p>
+  <p style="font-size:14px;margin-top:2px"><a href="/pendataan/lupa-sandi/">Lupa kata sandi?</a> &middot; <a href="/pendataan/daftar/">Belum punya akun? Daftar</a></p>
   <p style="font-size:13.5px;color:var(--ink-soft);margin-top:10px">Dengan masuk, Anda menyetujui pengelolaan data sesuai ketentuan HISANIYAH. Masuk dengan Google <b>tidak otomatis</b> berarti terverifikasi sebagai alumni — verifikasi dilakukan pengurus dari data yang Anda kirim.</p>
 </div>
 </div></section>
@@ -46,8 +54,20 @@
   const st = document.getElementById('login-status');
   await HisaData.load();
   if (HisaData.getSession()) { location.href = '/pendataan/akun/'; return; }
+  const formEmail = document.getElementById('form-email');
+  formEmail.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const stE = document.getElementById('email-status');
+    stE.textContent = 'Memeriksa…';
+    try {
+      const hasil = await HisaData.apiCall('auth.masuk.email', { email: document.getElementById('f-email').value.trim(), kata_sandi: document.getElementById('f-sandi').value });
+      HisaData.setSession({ token: hasil.token, user: hasil.user });
+      stE.textContent = 'Berhasil masuk. Mengalihkan…';
+      location.href = '/pendataan/akun/';
+    } catch(err){ stE.textContent = 'Gagal masuk: ' + err.message; }
+  });
   const cid = window.HISA_GIS_CLIENT_ID || '';
-  if (!cid) { st.textContent = 'Login Google belum diaktifkan pengurus. Coba lagi nanti.'; return; }
+  if (!cid) { st.textContent = 'Login Google belum diaktifkan pengurus. Silakan masuk dengan email di bawah.'; return; }
   if (!HisaData.apiMode()) { st.textContent = 'Layanan akun belum terhubung ke server.'; return; }
   function initGIS(){
     if (!window.google || !google.accounts || !google.accounts.id) { setTimeout(initGIS, 400); return; }
