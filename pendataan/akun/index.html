@@ -34,6 +34,7 @@
 <script src="/assets/js/api.js"></script>
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/kta-download.js"></script>
+<script src="/assets/js/foto-crop.js"></script>
 <script>
 (async () => {
   const box = document.getElementById('akun-box');
@@ -108,16 +109,8 @@
     const st = document.querySelector('.foto-kta-status[data-alumni="' + id + '"]');
     const btn = document.querySelector('.btn-foto-kta[data-alumni="' + id + '"]');
     try {
-      if (st) st.textContent = 'Memproses foto…';
-      const url = URL.createObjectURL(f);
-      const img = new Image();
-      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
-      const maks = 800, skala = Math.min(1, maks / Math.max(img.width, img.height));
-      const cv = document.createElement('canvas');
-      cv.width = Math.round(img.width * skala); cv.height = Math.round(img.height * skala);
-      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
-      URL.revokeObjectURL(url);
-      const b64 = cv.toDataURL('image/jpeg', 0.85).split(',')[1];
+      const b64 = await cropFoto(f);
+      if (!b64) { inp.value = ''; return; }
       if (st) st.textContent = 'Mengunggah…';
       const r = await HisaData.apiCall('alumni.foto.upload', { Alumni_ID: id, base64: b64, mime: 'image/jpeg' });
       const slot = document.querySelector('[data-slot-foto="' + id + '"]');
