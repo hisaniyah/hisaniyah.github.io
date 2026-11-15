@@ -85,14 +85,14 @@
           <div class="ka-foto">${k.alumni.foto_file_id ? `<img src="https://drive.google.com/thumbnail?id=${encodeURIComponent(k.alumni.foto_file_id)}&sz=w200" alt="Foto ${esc(k.alumni.Nama)}">` : `<span>${esc((k.alumni.Nama || 'A').trim().split(/\s+/).slice(0,2).map(w => w[0]).join('').toUpperCase())}</span>`}</div>
           <div class="ka-info">
             <span class="ka-label">Nama Anggota</span>
-            <h4>${esc(k.alumni.Nama)}</h4>
+            <h4 class="${(k.alumni.Nama || '').length > 28 ? 'sangat-panjang' : (k.alumni.Nama || '').length > 18 ? 'panjang' : ''}">${esc(k.alumni.Nama)}</h4>
             <span class="ka-label">Nomor Anggota</span>
             <p class="ka-nomor">${esc(k.alumni.no_anggota || '-')}</p>
             <p class="ka-meta">${esc(k.alumni.angkatan_label || '')}${k.alumni.korda_label ? ' · ' + esc(k.alumni.korda_label) : ''}</p>
           </div>
           <div class="ka-qr"><img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}"><span>Pindai untuk verifikasi</span></div>
         </div>
-      </div>${!k.alumni.foto_file_id && k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px"><a class="btn btn-outline" href="/pendataan/akun/data/?id=${encodeURIComponent(k.alumni.Alumni_ID)}" style="padding:9px 16px">＋ Tambah Foto untuk KTA</a></div>` : ''}` : ''}`).join('') : '<div class="notice">Belum ada data alumni. Tekan "Tambah Data Alumni" untuk mendaftarkan diri Anda atau anggota keluarga.</div>'}
+      </div>${!k.alumni.foto_file_id && k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px"><a class="btn btn-outline" href="/pendataan/akun/data/?id=${encodeURIComponent(k.alumni.Alumni_ID)}" style="padding:9px 15px">＋ Tambah Foto untuk KTA</a></div>` : ''}` : ''}`).join('') : '<div class="notice">Belum ada data alumni. Tekan "Tambah Data Alumni" untuk mendaftarkan diri Anda atau anggota keluarga.</div>'}
       <p style="color:var(--ink-soft);font-size:14.5px;margin-top:8px">Satu akun Google boleh mengelola beberapa data alumni (misalnya untuk orang tua/saudara). Setiap data diverifikasi pengurus satu per satu.</p>
     </div>
   </div>`;
