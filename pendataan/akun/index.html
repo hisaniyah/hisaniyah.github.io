@@ -78,7 +78,7 @@
       <div class="kartu-anggota">
         <div class="ka-head">
           <img class="logo" src="/assets/img/logo-hisaniyah-trans-256.png" alt="Logo HISANIYAH">
-          <div class="ka-org"><strong>HISANIYAH</strong><span>Himpunan Santri-Alumni K.H. Yahya Syabrawi</span></div>
+          <div class="ka-org"><strong>HISANIYAH</strong><span>Himpunan Santri-Alumni Kabupaten Malang</span></div>
           <span class="ka-badge">KARTU ANGGOTA</span>
         </div>
         <div class="ka-body">
@@ -88,7 +88,7 @@
             <h4 class="${(k.alumni.Nama || '').length > 28 ? 'sangat-panjang' : (k.alumni.Nama || '').length > 18 ? 'panjang' : ''}">${esc(k.alumni.Nama)}</h4>
             <span class="ka-label">Nomor Anggota</span>
             <p class="ka-nomor">${esc(k.alumni.no_anggota || '-')}</p>
-            <p class="ka-meta">${esc(k.alumni.angkatan_label || '')}${k.alumni.korda_label ? ' · ' + esc(k.alumni.korda_label) : ''}</p>
+            <p class="ka-meta">${k.alumni.angkatan_label ? `<span>${esc(k.alumni.angkatan_label)}</span>` : ''}${k.alumni.korda_label ? `<span>${esc(k.alumni.korda_label)}</span>` : ''}</p>
           </div>
           <div class="ka-qr"><img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}"><span>Pindai untuk verifikasi</span></div>
         </div>
