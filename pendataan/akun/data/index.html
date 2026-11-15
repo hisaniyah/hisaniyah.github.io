@@ -49,6 +49,18 @@
   </div>
   <p id="form-status" class="field full" style="font-weight:600;color:var(--ink-soft)"></p>
 </form>
+<div id="foto-panel" hidden style="margin-top:26px;border-top:1px solid var(--line);padding-top:20px">
+  <h3 style="font-size:17px;font-weight:800;margin-bottom:6px">Foto untuk Kartu Anggota (KTA)</h3>
+  <p style="color:var(--ink-soft);font-size:14.5px;margin-bottom:14px">Foto ini tampil pada Kartu Anggota Digital alumni ini. Pakai foto wajah yang jelas; foto otomatis diperkecil sebelum diunggah. Dapat diganti kapan saja dan tidak memengaruhi status verifikasi.</p>
+  <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+    <div id="foto-preview" style="width:84px;height:104px;border-radius:12px;background:var(--teal-pale);display:grid;place-items:center;overflow:hidden;color:var(--teal);font-weight:800;font-size:26px;flex:none"></div>
+    <div style="display:grid;gap:9px;justify-items:start">
+      <input id="f-foto" type="file" accept="image/*" style="font-family:inherit;font-size:14.5px;max-width:260px">
+      <button class="btn btn-orange" id="btn-foto" type="button" style="padding:10px 18px">Unggah Foto</button>
+      <p id="foto-status" style="font-weight:600;color:var(--ink-soft);font-size:14px"></p>
+    </div>
+  </div>
+</div>
 </div>
 </div></section>
 </main>
@@ -60,6 +72,7 @@
 <script>
 (async () => {
   const $ = x => document.getElementById(x);
+  const { esc } = HisaData;
   const ses = HisaData.getSession();
   if (!ses) { location.href = '/pendataan/masuk/'; return; }
   const id = new URLSearchParams(location.search).get('id') || '';
@@ -77,6 +90,32 @@
     $('f-hub').closest('.field').style.display = 'none';
     const ang = (HisaData.cache.angkatan || []).find(a => a.Angkatan_ID === rec.Angkatan_ID);
     if (ang) $('f-lulus').value = ang.tahun_lulus || '';
+  }
+  if (id && rec) {
+    $('foto-panel').hidden = false;
+    const pv = $('foto-preview');
+    const setPv = url => { pv.innerHTML = url ? `<img src="${url}" alt="Foto alumni" style="width:100%;height:100%;object-fit:cover">` : esc((rec.Nama || 'A').trim().split(/\s+/).slice(0,2).map(w => w[0]).join('').toUpperCase()); };
+    setPv(rec.foto_file_id ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(rec.foto_file_id) + '&sz=w200' : '');
+    $('btn-foto').addEventListener('click', async () => {
+      const f = $('f-foto').files[0];
+      if (!f) { $('foto-status').textContent = 'Pilih berkas foto dulu.'; return; }
+      $('foto-status').textContent = 'Memproses foto…';
+      try {
+        const url = URL.createObjectURL(f);
+        const img = new Image();
+        await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+        const maks = 800, skala = Math.min(1, maks / Math.max(img.width, img.height));
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(img.width * skala); cv.height = Math.round(img.height * skala);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        URL.revokeObjectURL(url);
+        const b64 = cv.toDataURL('image/jpeg', 0.85).split(',')[1];
+        $('foto-status').textContent = 'Mengunggah…';
+        const r = await HisaData.apiCall('alumni.foto.upload', { Alumni_ID: id, base64: b64, mime: 'image/jpeg' });
+        rec.foto_file_id = r.foto_file_id; setPv(r.url_tampil);
+        $('foto-status').textContent = 'Foto tersimpan. Kartu Anggota Digital sudah memakai foto ini.';
+      } catch(err){ $('foto-status').textContent = 'Gagal mengunggah: ' + err.message; }
+    });
   }
   $('form').addEventListener('submit', async e => {
     e.preventDefault();
