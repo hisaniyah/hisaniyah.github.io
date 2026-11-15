@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifikasi Email — HISANIYAH</title>
+<meta name="description" content="Verifikasi email akun HISANIYAH.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+<link rel="stylesheet" href="/assets/css/pages/akun.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Verifikasi Email</span></nav>
+  <h1>Verifikasi Email</h1>
+  <p>Satu langkah terakhir untuk mengaktifkan akun Anda.</p>
+</div></section>
+<section class="section"><div class="container">
+<div class="login-card">
+  <img class="logo" src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH">
+  <h2 style="font-size:22px;font-weight:800">Verifikasi Email</h2>
+  <p id="status" style="color:var(--ink-soft);margin-top:8px;font-weight:600">Memeriksa tautan verifikasi…</p>
+  <div id="aksi" style="margin-top:14px"></div>
+</div>
+</div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+(async () => {
+  const st = document.getElementById('status');
+  const aksi = document.getElementById('aksi');
+  const token = new URLSearchParams(location.search).get('token') || '';
+  if (!token) { st.textContent = 'Tautan verifikasi tidak lengkap. Buka tautan dari email Anda.'; return; }
+  try {
+    await HisaData.apiCall('auth.email.verifikasi', { token: token });
+    st.textContent = 'Email Anda terverifikasi. Silakan masuk dengan email dan kata sandi Anda.';
+    aksi.innerHTML = '<a class="btn btn-teal" href="/pendataan/masuk/" style="justify-content:center;padding:12px">Masuk Sekarang</a>';
+  } catch(e){ st.textContent = 'Verifikasi gagal: ' + e.message; }
+})();
+</script>
+</body>
+</html>
