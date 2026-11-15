@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foto Pimpinan — Admin CMS HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>Foto Pimpinan</h1>
+<p class="admin-sub">Ganti foto pimpinan yang tampil di halaman Kepengurusan, seperti mengganti foto profil. Foto tersimpan di Drive organisasi; setiap foto diganti, foto lama otomatis dibuang agar hemat ruang. Halaman ini khusus Super Admin.</p>
+<div class="panel"><div id="list"><p>Memuat…</p></div></div>
+<p style="color:var(--ink-soft);font-size:14px">Perubahan langsung tampil di halaman Kepengurusan website begitu foto tersimpan.</p>
+</main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/pimpinan/');</script>
+<script>
+(async () => {
+  const list = document.getElementById('list');
+  const { esc } = HisaData;
+  const PIMPINAN = [
+    { key: 'rais_syuriah', jabatan: 'Rais Syuriah', nama: 'KH. Nasihuddin Al-Khuzaini', berkas: 'rais-syuriah.jpg' },
+    { key: 'katib', jabatan: 'Katib', nama: 'Gus Muhammad Hilal, M.Fil', berkas: 'katib.jpg' },
+    { key: 'ketua_umum', jabatan: 'Ketua Umum', nama: 'H. Mukhlis, S.Pd', berkas: 'ketua-umum.jpg' },
+    { key: 'sekjen', jabatan: 'Sekretaris Jenderal', nama: 'Abdur Rofik, M.Pd', berkas: 'sekjen.jpg' },
+    { key: 'bendahara', jabatan: 'Bendahara', nama: 'Ust. Syukron Muadzin, S.Pd', berkas: 'bendahara.jpg' }
+  ];
+  await HisaData.load();
+  const ses = HisaData.getSession();
+  if (!HisaData.apiMode()) {
+    list.innerHTML = '<p>Mode uji lokal: mengganti foto pimpinan memerlukan website yang terhubung ke database. Silakan buka panel ini dari website resmi hisaniyah.or.id dan masuk sebagai Super Admin.</p>';
+    return;
+  }
+  if (!ses || !ses.user || ses.user.Role !== 'super_admin') {
+    list.innerHTML = '<p><strong>Khusus Super Admin.</strong> Akun Anda tidak berhak mengganti foto pimpinan.</p>';
+    return;
+  }
+  const pf = (HisaData.cache && HisaData.cache.pimpinan_foto) || {};
+  const srcAwal = p => pf[p.key]
+    ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(pf[p.key]) + '&sz=w200'
+    : '/assets/img/pimpinan/' + p.berkas;
+  list.innerHTML = PIMPINAN.map(p => `
+    <div style="display:flex;gap:16px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line);flex-wrap:wrap">
+      <img id="pv-${p.key}" src="${esc(srcAwal(p))}" alt="Foto ${esc(p.nama)}" style="width:74px;height:92px;object-fit:cover;border-radius:12px;border:1px solid var(--line);flex:none">
+      <div style="flex:1;min-width:180px">
+        <p style="font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--orange);margin:0 0 2px">${esc(p.jabatan)}</p>
+        <strong style="font-size:16.5px">${esc(p.nama)}</strong>
+        <p id="st-${p.key}" style="color:var(--ink-soft);font-size:13.5px;margin:4px 0 0"></p>
+      </div>
+      <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+        <input type="file" id="f-${p.key}" accept="image/*" style="max-width:230px">
+        <button class="btn btn-teal" data-ganti="${p.key}" style="padding:10px 18px">Ganti Foto</button>
+      </div>
+    </div>`).join('');
+  list.addEventListener('click', async e => {
+    const btn = e.target.closest('[data-ganti]');
+    if (!btn) return;
+    const p = PIMPINAN.find(x => x.key === btn.dataset.ganti);
+    const f = document.getElementById('f-' + p.key).files[0];
+    const st = document.getElementById('st-' + p.key);
+    if (!f) { st.textContent = 'Pilih berkas foto dulu.'; return; }
+    st.textContent = 'Memproses foto…';
+    btn.disabled = true;
+    try {
+      const url = URL.createObjectURL(f);
+      const img = new Image();
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+      const maks = 800, skala = Math.min(1, maks / Math.max(img.width, img.height));
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * skala); cv.height = Math.round(img.height * skala);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      URL.revokeObjectURL(url);
+      const b64 = cv.toDataURL('image/jpeg', 0.85).split(',')[1];
+      st.textContent = 'Mengunggah…';
+      const r = await HisaData.apiCall('admin.pimpinan.foto.upload', { jabatan: p.key, base64: b64, mime: 'image/jpeg' });
+      if (HisaData.cache) { HisaData.cache.pimpinan_foto = HisaData.cache.pimpinan_foto || {}; HisaData.cache.pimpinan_foto[p.key] = r.foto_file_id; }
+      document.getElementById('pv-' + p.key).src = r.url_tampil;
+      st.textContent = 'Foto tersimpan dan sudah tampil di website. Foto lama sudah dibuang dari Drive.';
+      toast('Foto ' + p.jabatan + ' diganti');
+    } catch(err) { st.textContent = 'Gagal mengunggah: ' + err.message; }
+    btn.disabled = false;
+  });
+})();
+</script>
+</body>
+</html>
