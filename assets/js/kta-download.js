@@ -24,6 +24,22 @@
     });
   }
 
+  /* Foto diambil lewat backend sebagai base64 (berkas Drive tidak bisa dimuat
+     lintas-asal ke canvas); cadangan terakhir: muat URL langsung, lalu inisial. */
+  async function muatFoto(d) {
+    if (!d.foto) return null;
+    if (d.alumni && window.HisaData && HisaData.apiCall) {
+      try {
+        var r = await HisaData.apiCall('alumni.foto.data', { Alumni_ID: d.alumni });
+        if (r && r.ada && r.base64) {
+          var im = await muatGambar('data:' + (r.mime || 'image/jpeg') + ';base64,' + r.base64, false);
+          if (im) return im;
+        } else if (r && !r.ada) return null;
+      } catch (e) {}
+    }
+    return muatGambar(d.foto, true);
+  }
+
   function gambarContain(ctx, img, x, y, w, h) {
     var s = Math.min(w / img.naturalWidth, h / img.naturalHeight);
     var dw = img.naturalWidth * s, dh = img.naturalHeight * s;
@@ -68,7 +84,7 @@
 
     var hasil = await Promise.all([
       muatGambar('/assets/img/logo-hisaniyah-trans-256.png', false),
-      d.foto ? muatGambar(d.foto, true) : Promise.resolve(null),
+      muatFoto(d),
       muatGambar('https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=6&data=' +
         encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + (d.kode || '')), true)
     ]);
@@ -192,6 +208,7 @@
 
   async function unduhKTA(btn) {
     var d = {
+      alumni: btn.getAttribute('data-alumni') || '',
       nama: btn.getAttribute('data-nama') || '',
       nomor: btn.getAttribute('data-nomor') || '',
       angkatan: btn.getAttribute('data-angkatan') || '',
