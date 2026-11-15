@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atur Ulang Kata Sandi — HISANIYAH</title>
+<meta name="description" content="Buat kata sandi baru akun HISANIYAH.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/inner.css">
+<link rel="stylesheet" href="/assets/css/pages/akun.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="page-hero"><div class="container">
+  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Atur Ulang Kata Sandi</span></nav>
+  <h1>Atur Ulang Kata Sandi</h1>
+  <p>Buat kata sandi baru yang kuat dan mudah Anda ingat.</p>
+</div></section>
+<section class="section"><div class="container">
+<div class="login-card">
+  <img class="logo" src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH">
+  <h2 style="font-size:22px;font-weight:800">Buat Kata Sandi Baru</h2>
+  <p style="color:var(--ink-soft);margin-top:6px">Masukkan kata sandi baru untuk akun Anda.</p>
+  <form id="form" style="display:grid;gap:11px;text-align:left;margin-top:16px">
+    <div class="field"><label for="f-sandi">Kata Sandi Baru *</label><input id="f-sandi" type="password" required minlength="8" autocomplete="new-password" placeholder="Minimal 8 karakter"></div>
+    <div class="field"><label for="f-sandi2">Ulangi Kata Sandi Baru *</label><input id="f-sandi2" type="password" required minlength="8" autocomplete="new-password" placeholder="Ulangi kata sandi baru"></div>
+    <button class="btn btn-teal" type="submit" style="justify-content:center;padding:12px">Simpan Kata Sandi Baru</button>
+  </form>
+  <p id="status" style="font-weight:600;color:var(--ink-soft);min-height:22px;margin-top:10px"></p>
+</div>
+</div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+(async () => {
+  const st = document.getElementById('status');
+  const token = new URLSearchParams(location.search).get('token') || '';
+  if (!token) { st.textContent = 'Tautan atur ulang tidak lengkap. Minta tautan baru dari halaman Lupa Kata Sandi.'; document.getElementById('form').style.display = 'none'; return; }
+  document.getElementById('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const sandi = document.getElementById('f-sandi').value;
+    if (sandi !== document.getElementById('f-sandi2').value) { st.textContent = 'Ulangi kata sandi tidak sama.'; return; }
+    st.textContent = 'Menyimpan…';
+    try {
+      await HisaData.apiCall('auth.atur.ulang', { token: token, kata_sandi_baru: sandi });
+      document.querySelector('.login-card').innerHTML = '<img class="logo" src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH">' +
+        '<h2 style="font-size:22px;font-weight:800">Kata Sandi Diperbarui</h2>' +
+        '<p style="color:var(--ink-soft);margin-top:8px">Kata sandi baru sudah tersimpan. Silakan masuk dengan kata sandi baru Anda.</p>' +
+        '<a class="btn btn-teal" href="/pendataan/masuk/" style="justify-content:center;padding:12px;margin-top:14px">Masuk Sekarang</a>';
+    } catch(err){ st.textContent = 'Gagal: ' + err.message; }
+  });
+})();
+</script>
+</body>
+</html>
