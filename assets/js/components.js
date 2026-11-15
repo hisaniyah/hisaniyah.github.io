@@ -85,12 +85,12 @@ function renderHeader(){
       <div class="header-actions">
         <button class="search-btn" id="btn-search" aria-label="Cari di website">${icon('search')}</button>
         <a class="akun-chip" data-akun-chip href="/pendataan/masuk/" style="display:none"></a>
-        <a class="cta-daftar" href="/pendataan/">${icon('users')}<span>Pendataan Alumni</span></a>
+        <a class="cta-daftar" data-cta-akun href="/pendataan/masuk/">${icon('user')}<span>Login / Daftar</span></a>
         <button class="burger" id="btn-burger" aria-label="Buka menu">${icon('menu')}</button>
       </div>
     </div>
     <div class="mobile-menu" id="mobile-menu"><button class="m-search" id="m-search">${icon('search')}<span>Pencarian</span></button>${mobile}
-      <a class="cta-daftar" href="/pendataan/">${icon('users')}<span>Pendataan Alumni</span></a>
+      <a class="cta-daftar" data-cta-akun href="/pendataan/masuk/">${icon('user')}<span>Login / Daftar</span></a>
     </div>
   </header>
   <div class="search-overlay" id="search-overlay" role="dialog" aria-modal="true" aria-label="Pencarian">
@@ -134,7 +134,7 @@ function renderFooter(){
       <div>
         <h3>Layanan Alumni</h3>
         <ul>
-          <li><a href="/pendataan/">Pendataan Alumni</a></li>
+          <li><a href="/pendataan/masuk/">Pendataan Alumni</a></li>
           <li><a href="/kebijakan-privasi/">Kebijakan Privasi</a></li>
           <li><a href="/program/">Program &amp; Kegiatan</a></li>
           <li><a href="/berita/">Berita &amp; Artikel</a></li>
@@ -167,7 +167,7 @@ const SEARCH_INDEX = [
   {t:'Berita & Artikel', d:'Portal berita dan artikel HISANIYAH', href:'/berita/'},
   {t:'Galeri Kegiatan', d:'Dokumentasi foto kegiatan', href:'/galeri/'},
   {t:'HISANIYAH TV', d:'Kanal YouTube resmi HISANIYAH', href:'https://youtube.com/@hisaniyahtv'},
-  {t:'Pendataan Alumni', d:'Pendaftaran dan pengelolaan data alumni', href:'/pendataan/'},
+  {t:'Pendataan Alumni', d:'Pendaftaran dan pengelolaan data alumni', href:'/pendataan/masuk/'},
   {t:'Seminar Keilmuan HISANIYAH', d:'Berita — tema Peran Alumni dalam Penguatan Umat', href:'/berita/'},
   {t:'Silaturahmi Akbar Alumni Se-Jawa Timur', d:'Berita kegiatan alumni', href:'/berita/'},
   {t:'Pembentukan KORDA Baru di Malang', d:'Berita organisasi', href:'/berita/'}
@@ -178,8 +178,8 @@ const BOTTOM_NAV = [
   {label:'Beranda', href:'/', icon:'home', match:['/']},
   {label:'Berita', href:'/berita/', icon:'news', match:['/berita/']},
   {label:'HISANIYAH TV', href:'https://youtube.com/@hisaniyahtv', icon:'tv', match:['/tv/']},
-  {label:'Alumni', href:'/pendataan/', icon:'users', match:['/pendataan/']},
-  {label:'Akun', href:'/pendataan/akun/', icon:'user', match:['/pendataan/akun','/pendataan/masuk']}
+  {label:'Alumni', href:'/pendataan/masuk/', icon:'users', match:['/pendataan/masuk','/pendataan/daftar','/pendataan/lupa-sandi','/pendataan/atur-ulang','/pendataan/verifikasi-email']},
+  {label:'Akun', href:'/pendataan/akun/', icon:'user', match:['/pendataan/akun']}
 ];
 function renderBottomNav(){
   const path = location.pathname;
@@ -194,6 +194,7 @@ function renderBottomNav(){
 document.addEventListener('DOMContentLoaded', () => {
   try {
     const ses = JSON.parse(localStorage.getItem('hisa_session') || 'null');
+    if (ses && ses.user) document.querySelectorAll('[data-cta-akun]').forEach(el => { el.href = '/pendataan/akun/'; el.innerHTML = el.innerHTML.replace('Login / Daftar', 'Akun Saya'); });
     document.querySelectorAll('[data-akun-chip]').forEach(el => {
       if (ses && ses.user) {
         el.href = '/pendataan/akun/';
