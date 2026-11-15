@@ -12,7 +12,7 @@
   async function daftarkanToken(token){
     try {
       localStorage.setItem('hisa_fcm_token', token);
-      if (window.HisaData && HisaData.getSession()) {
+      if (typeof HisaData !== 'undefined' && HisaData.getSession()) {
         await HisaData.apiCall('perangkat.daftar', { fcm_token: token, platform: 'android' });
       }
     } catch(e){}
