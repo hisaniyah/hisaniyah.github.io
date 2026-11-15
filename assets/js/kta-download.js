@@ -28,7 +28,7 @@
      lintas-asal ke canvas); cadangan terakhir: muat URL langsung, lalu inisial. */
   async function muatFoto(d) {
     if (!d.foto) return null;
-    if (d.alumni && window.HisaData && HisaData.apiCall) {
+    if (d.alumni && typeof HisaData !== 'undefined' && HisaData.apiCall) {
       try {
         var r = await HisaData.apiCall('alumni.foto.data', { Alumni_ID: d.alumni });
         if (r && r.ada && r.base64) {
