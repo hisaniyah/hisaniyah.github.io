@@ -33,6 +33,7 @@
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/api.js"></script>
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/kta-download.js"></script>
 <script>
 (async () => {
   const box = document.getElementById('akun-box');
@@ -92,10 +93,11 @@
           </div>
           <div class="ka-qr"><img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}"><span>Pindai untuk verifikasi</span></div>
         </div>
-      </div>${!k.alumni.foto_file_id && k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px"><a class="btn btn-outline" href="/pendataan/akun/data/?id=${encodeURIComponent(k.alumni.Alumni_ID)}" style="padding:9px 15px">＋ Tambah Foto untuk KTA</a></div>` : ''}` : ''}`).join('') : '<div class="notice">Belum ada data alumni. Tekan "Tambah Data Alumni" untuk mendaftarkan diri Anda atau anggota keluarga.</div>'}
+      </div>${!k.alumni.foto_file_id && k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px"><a class="btn btn-outline" href="/pendataan/akun/data/?id=${encodeURIComponent(k.alumni.Alumni_ID)}" style="padding:9px 15px">＋ Tambah Foto untuk KTA</a></div>` : ''}<div style="margin:0 0 16px"><button type="button" class="btn btn-teal btn-unduh-kta" data-nama="${esc(k.alumni.Nama)}" data-nomor="${esc(k.alumni.no_anggota || '')}" data-angkatan="${esc(k.alumni.angkatan_label || '')}" data-korda="${esc(k.alumni.korda_label || '')}" data-foto="${k.alumni.foto_file_id ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(k.alumni.foto_file_id) + '&sz=w400' : ''}" data-kode="${esc(k.alumni.kode_verifikasi_qr || '')}" style="padding:10px 18px">⬇ Unduh KTA</button></div>` : ''}`).join('') : '<div class="notice">Belum ada data alumni. Tekan "Tambah Data Alumni" untuk mendaftarkan diri Anda atau anggota keluarga.</div>'}
       <p style="color:var(--ink-soft);font-size:14.5px;margin-top:8px">Satu akun Google boleh mengelola beberapa data alumni (misalnya untuk orang tua/saudara). Setiap data diverifikasi pengurus satu per satu.</p>
     </div>
   </div>`;
+  document.querySelectorAll('.btn-unduh-kta').forEach(b => b.addEventListener('click', () => unduhKTA(b)));
   document.getElementById('btn-keluar').addEventListener('click', async () => {
     try { await HisaData.apiCall('auth.logout', {}); } catch(e){}
     HisaData.clearSession(); location.href = '/';
