@@ -26,54 +26,58 @@
 @media (max-width:900px){ .akun-grid{grid-template-columns:1fr} .form-grid{grid-template-columns:1fr} }
 
 /* Kartu Anggota Digital — desain ulang minimalis modern (teal + oranye) */
-.kartu-anggota{position:relative;overflow:hidden;margin:0 0 16px;max-width:560px;aspect-ratio:85.6/54;display:flex;flex-direction:column;background:linear-gradient(135deg,#014F4F 0%,var(--teal) 58%,#027C78 100%);color:#fff;border-radius:20px;padding:22px 24px 24px;box-shadow:0 16px 34px rgba(1,80,80,.28)}
+.kartu-anggota{position:relative;overflow:hidden;margin:0 0 16px;max-width:560px;aspect-ratio:85.6/54;display:flex;flex-direction:column;background:linear-gradient(120deg,#014545 0%,#015C5C 45%,var(--teal) 72%,#027C78 100%);color:#fff;border-radius:20px;padding:22px 24px 28px;box-shadow:0 16px 34px rgba(1,80,80,.28)}
 .kartu-anggota::before{content:"";position:absolute;right:-70px;top:-80px;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,rgba(254,136,13,.38),rgba(254,136,13,0) 70%);pointer-events:none}
-.kartu-anggota::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,var(--orange),#FFB25E)}
-.ka-head{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.18);position:relative}
+.kartu-anggota::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:var(--orange)}
+.ka-head{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid rgba(255,255,255,.45);position:relative}
 .ka-head img.logo{width:46px;height:46px;object-fit:contain;background:#fff;border-radius:12px;padding:5px;flex:none}
-.ka-org{line-height:1.2;min-width:0}
-.ka-org strong{display:block;font-size:17px;font-weight:800;letter-spacing:1.4px}
-.ka-org span{display:block;font-size:10.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#BFE3E0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ka-org{line-height:1.25;min-width:0;border-left:2px solid rgba(255,255,255,.55);padding-left:12px}
+.ka-org strong{display:block;font-size:19px;font-weight:800;letter-spacing:2px}
+.ka-org span{display:block;font-size:10px;font-weight:600;letter-spacing:1.1px;text-transform:uppercase;color:#EAF6F5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ka-badge{margin-left:auto;flex:none;background:var(--orange);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:1.1px;padding:7px 13px;border-radius:999px;white-space:nowrap}
-.ka-body{display:flex;gap:18px;align-items:center;padding-top:14px;position:relative;flex:1;min-height:0}
-.ka-foto{width:66px;height:86px;flex:none;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.35);display:grid;place-items:center}
+.ka-body{display:flex;gap:16px;align-items:center;padding-top:14px;position:relative;flex:1;min-height:0}
+.ka-foto{width:100px;height:128px;flex:none;border-radius:14px;overflow:hidden;background:rgba(255,255,255,.14);border:3px solid #fff;display:grid;place-items:center}
 .ka-foto img{width:100%;height:100%;object-fit:cover;display:block}
-.ka-foto span{font-size:23px;font-weight:800;color:#fff;letter-spacing:1px}
-.ka-info{flex:1;min-width:0}
-.ka-label{display:block;font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#FFB25E;margin-bottom:3px}
-.ka-info h4{font-size:23px;font-weight:800;line-height:1.2;margin:0 0 13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ka-info h4.panjang{font-size:20px}
-.ka-info h4.sangat-panjang{font-size:16.5px;line-height:1.3}
-.ka-nomor{font-size:16.5px;font-weight:700;letter-spacing:1.6px;white-space:nowrap;margin:0}
-.ka-meta{font-size:13px;color:#CFEDEA;margin:9px 0 0}
+.ka-foto span{font-size:30px;font-weight:800;color:#fff;letter-spacing:1px}
+.ka-info{flex:1;min-width:0;border-left:2px solid rgba(255,255,255,.45);border-right:2px solid rgba(255,255,255,.45);padding:2px 16px}
+.ka-label{display:block;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:3px}
+.ka-info h4{font-size:29px;font-weight:800;line-height:1.2;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ka-info h4.panjang{font-size:24px}
+.ka-info h4.sangat-panjang{font-size:19px;line-height:1.3}
+.ka-nomor{font-size:23px;font-weight:800;letter-spacing:1.5px;white-space:nowrap;margin:0}
+.ka-meta{font-size:15px;line-height:1.5;color:#fff;margin:10px 0 0}
+.ka-meta span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ka-qr{flex:none;text-align:center}
-.ka-qr img.qr{width:88px;height:88px;border-radius:12px;background:#fff;padding:5px;display:block}
-.ka-qr span{display:block;font-size:9px;letter-spacing:.3px;color:#BFE3E0;margin-top:6px;width:88px}
+.ka-qr img.qr{width:104px;height:104px;border-radius:14px;background:#fff;padding:6px;display:block}
+.ka-qr span{display:block;font-size:10.5px;letter-spacing:.3px;color:#fff;margin-top:7px;width:104px}
 @media (max-width:420px){
   .kartu-anggota{padding:15px 16px 16px;border-radius:16px}
+  .kartu-anggota::after{height:6px}
   .ka-head{padding-bottom:9px;gap:9px}
   .ka-head img.logo{width:38px;height:38px;border-radius:10px;padding:4px}
-  .ka-org strong{font-size:15px}
-  .ka-org span{font-size:9px}
+  .ka-org{border-left-width:1.5px;padding-left:9px}
+  .ka-org strong{font-size:15px;letter-spacing:1.4px}
+  .ka-org span{font-size:8px;letter-spacing:.6px}
   .ka-badge{font-size:9px;padding:5px 9px}
-  .ka-body{gap:12px;padding-top:10px}
-  .ka-label{font-size:8.5px;letter-spacing:1.4px;margin-bottom:2px}
-  .ka-info h4{font-size:17.5px;margin-bottom:8px}
-  .ka-info h4.panjang{font-size:15.5px}
-  .ka-info h4.sangat-panjang{font-size:13.5px}
-  .ka-nomor{font-size:14px;letter-spacing:1px}
-  .ka-meta{font-size:11.5px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ka-foto{width:50px;height:64px;border-radius:10px}
-  .ka-foto span{font-size:17px}
-  .ka-qr img.qr{width:64px;height:64px;border-radius:10px}
-  .ka-qr span{width:64px;font-size:8px;margin-top:4px}
+  .ka-body{gap:10px;padding-top:8px}
+  .ka-info{border-left-width:1.5px;border-right-width:1.5px;padding:1px 10px}
+  .ka-label{font-size:8px;letter-spacing:1.3px;margin-bottom:2px}
+  .ka-info h4{font-size:18px;margin-bottom:6px}
+  .ka-info h4.panjang{font-size:16.5px}
+  .ka-info h4.sangat-panjang{font-size:14px}
+  .ka-nomor{font-size:15px;letter-spacing:.8px}
+  .ka-meta{font-size:11.5px;line-height:1.4;margin-top:5px}
+  .ka-foto{width:54px;height:70px;border-radius:10px;border-width:2.5px}
+  .ka-foto span{font-size:19px}
+  .ka-qr img.qr{width:60px;height:60px;border-radius:10px}
+  .ka-qr span{width:60px;font-size:8px;margin-top:4px}
 }
 @media (max-width:340px){
-  .ka-info h4{font-size:16px}
-  .ka-info h4.panjang{font-size:14.5px}
+  .ka-info h4{font-size:17px}
+  .ka-info h4.panjang{font-size:15px}
   .ka-info h4.sangat-panjang{font-size:12.5px}
-  .ka-nomor{font-size:13px}
-  .ka-foto{width:44px;height:58px}
-  .ka-qr img.qr{width:58px;height:58px}
-  .ka-qr span{width:58px}
+  .ka-nomor{font-size:13.5px}
+  .ka-foto{width:50px;height:66px}
+  .ka-qr img.qr{width:54px;height:54px}
+  .ka-qr span{width:54px}
 }
