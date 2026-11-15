@@ -73,6 +73,12 @@ function renderHeader(){
     const sub = n.drop ? n.drop.map(d=>`<a class="sub" href="${d.href}">${d.label}</a>`).join('') : '';
     return `<a href="${n.href}">${n.label}</a>${sub}`;
   }).join('');
+  let sesiUser = null;
+  try { const s = JSON.parse(localStorage.getItem('hisa_session') || 'null'); if (s && s.user) sesiUser = s.user; } catch(e){}
+  const akunHref = sesiUser ? '/pendataan/akun/' : '/pendataan/masuk/';
+  const akunLabel = sesiUser ? 'Akun Saya' : 'Login / Daftar';
+  const chipIsi = sesiUser ? (sesiUser.Foto ? `<img src="${sesiUser.Foto}" alt="" style="width:26px;height:26px;border-radius:50%">` : '') + `<span>${String(sesiUser.Nama || 'Akun').split(' ')[0]}</span>` : '';
+  const chipStyle = sesiUser ? 'display:inline-flex;align-items:center;gap:8px;font-weight:700' : 'display:none';
   return `
   <header class="site-header">
     <div class="header-in">
@@ -84,13 +90,13 @@ function renderHeader(){
       <nav class="main-nav" aria-label="Navigasi utama"><ul>${items}</ul></nav>
       <div class="header-actions">
         <button class="search-btn" id="btn-search" aria-label="Cari di website">${icon('search')}</button>
-        <a class="akun-chip" data-akun-chip href="/pendataan/masuk/" style="display:none"></a>
-        <a class="cta-daftar" data-cta-akun href="/pendataan/masuk/">${icon('user')}<span>Login / Daftar</span></a>
+        <a class="akun-chip" data-akun-chip href="${akunHref}" style="${chipStyle}">${chipIsi}</a>
+        <a class="cta-daftar" data-cta-akun href="${akunHref}">${icon('user')}<span>${akunLabel}</span></a>
         <button class="burger" id="btn-burger" aria-label="Buka menu">${icon('menu')}</button>
       </div>
     </div>
     <div class="mobile-menu" id="mobile-menu"><button class="m-search" id="m-search">${icon('search')}<span>Pencarian</span></button>${mobile}
-      <a class="cta-daftar" data-cta-akun href="/pendataan/masuk/">${icon('user')}<span>Login / Daftar</span></a>
+      <a class="cta-daftar" data-cta-akun href="${akunHref}">${icon('user')}<span>${akunLabel}</span></a>
     </div>
   </header>
   <div class="search-overlay" id="search-overlay" role="dialog" aria-modal="true" aria-label="Pencarian">
@@ -190,17 +196,4 @@ function renderBottomNav(){
   return `<nav class="bottom-nav" aria-label="Navigasi bawah">${items}</nav>`;
 }
 
-/* Chip akun pada header: tampil bila ada sesi masuk */
-document.addEventListener('DOMContentLoaded', () => {
-  try {
-    const ses = JSON.parse(localStorage.getItem('hisa_session') || 'null');
-    if (ses && ses.user) document.querySelectorAll('[data-cta-akun]').forEach(el => { el.href = '/pendataan/akun/'; el.innerHTML = el.innerHTML.replace('Login / Daftar', 'Akun Saya'); });
-    document.querySelectorAll('[data-akun-chip]').forEach(el => {
-      if (ses && ses.user) {
-        el.href = '/pendataan/akun/';
-        el.innerHTML = (ses.user.Foto ? `<img src="${ses.user.Foto}" alt="" style="width:26px;height:26px;border-radius:50%">` : '') + `<span>${String(ses.user.Nama || 'Akun').split(' ')[0]}</span>`;
-        el.style.display = 'inline-flex'; el.style.alignItems = 'center'; el.style.gap = '8px'; el.style.fontWeight = '700';
-      }
-    });
-  } catch(e){}
-});
+/* Keadaan masuk (chip akun + label tombol) kini ditentukan langsung di renderHeader() saat header digambar — tidak lagi ditukar sesudahnya. */
