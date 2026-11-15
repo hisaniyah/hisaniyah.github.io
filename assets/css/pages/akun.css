@@ -36,6 +36,9 @@
 .ka-org span{display:block;font-size:10.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#BFE3E0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ka-badge{margin-left:auto;flex:none;background:var(--orange);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:1.1px;padding:7px 13px;border-radius:999px;white-space:nowrap}
 .ka-body{display:flex;gap:18px;align-items:center;padding-top:16px;position:relative}
+.ka-foto{width:66px;height:86px;flex:none;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.35);display:grid;place-items:center}
+.ka-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.ka-foto span{font-size:23px;font-weight:800;color:#fff;letter-spacing:1px}
 .ka-info{flex:1;min-width:0}
 .ka-label{display:block;font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#FFB25E;margin-bottom:3px}
 .ka-info h4{font-size:23px;font-weight:800;line-height:1.2;margin:0 0 13px}
@@ -48,7 +51,10 @@
   .kartu-anggota{padding:18px 18px 20px}
   .ka-info h4{font-size:20px}
   .ka-nomor{font-size:15px;letter-spacing:1.2px}
-  .ka-qr img.qr{width:80px;height:80px}
-  .ka-qr span{width:80px}
+  .ka-qr img.qr{width:72px;height:72px}
+  .ka-qr span{width:72px}
+  .ka-foto{width:54px;height:72px}
+  .ka-foto span{font-size:19px}
+  .ka-body{gap:13px}
   .ka-badge{font-size:9.5px;padding:6px 10px}
 }
