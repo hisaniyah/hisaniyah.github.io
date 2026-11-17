@@ -4,7 +4,7 @@
   await HisaData.load();
   const items = HisaData.terbit();
   const { esc, fmtDate } = HisaData;
-  const link = b => `/berita/detail/?slug=${encodeURIComponent(b.slug)}`;
+  const link = b => `/berita/${encodeURIComponent(b.slug)}/`;
   /* --- Unggulan + slider HP --- */
   const slides = items.slice(0, 4);
   const dotsBox = document.getElementById('m-dots');
