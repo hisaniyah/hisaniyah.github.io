@@ -89,6 +89,7 @@
       st.textContent = 'Mengunggah…';
       const r = await HisaData.apiCall('admin.pimpinan.foto.upload', { jabatan: p.key, base64: b64, mime: 'image/jpeg' });
       if (HisaData.cache) { HisaData.cache.pimpinan_foto = HisaData.cache.pimpinan_foto || {}; HisaData.cache.pimpinan_foto[p.key] = r.foto_file_id; }
+      if (HisaData.clearPubCache) HisaData.clearPubCache();
       document.getElementById('pv-' + p.key).src = r.url_tampil;
       st.textContent = 'Foto tersimpan dan sudah tampil di website. Foto lama sudah dibuang dari Drive.';
       toast('Foto ' + p.jabatan + ' diganti');
