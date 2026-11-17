@@ -43,7 +43,7 @@
 (async () => {
   await HisaData.load();
   const { esc, fmtDate } = HisaData;
-  const link = b => '/berita/detail/?slug=' + encodeURIComponent(b.slug);
+  const link = b => '/berita/' + encodeURIComponent(b.slug) + '/';
   const row = document.getElementById('cat-row');
   const grid = document.getElementById('article-grid');
   const cats = [{Kategori_ID:'', nama:'Semua'}, ...HisaData.cache.kategori];
@@ -73,7 +73,7 @@
     const items = HisaData.terbit().filter(x => x.Berita_ID !== excludeId)
       .sort((a,b) => (String(b.unggulan)==='TRUE') - (String(a.unggulan)==='TRUE') || String(b.publish_at).localeCompare(String(a.publish_at))).slice(0,5);
     return '<aside class="card pop-card"><h3>Berita Populer</h3><ol class="pop-list">' + items.map((o,i) =>
-      '<li><span class="pop-num">' + String(i+1).padStart(2,'0') + '</span><div><a href="/berita/detail/?slug=' + encodeURIComponent(o.slug) + '">' + esc(o.judul) + '</a><span class="pop-meta">' + esc(fmtDate(o.publish_at)) + ' \u00B7 ' + esc(HisaData.kategoriNama(o.Kategori_ID)) + '</span></div></li>').join('') + '</ol></aside>';
+      '<li><span class="pop-num">' + String(i+1).padStart(2,'0') + '</span><div><a href="/berita/' + encodeURIComponent(o.slug) + '/">' + esc(o.judul) + '</a><span class="pop-meta">' + esc(fmtDate(o.publish_at)) + ' \u00B7 ' + esc(HisaData.kategoriNama(o.Kategori_ID)) + '</span></div></li>').join('') + '</ol></aside>';
   }
   document.getElementById('populer-box').innerHTML = populerHTML('');
   render('');
