@@ -54,7 +54,7 @@
     </div>
     <div class="panel"><h2>Per Angkatan</h2>${bar(s.per_angkatan)}</div>
     <div class="panel"><h2>Per KORDA</h2>${bar(s.per_korda)}</div>
-    <div class="panel"><h2>Langkah berikutnya</h2><p style="color:var(--ink-soft)">${s.menunggu > 0 ? 'Ada <b>' + s.menunggu + ' data menunggu</b> — periksa di menu <a href="/pendataan/admin/pengurus/verifikasi/" style="text-decoration:underline">Verifikasi Alumni</a>.' : 'Tidak ada antrean verifikasi saat ini.'}</p></div>`;
+    <div class="panel"><h2>Langkah berikutnya</h2><p style="color:var(--ink-soft)">${s.menunggu > 0 ? 'Ada <b>' + s.menunggu + ' data lama berstatus menunggu</b> — periksa di menu <a href="/pendataan/admin/pengurus/alumni/" style="text-decoration:underline">Data Alumni</a>.' : 'Pendaftaran baru kini langsung resmi — kelola atau nonaktifkan data melalui menu Data Alumni.'}</p></div>`;
   } catch(e){ gagal(e); }
 })();
 </script>
