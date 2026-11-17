@@ -48,6 +48,10 @@
     box.innerHTML = '<div class="notice">Tidak dapat terhubung ke server akun saat ini. Coba muat ulang halaman.</div>'; return;
   }
   const u = me.user;
+  if (u.Role === 'alumni' && !(me.kelola || []).length && !new URLSearchParams(location.search).has('lewati')) {
+    location.replace('/pendataan/akun/data/');
+    return;
+  }
   const peran = { super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', alumni: 'Alumni' }[u.Role] || u.Role;
   const stLabel = s => ({ menunggu: 'Menunggu Verifikasi', terverifikasi: 'Terverifikasi', ditolak: 'Ditolak', perlu_perbaikan: 'Perlu Perbaikan' }[s] || s);
   box.innerHTML = `
