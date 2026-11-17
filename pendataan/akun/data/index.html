@@ -27,6 +27,10 @@
 <section class="section"><div class="container">
 <div class="panel-putih">
 <h2 id="form-title" style="font-size:21px;font-weight:800;margin-bottom:16px">Tambah Data Alumni</h2>
+<div id="sambutan" style="display:none;background:#FFF4E8;border:1.5px dashed #FE880D;border-radius:12px;padding:13px 15px;margin-bottom:16px;color:#7A4A12;font-weight:600">
+  👋 Selamat datang di HISANIYAH! Akun Anda sudah jadi — satu langkah lagi: lengkapi data alumni di bawah ini agar nomor anggota &amp; kartu anggota digital (KTA) Anda langsung terbit.
+  <div style="margin-top:8px"><a href="/pendataan/akun/?lewati=1" style="color:var(--teal);font-weight:700">Lewati dulu, isi nanti →</a></div>
+</div>
 <form id="form" class="form-grid">
   <div class="field full"><label for="f-nama">Nama lengkap *</label><input id="f-nama" required maxlength="120"></div>
   <div class="field"><label for="f-tempat">Tempat lahir</label><input id="f-tempat" maxlength="60"></div>
@@ -76,6 +80,7 @@
   const ses = HisaData.getSession();
   if (!ses) { location.href = '/pendataan/masuk/'; return; }
   const id = new URLSearchParams(location.search).get('id') || '';
+  if (!id) $('sambutan').style.display = 'block';
   await HisaData.load();
   (HisaData.cache.korda || []).forEach(k => { const o = document.createElement('option'); o.value = k.Korda_ID; o.textContent = k.nama_korda; $('f-korda').appendChild(o); });
   let rec = null;
