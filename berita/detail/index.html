@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Baca Berita — HISANIYAH</title>
 <meta name="description" content="Artikel berita HISANIYAH.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HISANIYAH">
+<meta property="og:title" content="Berita HISANIYAH">
+<meta property="og:description" content="Artikel berita HISANIYAH.">
+<meta property="og:image" content="https://hisaniyah.or.id/assets/img/berita/banner-hisaniyah-sejarah.jpg">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +34,7 @@
 <script src="/assets/js/components.js"></script>
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/api.js"></script>
+<script src="/assets/js/berita-statis.js"></script>
 <script src="/assets/js/main.js"></script>
 <script>
 (async () => {
@@ -37,7 +43,8 @@
   const slug = new URLSearchParams(location.search).get('slug') || '';
   const box = document.getElementById('article-box');
   const b = HisaData.cache.berita.find(x => x.slug === slug && x.status === 'terbit');
-  if (!b) { box.innerHTML = '<div class="notice">Artikel tidak ditemukan atau belum diterbitkan. Kembali ke <a href="/berita/" style="text-decoration:underline">daftar berita</a>.</div>'; return; }
+  if (!b) { box.innerHTML = '<div class="notice">Artikel tidak ditemukan atau belum diterbitkan. Kembali ke <a href="/berita/" style="text-decoration:underline">daftar berita</a>.</div>'; return; } /*STATIS*/ /*STATIS*/ /*STATIS*/
+    if (window.HISA_STATIS_BERITA && window.HISA_STATIS_BERITA[slug]) { location.replace('/berita/' + encodeURIComponent(slug) + '/'); return; }
   document.title = b.meta_title || b.judul + ' — HISANIYAH';
   const others = HisaData.terbit().filter(x => x.Berita_ID !== b.Berita_ID).slice(0,3);
 
@@ -45,7 +52,7 @@
     const items = HisaData.terbit().filter(x => x.Berita_ID !== excludeId)
       .sort((a,b) => (String(b.unggulan)==='TRUE') - (String(a.unggulan)==='TRUE') || String(b.publish_at).localeCompare(String(a.publish_at))).slice(0,5);
     return '<aside class="card pop-card"><h3>Berita Populer</h3><ol class="pop-list">' + items.map((o,i) =>
-      '<li><span class="pop-num">' + String(i+1).padStart(2,'0') + '</span><div><a href="/berita/detail/?slug=' + encodeURIComponent(o.slug) + '">' + esc(o.judul) + '</a><span class="pop-meta">' + esc(fmtDate(o.publish_at)) + ' \u00B7 ' + esc(HisaData.kategoriNama(o.Kategori_ID)) + '</span></div></li>').join('') + '</ol></aside>';
+      '<li><span class="pop-num">' + String(i+1).padStart(2,'0') + '</span><div><a href="/berita/' + encodeURIComponent(o.slug) + '/">' + esc(o.judul) + '</a><span class="pop-meta">' + esc(fmtDate(o.publish_at)) + ' \u00B7 ' + esc(HisaData.kategoriNama(o.Kategori_ID)) + '</span></div></li>').join('') + '</ol></aside>';
   }
   box.innerHTML = `
     <div class="news-layout"><div>
@@ -58,9 +65,9 @@
     <div style="height:34px"></div>
     <h3 class="section-title" style="margin-bottom:18px">Berita Lainnya</h3>
     <div class="grid-3">${others.map(o => `
-      <article class="card article-card"><a class="thumb" href="/berita/detail/?slug=${encodeURIComponent(o.slug)}">${HisaData.thumbHTML(o)}</a>
+      <article class="card article-card"><a class="thumb" href="/berita/${encodeURIComponent(o.slug)}/">${HisaData.thumbHTML(o)}</a>
       <div class="body"><span class="meta-date">${icon('calendar')}${esc(fmtDate(o.publish_at))}</span><h3>${esc(o.judul)}</h3>
-      <a class="link-more" href="/berita/detail/?slug=${encodeURIComponent(o.slug)}">Baca Selengkapnya ${icon('arrowR')}</a></div></article>`).join('')}
+      <a class="link-more" href="/berita/${encodeURIComponent(o.slug)}/">Baca Selengkapnya ${icon('arrowR')}</a></div></article>`).join('')}
     </div>`;
   box.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = icon(el.dataset.ic); });
   HisaData.hydrateMedia(box);
