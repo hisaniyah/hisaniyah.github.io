@@ -74,7 +74,7 @@
       <div class="alumni-card">
         <div style="flex:1">
           <h4>${esc(k.alumni.Nama)}</h4>
-          <p>${esc(k.alumni.angkatan_label || '')}${k.alumni.korda_label ? ' · ' + esc(k.alumni.korda_label) : ''}${k.alumni.Tahun_Lulus ? ' · Lulus: ' + esc(k.alumni.Tahun_Lulus) : ''} · Hubungan: ${esc(k.relasi.Hubungan)}${k.relasi.Status_Akses !== 'aktif' ? ' · Akses: ' + esc(k.relasi.Status_Akses) : ''}</p>
+          <p>${esc(k.alumni.angkatan_label || '')}${k.alumni.korda_label ? ' · ' + esc(k.alumni.korda_label) : ''}${k.alumni.Tahun_Keluar ? ' · Keluar: ' + esc(k.alumni.Tahun_Keluar) : ''} · Hubungan: ${esc(k.relasi.Hubungan)}${k.relasi.Status_Akses !== 'aktif' ? ' · Akses: ' + esc(k.relasi.Status_Akses) : ''}</p>
           ${k.alumni.no_anggota ? `<p>No. Anggota: <b>${esc(k.alumni.no_anggota)}</b></p>` : ''}
         </div>
         <span class="st ${esc(k.alumni.Status_Verifikasi)}">${esc(stLabel(k.alumni.Status_Verifikasi))}</span>
