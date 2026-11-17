@@ -6,7 +6,6 @@ const ADMIN_NAV = [
   {label:'Pengumuman', href:'/pendataan/admin/pengumuman/', icon:'mega', match:'/pendataan/admin/pengumuman/', cms:true},
   {label:'Foto Pimpinan', href:'/pendataan/admin/pimpinan/', icon:'gallery', match:'/pendataan/admin/pimpinan/', cms:true, super:true},
   {label:'Statistik Pengurus', href:'/pendataan/admin/pengurus/', icon:'chart', match:'/pendataan/admin/pengurus/'},
-  {label:'Verifikasi Alumni', href:'/pendataan/admin/pengurus/verifikasi/', icon:'shield', match:'/pendataan/admin/pengurus/verifikasi/'},
   {label:'Data Alumni', href:'/pendataan/admin/pengurus/alumni/', icon:'users', match:'/pendataan/admin/pengurus/alumni/'},
   {label:'Pengguna & Peran', href:'/pendataan/admin/pengurus/pengguna/', icon:'user', match:'/pendataan/admin/pengurus/pengguna/'},
   {label:'KORDA & Angkatan', href:'/pendataan/admin/pengurus/wilayah/', icon:'pin', match:'/pendataan/admin/pengurus/wilayah/', pusat:true}
