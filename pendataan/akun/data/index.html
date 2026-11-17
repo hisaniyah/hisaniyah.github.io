@@ -38,6 +38,7 @@
   <div class="field"><label for="f-jk">Jenis kelamin</label><select id="f-jk"><option value="">— pilih —</option><option>Laki-laki</option><option>Perempuan</option></select></div>
   <div class="field"><label for="f-hub">Hubungan dengan pemilik akun</label><select id="f-hub"><option>Diri sendiri</option><option>Anak</option><option>Orang tua</option><option>Saudara</option><option>Suami/Istri</option><option>Keluarga lain</option></select></div>
   <div class="field"><label for="f-masuk">Tahun masuk pesantren *</label><input id="f-masuk" type="number" min="1950" max="2100" required placeholder="2014"></div>
+    <div class="field"><label for="f-lulus">Tahun Lulus</label><input id="f-lulus" type="number" min="1950" max="2100" placeholder="2018"><small style="color:var(--ink-soft)">Tidak wajib. Bagi yang tidak sampai lulus, isi tahun keluar dari pesantren.</small></div>
   <div class="field"><label for="f-korda">KORDA / wilayah</label><select id="f-korda"><option value="">— belum ada / tidak tahu —</option></select></div>
   <div class="field"><label for="f-wa">No. WhatsApp</label><input id="f-wa" maxlength="20" placeholder="08…"></div>
   <div class="field full"><label for="f-alamat">Alamat sekarang</label><textarea id="f-alamat" rows="2" maxlength="300"></textarea></div>
@@ -89,7 +90,7 @@
     try { const me = await HisaData.apiCall('auth.me', {}); rec = (me.kelola.find(k => k.alumni.Alumni_ID === id) || {}).alumni || null; } catch(e){}
     if (!rec) { $('form-status').textContent = 'Data tidak ditemukan atau bukan Anda yang mengelola.'; return; }
     $('f-nama').value = rec.Nama || ''; $('f-tempat').value = rec.Tempat_Lahir || ''; $('f-lahir').value = (rec.Tanggal_Lahir || '').slice(0,10);
-    $('f-jk').value = rec.Jenis_Kelamin || ''; $('f-masuk').value = rec.Tahun_Masuk || ''; $('f-korda').value = rec.Korda_ID || '';
+    $('f-jk').value = rec.Jenis_Kelamin || ''; $('f-masuk').value = rec.Tahun_Masuk || ''; $('f-lulus').value = rec.Tahun_Lulus || ''; $('f-korda').value = rec.Korda_ID || '';
     $('f-wa').value = rec.WhatsApp || ''; $('f-alamat').value = rec.Alamat || ''; $('f-kab').value = rec.Kabupaten || '';
     $('f-prov').value = rec.Provinsi || ''; $('f-pendidikan').value = rec.Pendidikan || ''; $('f-pekerjaan').value = rec.Pekerjaan || ''; $('f-email').value = rec.Email || '';
     $('f-hub').closest('.field').style.display = 'none';
@@ -115,7 +116,7 @@
   $('form').addEventListener('submit', async e => {
     e.preventDefault();
     const data = { Nama: $('f-nama').value.trim(), Tempat_Lahir: $('f-tempat').value.trim(), Tanggal_Lahir: $('f-lahir').value,
-      Jenis_Kelamin: $('f-jk').value, Tahun_Masuk: $('f-masuk').value,
+      Jenis_Kelamin: $('f-jk').value, Tahun_Masuk: $('f-masuk').value, Tahun_Lulus: $('f-lulus').value,
       Korda_ID: $('f-korda').value, WhatsApp: $('f-wa').value.trim(), Alamat: $('f-alamat').value.trim(),
       Kabupaten: $('f-kab').value.trim(), Provinsi: $('f-prov').value.trim(), Pendidikan: $('f-pendidikan').value.trim(),
       Pekerjaan: $('f-pekerjaan').value.trim(), Email: $('f-email').value.trim() };
