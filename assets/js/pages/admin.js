@@ -13,7 +13,7 @@ const ADMIN_NAV = [
 function renderAdminShell(activeMatch){
   const top = document.getElementById('admin-top');
   if (top) top.innerHTML = `<div class="admin-top-in">
-    <span class="brand-badge"><img src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH"></span>
+    <span class="brand-badge"><img src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo HISANIYAH"></span>
     <span><strong>HISANIYAH</strong><small>Admin CMS</small></span>
     <a class="view" href="/" target="_blank" rel="noopener">${icon('arrowR')} Lihat Website</a></div>
     <div class="mode-banner" id="mode-banner">MODE UJI LOKAL — perubahan tersimpan di peramban ini dan langsung tampil di website. Login admin &amp; penyimpanan server (Google Sheets via Apps Script) diaktifkan pada Tahap 4–6.</div>`;
