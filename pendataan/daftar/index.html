@@ -26,7 +26,7 @@
 </div></section>
 <section class="section"><div class="container">
 <div class="login-card">
-  <img class="logo" src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH">
+  <img class="logo" src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo HISANIYAH">
   <h2 style="font-size:22px;font-weight:800">Daftar Akun Baru</h2>
   <p style="color:var(--ink-soft);margin-top:6px">Buat akun dengan email Anda. Setelah daftar, Anda langsung bisa masuk — tanpa verifikasi email.</p>
   <form id="form" style="display:grid;gap:11px;text-align:left;margin-top:16px">
@@ -69,7 +69,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
   st.textContent = 'Memproses pendaftaran…';
   try {
     await HisaData.apiCall('auth.daftar.email', { nama: document.getElementById('f-nama').value.trim(), email: document.getElementById('f-email').value.trim(), kata_sandi: sandi });
-    document.querySelector('.login-card').innerHTML = '<img class="logo" src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo HISANIYAH">' +
+    document.querySelector('.login-card').innerHTML = '<img class="logo" src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo HISANIYAH">' +
       '<h2 style="font-size:22px;font-weight:800">Pendaftaran Diterima</h2>' +
       '<p style="color:var(--ink-soft);margin-top:8px">Akun Anda sudah aktif. Silakan masuk dengan email dan kata sandi yang baru dibuat, lalu isi data alumni — nomor anggota Anda langsung terbit.</p>' +
       '<a class="btn btn-teal" href="/pendataan/masuk/" style="justify-content:center;padding:12px;margin-top:14px">Ke Halaman Masuk</a>';
