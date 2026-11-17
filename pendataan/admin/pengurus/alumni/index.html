@@ -33,6 +33,7 @@
   <div class="field"><label>Jenis kelamin</label><select id="u-jk"><option value="">—</option><option>Laki-laki</option><option>Perempuan</option></select></div>
   <div class="field"><label>WhatsApp</label><input id="u-wa" maxlength="20"></div>
   <div class="field"><label>Tahun masuk</label><input id="u-masuk" type="number" min="1950" max="2100"></div>
+  <div class="field"><label>Tahun lulus</label><input id="u-lulus" type="number" min="1950" max="2100"></div>
   <div class="field"><label>KORDA</label><select id="u-korda"><option value="">— belum ada —</option></select></div>
   <div class="field"><label>Email</label><input id="u-email" type="email" maxlength="120"></div>
   <div class="field full"><label>Alamat</label><textarea id="u-alamat" rows="2" maxlength="300"></textarea></div>
@@ -74,8 +75,8 @@
     data = semua.filter(a => (!kv || String(a.Korda_ID) === String(kv)) && (!qv || (a.Nama + ' ' + (a.no_anggota || '') + ' ' + (a.pengelola ? a.pengelola.nama : '')).toLowerCase().includes(qv)));
     const infoJumlah = `<p style="font-weight:700;margin-bottom:12px">Menampilkan ${data.length} dari ${semua.length} data</p>`;
     if (!data.length) { box.innerHTML = '<div class="panel">' + infoJumlah + '<p style="color:var(--ink-soft)">Tidak ada data yang cocok.</p></div>'; return; }
-    box.innerHTML = `<div class="panel">${infoJumlah}<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Nama</th><th>Angkatan</th><th>KORDA</th><th>Pengelola</th><th>Status</th><th>No. Anggota</th><th></th></tr></thead><tbody>
-    ${data.map(a => `<tr><td><b>${esc(a.Nama)}</b></td><td>${esc(a.angkatan_label || '-')}</td><td>${esc(a.korda_label || '-')}</td><td>${a.pengelola ? esc(a.pengelola.nama) : '-'}</td><td><span class="st ${esc(a.Status_Verifikasi)}">${esc(stLabel(a.Status_Verifikasi))}</span></td><td>${esc(a.no_anggota || '-')}</td><td style="white-space:nowrap"><button class="abtn" data-ubah="${esc(a.Alumni_ID)}">Ubah</button>${a.Status_Verifikasi === 'terverifikasi' ? ` <button class="abtn" data-nonaktif="${esc(a.Alumni_ID)}" style="color:#b3261e;border-color:#e3b3ae">Nonaktifkan</button>` : ''}${a.Status_Verifikasi === 'ditolak' ? ` <button class="abtn" data-aktifkan="${esc(a.Alumni_ID)}">Aktifkan</button>` : ''}</td></tr>`).join('')}
+    box.innerHTML = `<div class="panel">${infoJumlah}<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Nama</th><th>Angkatan</th><th>Lulus</th><th>KORDA</th><th>Pengelola</th><th>Status</th><th>No. Anggota</th><th></th></tr></thead><tbody>
+    ${data.map(a => `<tr><td><b>${esc(a.Nama)}</b></td><td>${esc(a.angkatan_label || '-')}</td><td>${esc(a.Tahun_Lulus || '-')}</td><td>${esc(a.korda_label || '-')}</td><td>${a.pengelola ? esc(a.pengelola.nama) : '-'}</td><td><span class="st ${esc(a.Status_Verifikasi)}">${esc(stLabel(a.Status_Verifikasi))}</span></td><td>${esc(a.no_anggota || '-')}</td><td style="white-space:nowrap"><button class="abtn" data-ubah="${esc(a.Alumni_ID)}">Ubah</button>${a.Status_Verifikasi === 'terverifikasi' ? ` <button class="abtn" data-nonaktif="${esc(a.Alumni_ID)}" style="color:#b3261e;border-color:#e3b3ae">Nonaktifkan</button>` : ''}${a.Status_Verifikasi === 'ditolak' ? ` <button class="abtn" data-aktifkan="${esc(a.Alumni_ID)}">Aktifkan</button>` : ''}</td></tr>`).join('')}
     </tbody></table></div></div>`;
         box.querySelectorAll('[data-ubah]').forEach(b => b.addEventListener('click', () => bukaUbah(b.dataset.ubah)));
     box.querySelectorAll('[data-nonaktif]').forEach(b => b.addEventListener('click', async () => {
@@ -92,7 +93,7 @@
     const a = data.find(x => x.Alumni_ID === id); if (!a) return;
     editId = id;
     $('u-nama').value = a.Nama || ''; $('u-tempat').value = a.Tempat_Lahir || ''; $('u-lahir').value = String(a.Tanggal_Lahir || '').slice(0,10);
-    $('u-jk').value = a.Jenis_Kelamin || ''; $('u-wa').value = a.WhatsApp || ''; $('u-masuk').value = a.Tahun_Masuk || '';
+    $('u-jk').value = a.Jenis_Kelamin || ''; $('u-wa').value = a.WhatsApp || ''; $('u-masuk').value = a.Tahun_Masuk || ''; $('u-lulus').value = a.Tahun_Lulus || '';
     $('u-korda').value = a.Korda_ID || ''; $('u-email').value = a.Email || '';
     $('u-alamat').value = a.Alamat || ''; $('u-kab').value = a.Kabupaten || ''; $('u-prov').value = a.Provinsi || '';
     $('u-pendidikan').value = a.Pendidikan || ''; $('u-pekerjaan').value = a.Pekerjaan || '';
@@ -102,7 +103,7 @@
   $('form').addEventListener('submit', async e => {
     e.preventDefault();
     const d = { Nama: $('u-nama').value.trim(), Tempat_Lahir: $('u-tempat').value.trim(), Tanggal_Lahir: $('u-lahir').value, Jenis_Kelamin: $('u-jk').value,
-      WhatsApp: $('u-wa').value.trim(), Tahun_Masuk: $('u-masuk').value, Korda_ID: $('u-korda').value,
+      WhatsApp: $('u-wa').value.trim(), Tahun_Masuk: $('u-masuk').value, Tahun_Lulus: $('u-lulus').value, Korda_ID: $('u-korda').value,
       Email: $('u-email').value.trim(), Alamat: $('u-alamat').value.trim(), Kabupaten: $('u-kab').value.trim(), Provinsi: $('u-prov').value.trim(),
       Pendidikan: $('u-pendidikan').value.trim(), Pekerjaan: $('u-pekerjaan').value.trim() };
     try { await HisaData.apiCall('pengurus.alumni.ubah', { Alumni_ID: editId, data: d }); toast('Data alumni diperbarui'); $('panel-ubah').style.display = 'none'; semua = null; muat(); }
@@ -111,7 +112,7 @@
   let t; $('q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(gambar, 200); });
   $('f-korda').addEventListener('change', gambar);
   $('btn-csv').addEventListener('click', () => {
-    const kolom = ['Nama','Status_Verifikasi','no_anggota','angkatan_label','korda_label','WhatsApp','Email','Kabupaten','Provinsi','Pendidikan','Pekerjaan'];
+    const kolom = ['Nama','Status_Verifikasi','no_anggota','angkatan_label','Tahun_Lulus','korda_label','WhatsApp','Email','Kabupaten','Provinsi','Pendidikan','Pekerjaan'];
     const csv = [kolom.join(';')].concat(data.map(a => kolom.map(k => '"' + String(a[k] === undefined ? '' : a[k]).replace(/"/g, '""') + '"').join(';'))).join('\n');
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' })); a.download = 'data-alumni-hisaniyah.csv'; a.click();
