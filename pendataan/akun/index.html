@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Akun Saya — HISANIYAH</title>
-<meta name="description" content="Dashboard akun alumni HISANIYAH.">
+<title>Dashboard — Portal Alumni HISANIYAH</title>
+<meta name="description" content="Dashboard Portal Alumni HISANIYAH: kelola data alumni, keluarga, dan kartu anggota digital Anda.">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,27 +12,44 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/variables.css">
 <link rel="stylesheet" href="/assets/css/base.css">
-<link rel="stylesheet" href="/assets/css/components.css">
-<link rel="stylesheet" href="/assets/css/pages/inner.css">
 <link rel="stylesheet" href="/assets/css/pages/akun.css">
+<link rel="stylesheet" href="/assets/css/portal.css">
 </head>
 <body>
-<div id="site-header"></div>
-<main>
-<section class="page-hero"><div class="container">
-  <nav class="crumb" aria-label="Jejak halaman"><a href="/">Beranda</a><span>›</span><span>Akun Saya</span></nav>
-  <h1>Akun Saya</h1>
-  <p>Kelola data alumni Anda dan keluarga yang Anda bantu daftarkan.</p>
-</div></section>
-<section class="section"><div class="container">
-<div id="akun-box"><p class="lead">Memuat akun…</p></div>
-</div></section>
-</main>
-<div id="site-footer"></div>
-<script src="/assets/js/components.js"></script>
+<div class="portal-shell">
+  <aside class="portal-sidebar" id="portal-sidebar">
+    <div class="portal-brand">
+      <img src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo HISANIYAH">
+      <strong>HISANIYAH</strong>
+      <span>Himpunan Santri-Alumni<br>K.H. Yahya Syabrawi</span>
+    </div>
+    <nav class="portal-nav" id="portal-nav">
+      <p class="portal-nav-label">Menu Utama</p>
+      <a href="#" data-view="dashboard" class="aktif"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+      <a href="#" data-view="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="11" r="2.2"/><path d="M5.5 16.5c.6-1.4 1.7-2 3-2s2.4.6 3 2"/><line x1="15" y1="9.5" x2="19" y2="9.5"/><line x1="15" y1="13" x2="19" y2="13"/></svg>Data Alumni</a>
+      <a href="#" data-view="keluarga"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Keluarga Alumni</a>
+      <a href="#" data-view="kta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>KTA Alumni</a>
+      <a href="#" data-view="pengaturan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>Pengaturan</a>
+    </nav>
+    <div class="portal-side-foot">
+      <nav class="portal-nav">
+        <a href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Web Resmi</a>
+        <a href="#" class="btn-keluar-portal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Keluar</a>
+      </nav>
+    </div>
+  </aside>
+  <div class="portal-overlay" id="portal-overlay"></div>
+  <div class="portal-main">
+    <div class="portal-topbar">
+      <button class="burger" id="btn-burger" type="button" aria-label="Buka menu"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <span class="brand-mini"><img src="/assets/img/logo-hisaniyah-trans-256.webp" alt="">Portal Alumni</span>
+      <span class="chip"><span class="inisial" id="chip-inisial">…</span><span class="nm" id="chip-nama">Memuat…</span></span>
+    </div>
+    <main class="portal-content" id="akun-box"><p class="lead">Memuat akun…</p></main>
+  </div>
+</div>
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/api.js"></script>
-<script src="/assets/js/main.js"></script>
 <script src="/assets/js/kta-download.js?v=3"></script>
 <script src="/assets/js/foto-crop.js"></script>
 <script>
@@ -54,23 +71,20 @@
   }
   const peran = { super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', alumni: 'Alumni' }[u.Role] || u.Role;
   const stLabel = s => ({ menunggu: 'Menunggu Verifikasi', terverifikasi: 'Terverifikasi', ditolak: 'Ditolak', perlu_perbaikan: 'Perlu Perbaikan' }[s] || s);
-  box.innerHTML = `
-  <div class="akun-grid">
-    <div class="profil-card">
-      ${u.Foto ? `<img src="${esc(u.Foto)}" alt="Foto profil">` : `<div class="inisial">${esc((u.Nama || 'A').slice(0,1))}</div>`}
-      <h3>${esc(u.Nama)}</h3><p>${esc(u.Email)}</p>
-      <span class="role-badge">${esc(peran)}</span>
-      <div style="margin-top:18px;display:grid;gap:9px">
-        ${['super_admin','pengurus_pusat'].includes(u.Role) ? '<a class="btn btn-orange" href="/pendataan/admin/" style="justify-content:center">Buka Panel Admin CMS</a>' : ''}
-        <button class="btn btn-outline" id="btn-keluar" style="justify-content:center">Keluar</button>
-      </div>
-    </div>
-    <div>
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">
-        <h2 style="font-size:22px;font-weight:800">Data Alumni yang Anda Kelola (${me.kelola.length})</h2>
-        <a class="btn btn-teal" href="/pendataan/akun/data/" style="padding:11px 18px">+ Tambah Data Alumni</a>
-      </div>
-      ${me.kelola.length ? me.kelola.map(k => `
+  const kelola = me.kelola || [];
+  const diri = kelola.filter(k => k.relasi.Hubungan === 'Diri Sendiri');
+  const keluarga = kelola.filter(k => k.relasi.Hubungan !== 'Diri Sendiri');
+  const adaKTA = kelola.some(k => k.alumni.Status_Verifikasi === 'terverifikasi');
+  const inisial2 = (u.Nama || 'A').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  document.getElementById('chip-nama').textContent = u.Nama || '';
+  document.getElementById('chip-inisial').innerHTML = u.Foto ? `<img src="${esc(u.Foto)}" alt="">` : esc(inisial2);
+  const svgId = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8.5" cy="11" r="2.2"/><path d="M5.5 16.5c.6-1.4 1.7-2 3-2s2.4.6 3 2"/><line x1="15" y1="9.5" x2="19" y2="9.5"/><line x1="15" y1="13" x2="19" y2="13"/></svg>';
+  const svgUsers = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+  const svgCard = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>';
+  const svgPlus = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>';
+  const svgFile = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
+  const svgGlobe = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+  const kartuData = (k) => `
       <div class="alumni-card">
         <div style="flex:1">
           <h4>${esc(k.alumni.Nama)}</h4>
@@ -79,8 +93,8 @@
         </div>
         <span class="st ${esc(k.alumni.Status_Verifikasi)}">${esc(stLabel(k.alumni.Status_Verifikasi))}</span>
         ${k.relasi.is_pengelola_utama ? `<a class="btn btn-outline" href="/pendataan/akun/data/?id=${encodeURIComponent(k.alumni.Alumni_ID)}" style="padding:9px 15px">Ubah</a>` : ''}
-      </div>
-      ${k.alumni.Status_Verifikasi === 'terverifikasi' ? `
+      </div>`;
+  const blokKTA = (k) => `
       <div class="kartu-anggota">
         <div class="ka-head">
           <img class="logo" src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo HISANIYAH">
@@ -98,10 +112,89 @@
           </div>
           <div class="ka-qr"><img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}"><span>Pindai untuk verifikasi</span></div>
         </div>
-      </div>${k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="btn btn-outline btn-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" style="padding:9px 15px">${k.alumni.foto_file_id ? '📷 Ganti Foto KTA' : '＋ Tambah Foto untuk KTA'}</button><span class="foto-kta-status" data-alumni="${esc(k.alumni.Alumni_ID)}" style="font-weight:600;color:var(--ink-soft);font-size:14px"></span><input type="file" accept="image/*" class="input-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" hidden></div>` : ''}<div style="margin:0 0 16px"><button type="button" class="btn btn-teal btn-unduh-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" data-nama="${esc(k.alumni.Nama)}" data-nomor="${esc(k.alumni.no_anggota || '')}" data-angkatan="${esc(k.alumni.angkatan_label || '')}" data-korda="${esc(k.alumni.korda_label || '')}" data-foto="${k.alumni.foto_file_id ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(k.alumni.foto_file_id) + '&sz=w400' : ''}" data-kode="${esc(k.alumni.kode_verifikasi_qr || '')}" style="padding:10px 18px">⬇ Unduh KTA</button></div>` : ''}`).join('') : '<div class="notice">Belum ada data alumni. Tekan "Tambah Data Alumni" untuk mendaftarkan diri Anda atau anggota keluarga.</div>'}
-      <p style="color:var(--ink-soft);font-size:14.5px;margin-top:8px">Satu akun Google boleh mengelola beberapa data alumni (misalnya untuk orang tua/saudara). Setiap data langsung aktif sebagai anggota begitu disimpan; pengurus dapat menonaktifkan data yang terbukti tidak sah.</p>
+      </div>${k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="btn btn-outline btn-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" style="padding:9px 15px">${k.alumni.foto_file_id ? '📷 Ganti Foto KTA' : '＋ Tambah Foto untuk KTA'}</button><span class="foto-kta-status" data-alumni="${esc(k.alumni.Alumni_ID)}" style="font-weight:600;color:var(--ink-soft);font-size:14px"></span><input type="file" accept="image/*" class="input-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" hidden></div>` : ''}<div style="margin:0 0 16px"><button type="button" class="btn btn-teal btn-unduh-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" data-nama="${esc(k.alumni.Nama)}" data-nomor="${esc(k.alumni.no_anggota || '')}" data-angkatan="${esc(k.alumni.angkatan_label || '')}" data-korda="${esc(k.alumni.korda_label || '')}" data-foto="${k.alumni.foto_file_id ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(k.alumni.foto_file_id) + '&sz=w400' : ''}" data-kode="${esc(k.alumni.kode_verifikasi_qr || '')}" style="padding:10px 18px">⬇ Unduh KTA</button></div>`;
+  const profilHTML = `
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        ${u.Foto ? `<img src="${esc(u.Foto)}" alt="Foto profil" style="width:72px;height:72px;border-radius:50%;object-fit:cover;flex:none">` : `<div style="width:72px;height:72px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;font-size:25px;font-weight:800;flex:none">${esc(inisial2)}</div>`}
+        <div style="min-width:0">
+          <h4 style="font-size:18.5px;font-weight:800">${esc(u.Nama)}</h4>
+          <p style="color:var(--ink-soft);font-size:14px;word-break:break-all">${esc(u.Email)}</p>
+          <span class="role-badge" style="margin-top:6px">${esc(peran)}</span>
+        </div>
+      </div>`;
+  const diriUtama = diri.find(k => k.relasi.is_pengelola_utama);
+  const editProfil = diriUtama
+    ? `<a class="btn btn-teal" href="/pendataan/akun/data/?id=${encodeURIComponent(diriUtama.alumni.Alumni_ID)}" style="justify-content:center;width:100%;margin-top:18px">Edit Profil</a>`
+    : `<a class="btn btn-teal" href="#" data-view-link="data" style="justify-content:center;width:100%;margin-top:18px">Edit Profil</a>`;
+  box.innerHTML = `
+  <section class="portal-view aktif" id="view-dashboard">
+    <p class="portal-greet">Selamat Datang,<strong>${esc(u.Nama)}</strong></p>
+    <p style="color:var(--ink-soft);margin-top:6px">Kelola data alumni dan keluarga Anda dalam satu tempat.</p>
+    <div class="portal-stats tiga">
+      <div class="portal-stat"><span class="ic">${svgId}</span><b>${diri.length}</b><span>Data Alumni</span></div>
+      <div class="portal-stat"><span class="ic">${svgUsers}</span><b>${keluarga.length}</b><span>Keluarga Alumni</span></div>
+      <div class="portal-stat sorot"><span class="ic">${svgCard}</span><b style="font-size:20.5px;padding:4px 0 3px">${adaKTA ? 'Sudah Aktif' : 'Belum Aktif'}</b><span>Status KTA</span></div>
     </div>
-  </div>`;
+    <div class="portal-duo">
+      <div class="portal-panel">
+        <h3 style="font-size:17px;font-weight:800;margin-bottom:16px">Profil Akun</h3>
+        ${profilHTML}
+        ${editProfil}
+      </div>
+      <div class="portal-panel">
+        <h3 style="font-size:17px;font-weight:800;margin-bottom:16px">Akses Cepat</h3>
+        <div class="portal-tiles">
+          <a class="portal-tile" href="/pendataan/akun/data/"><span class="ic">${svgPlus}</span>Tambah Data Alumni<small>Data diri atau keluarga</small></a>
+          <a class="portal-tile" href="#" data-view-link="kta"><span class="ic">${svgCard}</span>Buat KTA<small>Lihat &amp; unduh kartu anggota</small></a>
+          ${['super_admin','pengurus_pusat'].includes(u.Role) ? `<a class="portal-tile" href="/pendataan/admin/"><span class="ic">${svgFile}</span>Panel Admin CMS<small>Berita &amp; pengumuman</small></a>` : `<a class="portal-tile" href="/"><span class="ic">${svgGlobe}</span>Web Resmi<small>hisaniyah.or.id</small></a>`}
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="portal-view" id="view-data">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+      <h2 style="font-size:22px;font-weight:800">Data Alumni</h2>
+      <a class="btn btn-teal" href="/pendataan/akun/data/" style="padding:11px 18px">+ Tambah Data Alumni</a>
+    </div>
+    ${diri.length ? diri.map(kartuData).join('') : '<div class="notice">Anda belum memiliki data diri. Tekan "Tambah Data Alumni" untuk mendaftarkan diri Anda.</div>'}
+  </section>
+  <section class="portal-view" id="view-keluarga">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+      <h2 style="font-size:22px;font-weight:800">Keluarga Alumni</h2>
+      <a class="btn btn-teal" href="/pendataan/akun/data/" style="padding:11px 18px">+ Tambah Data Keluarga</a>
+    </div>
+    ${keluarga.length ? keluarga.map(kartuData).join('') : '<div class="notice">Belum ada data keluarga yang Anda kelola. Satu akun Google boleh mengelola beberapa data alumni, misalnya untuk orang tua atau saudara yang tidak memiliki akun sendiri.</div>'}
+    <p style="color:var(--ink-soft);font-size:14.5px;margin-top:8px">Satu akun Google boleh mengelola beberapa data alumni (misalnya untuk orang tua/saudara). Setiap data langsung aktif sebagai anggota begitu disimpan; pengurus dapat menonaktifkan data yang terbukti tidak sah.</p>
+  </section>
+  <section class="portal-view" id="view-kta">
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:16px">KTA Alumni</h2>
+    ${kelola.length ? kelola.map(k => k.alumni.Status_Verifikasi === 'terverifikasi' ? blokKTA(k) : kartuData(k)).join('') : '<div class="notice">Belum ada data alumni. KTA akan muncul di sini setelah data Anda tersimpan.</div>'}
+  </section>
+  <section class="portal-view" id="view-pengaturan">
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:16px">Pengaturan</h2>
+    <div class="portal-panel" style="max-width:660px">
+      ${profilHTML}
+      <div style="border-top:1px solid var(--line);margin:20px 0"></div>
+      <p style="display:flex;justify-content:space-between;gap:14px;padding:7px 0;font-size:15px"><span style="color:var(--ink-soft);font-weight:600">Data yang dikelola</span><b>${kelola.length} data</b></p>
+      <p style="display:flex;justify-content:space-between;gap:14px;padding:7px 0;font-size:15px"><span style="color:var(--ink-soft);font-weight:600">Status KTA</span><b>${adaKTA ? 'Sudah Aktif' : 'Belum Aktif'}</b></p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-outline" href="/" style="justify-content:center">← Web Resmi</a>
+        <button class="btn btn-teal btn-keluar-portal" type="button" style="justify-content:center">Keluar</button>
+      </div>
+    </div>
+  </section>`;
+  const sidebar = document.getElementById('portal-sidebar');
+  const overlay = document.getElementById('portal-overlay');
+  function tampilView(v) {
+    document.querySelectorAll('.portal-view').forEach(s => s.classList.toggle('aktif', s.id === 'view-' + v));
+    document.querySelectorAll('#portal-nav a[data-view]').forEach(a => a.classList.toggle('aktif', a.getAttribute('data-view') === v));
+    sidebar.classList.remove('open'); overlay.classList.remove('tampil');
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('#portal-nav a[data-view]').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); tampilView(a.getAttribute('data-view')); }));
+  document.querySelectorAll('[data-view-link]').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); tampilView(a.getAttribute('data-view-link')); }));
+  document.getElementById('btn-burger').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('tampil'); });
+  overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('tampil'); });
   document.querySelectorAll('.btn-unduh-kta').forEach(b => b.addEventListener('click', () => unduhKTA(b)));
   document.querySelectorAll('.btn-foto-kta').forEach(b => b.addEventListener('click', () => {
     const inp = document.querySelector('.input-foto-kta[data-alumni="' + b.getAttribute('data-alumni') + '"]');
@@ -126,10 +219,11 @@
     } catch (err) { if (st) st.textContent = 'Gagal mengunggah: ' + err.message; }
     inp.value = '';
   }));
-  document.getElementById('btn-keluar').addEventListener('click', async () => {
-    try { await HisaData.apiCall('auth.logout', {}); } catch(e){}
+  document.querySelectorAll('.btn-keluar-portal').forEach(b => b.addEventListener('click', async (e) => {
+    e.preventDefault();
+    try { await HisaData.apiCall('auth.logout', {}); } catch(err){}
     HisaData.clearSession(); location.href = '/';
-  });
+  }));
 })();
 </script>
 </body>

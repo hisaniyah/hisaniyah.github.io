@@ -3,13 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pendataan Alumni — HISANIYAH</title>
-<meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0; url=/pendataan/masuk/">
+<title>Portal Alumni — HISANIYAH</title>
+<meta name="description" content="Portal Alumni HISANIYAH: kelola data alumni, keluarga, dan kartu anggota digital Anda dalam satu tempat.">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
-<script>location.replace('/pendataan/masuk/');</script>
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/portal.css">
 </head>
-<body>
-<p style="font-family:sans-serif;text-align:center;margin-top:40px">Mengalihkan ke halaman masuk pendataan alumni… <a href="/pendataan/masuk/">Klik di sini bila tidak berpindah otomatis</a>.</p>
+<body class="portal-page">
+<svg class="portal-swoosh" viewBox="0 0 330 175" preserveAspectRatio="none" aria-hidden="true"><path fill="#027C78" opacity=".45" d="M0,0 H330 C228,28 118,78 0,175 Z"/><path fill="#0E8A84" opacity=".45" d="M0,0 H258 C176,21 94,60 0,128 Z"/><path fill="#ABE8F4" opacity=".65" d="M0,0 H186 C128,14 68,41 0,86 Z"/></svg>
+<main class="portal-login-wrap">
+  <img class="portal-logo" src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo HISANIYAH">
+  <p class="portal-org">HIMPUNAN SANTRI-ALUMNI<br>K.H. YAHYA SYABRAWI</p>
+  <h1 class="portal-title">Portal Alumni</h1>
+  <p class="portal-sub">Kelola data alumni, keluarga, dan kartu anggota digital Anda dalam satu tempat.</p>
+  <section class="portal-card" style="max-width:560px;padding:34px 38px" aria-label="Masuk atau daftar Portal Alumni">
+    <div style="display:grid;gap:12px">
+      <a class="btn btn-teal" href="/pendataan/masuk/" style="justify-content:center;padding:15px;font-size:16.5px">Masuk</a>
+      <a class="btn btn-outline" href="/pendataan/daftar/" style="justify-content:center;padding:15px;font-size:16.5px">Daftar</a>
+    </div>
+  </section>
+  <p style="margin-top:22px"><a href="/" style="color:var(--teal);font-weight:700;font-size:14.5px;text-decoration:none">← Kembali ke Web Resmi</a></p>
+</main>
+<svg class="portal-wave" viewBox="0 0 1440 130" preserveAspectRatio="none" aria-hidden="true"><path fill="#BFE9E6" opacity=".7" d="M0,88 C320,60 640,96 960,84 C1200,75 1360,54 1440,44 L1440,130 L0,130 Z"/><path fill="#FE880D" d="M0,100 C320,74 640,108 960,96 C1200,87 1360,66 1440,56 L1440,130 L0,130 Z"/><path fill="#016767" d="M0,112 C320,88 640,120 960,108 C1200,99 1360,80 1440,70 L1440,130 L0,130 Z"/></svg>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+if (HisaData.getSession()) location.replace('/pendataan/akun/');
+</script>
 </body>
 </html>

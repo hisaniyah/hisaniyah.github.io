@@ -75,8 +75,8 @@ function renderHeader(){
   }).join('');
   let sesiUser = null;
   try { const s = JSON.parse(localStorage.getItem('hisa_session') || 'null'); if (s && s.user) sesiUser = s.user; } catch(e){}
-  const akunHref = sesiUser ? '/pendataan/akun/' : '/pendataan/masuk/';
-  const akunLabel = sesiUser ? 'Akun Saya' : 'Login / Daftar';
+  const akunHref = sesiUser ? '/pendataan/akun/' : '/pendataan/';
+  const akunLabel = sesiUser ? 'Akun Saya' : 'Portal Alumni';
   const chipIsi = sesiUser ? (sesiUser.Foto ? `<img src="${sesiUser.Foto}" alt="" style="width:26px;height:26px;border-radius:50%">` : '') + `<span>${String(sesiUser.Nama || 'Akun').split(' ')[0]}</span>` : '';
   const chipStyle = sesiUser ? 'display:inline-flex;align-items:center;gap:8px;font-weight:700' : 'display:none';
   return `

@@ -13,6 +13,7 @@ const ADMIN_NAV = [
 function renderAdminShell(activeMatch){
   const top = document.getElementById('admin-top');
   if (top) top.innerHTML = `<div class="admin-top-in">
+    <button class="admin-burger" id="admin-burger" type="button" aria-label="Buka menu"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <span class="brand-badge"><img src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo HISANIYAH"></span>
     <span><strong>HISANIYAH</strong><small>Admin CMS</small></span>
     <a class="view" href="/" target="_blank" rel="noopener">${icon('arrowR')} Lihat Website</a></div>
@@ -29,8 +30,21 @@ function renderAdminShell(activeMatch){
       if (n.super && role !== 'super_admin') return false;
       return true;
     });
-    side.innerHTML = tampil.map(n =>
-      `<a href="${n.href}"${n.match === activeMatch ? ' class="active"' : ''}>${icon(n.icon)}${n.label}</a>`).join('');
+    let html = ''; let grup = '';
+    tampil.forEach(n => {
+      const g = n.href.includes('/pengurus/') ? 'pengurus' : 'cms';
+      if (g !== grup) { grup = g; html += `<p class="nav-label">${g === 'cms' ? 'Menu CMS' : 'Menu Pengurus'}</p>`; }
+      html += `<a href="${n.href}"${n.match === activeMatch ? ' class="active"' : ''}>${icon(n.icon)}${n.label}</a>`;
+    });
+    html += `<div class="side-foot"><a href="/pendataan/akun/">← Dashboard Portal</a></div>`;
+    side.innerHTML = html;
+    const burger = document.getElementById('admin-burger');
+    if (burger) {
+      let ov = document.querySelector('.admin-overlay');
+      if (!ov) { ov = document.createElement('div'); ov.className = 'admin-overlay'; document.body.appendChild(ov); }
+      burger.addEventListener('click', () => { side.classList.add('open'); ov.classList.add('tampil'); });
+      ov.addEventListener('click', () => { side.classList.remove('open'); ov.classList.remove('tampil'); });
+    }
   }
 }
 function toast(msg){

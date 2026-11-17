@@ -1,27 +1,33 @@
 /* Panel Admin CMS HISANIYAH (Tahap 3) */
-body{background:#F2F7F7}
-.admin-top{background:var(--teal-dark);color:#fff;position:sticky;top:0;z-index:50}
-.admin-top-in{max-width:1280px;margin:0 auto;padding:0 20px;min-height:64px;display:flex;align-items:center;gap:14px}
+body{background:linear-gradient(180deg,#F2FBFD 0%,var(--bg-soft) 100%);min-height:100vh}
+.admin-top{background:#fff;color:var(--ink);position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line)}
+.admin-top-in{margin:0;padding:0 20px;min-height:64px;display:flex;align-items:center;gap:14px}
 .admin-top .brand-badge{width:42px;height:42px}.admin-top .brand-badge img{width:39px;height:39px}
 .admin-top strong{font-size:18px;letter-spacing:.4px}
-.admin-top small{display:block;color:#A9D8D4;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.6px}
-.admin-top a.view{margin-left:auto;color:#fff;font-weight:700;display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.12);padding:9px 16px;border-radius:999px}
-.admin-top a.view:hover{background:var(--orange)}
+.admin-top small{display:block;color:var(--teal);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+.admin-top a.view{margin-left:auto;color:var(--teal);font-weight:700;display:inline-flex;gap:8px;align-items:center;background:#fff;border:1.6px solid var(--teal);padding:8px 16px;border-radius:999px}
+.admin-top a.view:hover{background:var(--teal);color:#fff}
+.admin-burger{display:none;width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:#fff;place-items:center;cursor:pointer;color:var(--teal-dark);flex:none}
+.admin-overlay{position:fixed;inset:0;background:rgba(6,40,40,.45);opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:55}
+.admin-overlay.tampil{opacity:1;pointer-events:auto}
 .mode-banner{background:#FFF3DF;color:#7A4A00;font-weight:600;font-size:14.5px;padding:11px 20px;text-align:center;border-bottom:1px solid #F3D9A4}
-.admin-wrap{max-width:1280px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:start}
-.admin-side{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:12px;position:sticky;top:132px}
-.admin-side a{display:flex;gap:11px;align-items:center;padding:11px 13px;border-radius:10px;font-weight:700;color:var(--ink-soft)}
-.admin-side a svg{width:20px;height:20px}
-.admin-side a:hover{background:var(--teal-light)}
-.admin-side a.active{background:var(--teal);color:#fff}
-.admin-main{min-width:0}
+.admin-wrap{margin:0;padding:0;display:grid;grid-template-columns:266px 1fr;gap:0;align-items:stretch}
+.admin-side{background:linear-gradient(180deg,var(--teal-dark) 0%,var(--teal) 100%);color:#fff;padding:20px 14px;position:sticky;top:109px;height:calc(100vh - 109px);overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.admin-side a{display:flex;gap:11px;align-items:center;padding:12px 13px;border-radius:12px;font-weight:600;color:#EAF6F5;text-decoration:none}
+.admin-side a svg{width:20px;height:20px;flex:none}
+.admin-side a:hover{background:rgba(255,255,255,.10);color:#fff}
+.admin-side a.active{background:rgba(255,255,255,.17);color:#fff;font-weight:700}
+.admin-side .nav-label{font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#9FD8D2;margin:16px 12px 6px}
+.admin-side .nav-label:first-child{margin-top:0}
+.admin-side .side-foot{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.18)}
+.admin-main{min-width:0;padding:28px 32px 60px}
 .admin-main h1{font-size:26px;font-weight:800;margin-bottom:4px}
 .admin-sub{color:var(--ink-soft);margin-bottom:20px}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-card)}
 .stat b{font-size:32px;font-weight:800;color:var(--teal);display:block;line-height:1.1}
 .stat span{color:var(--ink-soft);font-weight:600;font-size:14px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:22px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:22px;box-shadow:var(--shadow-card)}
 .panel h2{font-size:19px;font-weight:800;margin-bottom:14px}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .toolbar input[type=search],.toolbar select,.field input,.field select,.field textarea{font-family:inherit;font-size:15.5px;padding:11px 14px;border:1.6px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);width:100%}
@@ -60,8 +66,11 @@ table.tbl{width:100%;border-collapse:collapse;font-size:15px}
 .switch input:checked + i::after{left:24px}
 @media (max-width:900px){
   .admin-wrap{grid-template-columns:1fr}
-  .admin-side{position:static;display:flex;gap:6px;overflow-x:auto;padding:8px}
-  .admin-side a{white-space:nowrap}
+  .admin-burger{display:grid}
+  .admin-side{position:fixed;left:0;top:0;width:272px;height:100vh;transform:translateX(-105%);transition:transform .25s ease;z-index:60;box-shadow:0 0 60px rgba(0,0,0,.25)}
+  .admin-side.open{transform:none}
+  .admin-main{padding:22px 16px 60px}
+  .admin-top a.view{padding:7px 12px;font-size:13.5px}
   .stat-grid{grid-template-columns:repeat(2,1fr)}
   .form-grid{grid-template-columns:1fr}
   .tbl thead{display:none}
@@ -79,7 +88,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:15px}
 .st.ditolak{background:#FDE3E3;color:#B03A3A}.st.perlu_perbaikan{background:#FFE9D6;color:#A85B00}
 .bar-row{display:grid;grid-template-columns:170px 1fr 44px;gap:12px;align-items:center;margin-bottom:9px;font-size:14.5px}
 .bar-track{background:#EAF4F4;border-radius:99px;height:14px;overflow:hidden}
-.bar-fill{background:var(--teal);height:100%;border-radius:99px}
+.bar-fill{display:block;background:var(--teal);height:100%;border-radius:99px}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .chip{border:1.6px solid var(--line);background:#fff;border-radius:999px;padding:7px 15px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px}
 .chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
