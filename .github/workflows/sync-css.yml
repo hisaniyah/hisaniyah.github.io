@@ -1,0 +1,21 @@
+name: sync-css
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ambil portal.css dari cermin Firebase
+        run: |
+          set -e
+          curl -fsSL "https://hisaniyah.web.app/assets/css/portal.css" -o assets/css/portal.css
+          echo "portal.css $(stat -c%s assets/css/portal.css) byte"
+          grep -c "white-space:nowrap" assets/css/portal.css
+          git config user.name "hisaniyah"
+          git config user.email "hisaniyahru1@gmail.com"
+          git add assets/css/portal.css
+          git commit -m "Tombol Daftar/Login satu baris" || echo "tidak ada perubahan"
+          git push
