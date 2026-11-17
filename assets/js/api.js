@@ -27,6 +27,16 @@ const HisaData = (() => {
   }
   const API_URL = (typeof window !== 'undefined' && window.HISA_API_URL) || '';
   const SES_KEY = 'hisa_session';
+    /* Cache data PUBLIK antar-halaman (Fase A optimasi, 17 Nov 2026): hanya hasil
+     public.bootstrap (berita/kategori/pengumuman/master) — TANPA token & data pribadi.
+     TTL 5 menit; bila server gagal/timeout, cache lama dipakai sebagai cadangan. */
+    const PUB_KEY = 'hisa_pub_v1';
+  const PUB_TTL = 5 * 60 * 1000;
+  const API_TIMEOUT = 6000;
+  function pubCacheRead(){ try { const raw = localStorage.getItem(PUB_KEY); if (!raw) return null; const o = JSON.parse(raw); return (o && o.data && o.ts) ? o : null; } catch(e){ return null; } }
+  function pubCacheWrite(data){ try { localStorage.setItem(PUB_KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch(e){} }
+  function pubCacheClear(){ try { localStorage.removeItem(PUB_KEY); } catch(e){} }
+  function withTimeout(p, ms){ return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('Batas waktu terlampaui')), ms))]); }
   function getSession(){ try { return JSON.parse(localStorage.getItem(SES_KEY) || 'null'); } catch(e){ return null; } }
   function setSession(ses){ try { localStorage.setItem(SES_KEY, JSON.stringify(ses)); } catch(e){} }
   function clearSession(){ try { localStorage.removeItem(SES_KEY); } catch(e){} }
@@ -37,6 +47,7 @@ const HisaData = (() => {
   function tulisAPI(action, payload){
     const ses = getSession();
     if (!API_URL || !ses) return Promise.resolve(null);
+    pubCacheClear(); // data publik berubah -> cache antar-halaman tidak boleh basi
     return apiCall(action, payload, ses.token).catch(e => { console.warn('Tulis API gagal:', action, e.message); return null; });
   }
   async function apiCall(action, payload, token){
@@ -50,7 +61,10 @@ const HisaData = (() => {
   async function load(){
     if (cache) return cache;
     if (API_URL) {
-      try { cache = await apiCall('public.bootstrap'); return cache; } catch(e){ /* jatuh ke mode lokal */ }
+      const pc = pubCacheRead();
+      if (pc && (Date.now() - pc.ts) < PUB_TTL) { cache = pc.data; return cache; }
+      try { cache = await withTimeout(apiCall('public.bootstrap'), API_TIMEOUT); pubCacheWrite(cache); return cache; }
+      catch(e){ if (pc) { cache = pc.data; return cache; } /* jatuh ke mode lokal */ }
     }
     try { const raw = localStorage.getItem(CMS_KEY); if (raw) { cache = JSON.parse(raw); return cache; } } catch(e){}
     try { const r = await fetch('/assets/data/berita.json'); cache = await r.json(); }
@@ -59,7 +73,7 @@ const HisaData = (() => {
   }
   function save(){ try { localStorage.setItem(CMS_KEY, JSON.stringify(cache)); } catch(e){} }
   function isLocalMode(){ try { return !!localStorage.getItem(CMS_KEY); } catch(e){ return false; } }
-  function resetLocal(){ try { localStorage.removeItem(CMS_KEY); } catch(e){} cache = null; }
+  function resetLocal(){ try { localStorage.removeItem(CMS_KEY); } catch(e){} pubCacheClear(); cache = null; }
   function uid(prefix){ return prefix + Date.now().toString(36).toUpperCase() + Math.floor(Math.random()*99); }
   /* --- kueri publik --- */
   function kategoriNama(id){ const k = (cache?.kategori || []).find(x => x.Kategori_ID === id); return k ? k.nama : ''; }
@@ -116,12 +130,12 @@ const HisaData = (() => {
   /* Gambar utama: foto unggahan, URL langsung, atau penahan gradasi sesuai data */
   function thumbHTML(b, label){
     if (b.gambar_media_id)
-      return `<img data-media="${esc(b.gambar_media_id)}" alt="${esc(b.alt_gambar || b.judul)}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+      return `<img data-media="${esc(b.gambar_media_id)}" alt="${esc(b.alt_gambar || b.judul)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block">`;
     if (b.gambar_utama_file_id && /^https?:\/\//i.test(b.gambar_utama_file_id))
-      return `<img src="${esc(b.gambar_utama_file_id)}" alt="${esc(b.alt_gambar || b.judul)}" style="width:100%;height:100%;object-fit:cover">`;
+      return `<img src="${esc(b.gambar_utama_file_id)}" alt="${esc(b.alt_gambar || b.judul)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover">`;
     return `<span class="thumb-ph" style="background:${esc(b.gambar_grad || 'linear-gradient(135deg,#016767,#0E8A84)')}"><span><span data-ic="${esc(b.gambar_ikon || 'news')}"></span><br>${esc(label || b.judul)}</span></span>`;
   }
-  return { esc, slugify, fmtDate, sanitize, load, save, isLocalMode, resetLocal, kategoriNama, apiCall, apiMode, getSession, setSession, clearSession, sesiAdmin, sesiPengurus,
+  return { esc, slugify, fmtDate, sanitize, load, save, isLocalMode, resetLocal, kategoriNama, apiCall, apiMode, getSession, setSession, clearSession, sesiAdmin, sesiPengurus, clearPubCache: pubCacheClear,
            terbit, pengumumanAktif, upsertBerita, hapusBerita, upsertKategori, hapusKategori,
            upsertPengumuman, hapusPengumuman, exportJSON, importJSON, thumbHTML,
            mediaPut, mediaURL, mediaDel, hydrateMedia,
