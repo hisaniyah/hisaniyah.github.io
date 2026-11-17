@@ -14,7 +14,7 @@
 .portal-title{font-size:54px;font-weight:800;letter-spacing:-.01em;line-height:1.12;margin-top:16px;color:var(--ink)}
 .portal-sub{color:var(--ink-soft);max-width:540px;margin:12px auto 0;font-size:16px}
 .portal-card{background:#fff;border-radius:26px;box-shadow:0 24px 60px rgba(1,80,80,.14);padding:44px 48px;max-width:860px;width:100%;margin-top:38px;text-align:center}
-.portal-gbtn{display:flex;align-items:center;justify-content:center;gap:14px;width:100%;max-width:560px;margin:0 auto;height:68px;border:none;border-radius:16px;background:var(--teal);color:#fff;font-family:inherit;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 12px 26px rgba(1,103,103,.30);transition:background .15s ease,transform .15s ease}
+.portal-gbtn{display:flex;align-items:center;justify-content:center;gap:14px;width:100%;max-width:560px;margin:0 auto;min-height:68px;padding:10px 20px;border:none;border-radius:16px;background:var(--teal);color:#fff;font-family:inherit;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 12px 26px rgba(1,103,103,.30);transition:background .15s ease,transform .15s ease}
 .portal-gbtn:hover{background:var(--teal-dark);transform:translateY(-1px)}
 .portal-gbtn .g-circle{width:42px;height:42px;flex:none;border-radius:50%;background:#fff;display:grid;place-items:center}
 .portal-gbtn .g-circle svg{width:23px;height:23px;display:block}
@@ -27,7 +27,7 @@
   .portal-title{font-size:34px}
   .portal-logo{width:96px;height:96px}
   .portal-card{padding:26px 20px;border-radius:22px}
-  .portal-gbtn{max-width:none;height:58px;font-size:17.5px}
+  .portal-gbtn{max-width:none;min-height:58px;padding:9px 14px;font-size:16.5px}
   .portal-gbtn .g-circle{width:36px;height:36px}
   .portal-gbtn .g-circle svg{width:20px;height:20px}
   .portal-wave{height:70px;margin-top:36px}
@@ -95,6 +95,59 @@
   .portal-stats,.portal-stats.tiga{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:640px){
-  .portal-tiles{grid-template-columns:1fr}
+  .portal-tiles{grid-template-columns:repeat(2,1fr);gap:10px}
+  .portal-tile{padding:16px 10px;font-size:14px}
   .portal-greet strong{font-size:26px}
+}
+
+/* ===== Tahap P5: keluar oranye, navigasi bawah HP, baris data, menu akun, formulir ===== */
+.portal-keluar{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--orange);color:#fff;border:none;font-family:inherit;font-size:13.5px;font-weight:800;padding:9px 16px;border-radius:999px;cursor:pointer;flex:none;box-shadow:0 6px 16px rgba(254,136,13,.35)}
+.portal-keluar:hover{background:var(--orange-dark)}
+.portal-keluar svg{width:16px;height:16px}
+.portal-bnav{display:none}
+.portal-bnav a{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:#7C9794;font-size:11px;font-weight:700;position:relative;padding-top:5px}
+.portal-bnav a.aktif{color:var(--teal)}
+.portal-bnav a.aktif::before{content:"";position:absolute;top:-9px;left:22%;right:22%;height:3.5px;border-radius:99px;background:var(--orange)}
+.portal-bnav svg{width:23px;height:23px}
+@media (max-width:1020px){
+  .portal-bnav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:8px 4px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 18px rgba(1,79,79,.08);z-index:45}
+  .portal-content{padding-bottom:100px}
+  .portal-sidebar{display:none}
+}
+.prow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:13px 16px;margin-bottom:10px}
+.prow .ava{width:42px;height:42px;border-radius:50%;background:var(--teal-pale);color:var(--teal);display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+.prow .siapa{flex:1;min-width:0}
+.prow .siapa b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .siapa span{font-size:12.5px;color:var(--ink-soft)}
+.prow .chev{color:#B9CFCB;font-size:19px;font-weight:700;flex:none}
+.prow-klik{cursor:pointer}
+.pm-row{display:flex;justify-content:space-between;gap:14px;font-size:14px;padding:5.5px 0}
+.pm-row span{color:var(--ink-soft);font-weight:600}
+.pm-row b{font-weight:800;text-align:right}
+.pm-aktif{color:var(--teal)}
+.profil-besar{text-align:center;padding:6px 0 2px}
+.profil-besar .ava{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:#fff;display:grid;place-items:center;font-size:29px;font-weight:800;margin:0 auto;overflow:hidden}
+.profil-besar .ava img{width:100%;height:100%;object-fit:cover}
+.profil-besar .nama{font-size:19px;font-weight:800;color:var(--teal-dark);margin-top:12px}
+.profil-besar .email{font-size:13px;color:var(--ink-soft);margin-top:2px;word-break:break-all}
+.menu-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #EFF5F4;text-decoration:none;color:var(--ink)}
+.menu-row:last-child{border-bottom:none;padding-bottom:2px}
+.menu-row .ic{width:40px;height:40px;border-radius:12px;background:var(--teal-pale);display:grid;place-items:center;flex:none;color:var(--teal)}
+.menu-row .ic.oranye{background:#FFF1E2;color:var(--orange-dark)}
+.menu-row .ic svg{width:20px;height:20px}
+.menu-row .teks{flex:1;min-width:0}
+.menu-row .teks b{font-size:14.5px;display:block}
+.menu-row .teks span{font-size:12px;color:var(--ink-soft)}
+.menu-row .chev{color:#B9CFCB;font-size:18px;font-weight:700}
+.portal-formwrap{min-height:100vh;background:linear-gradient(180deg,#F2FBFD 0%,var(--bg-soft) 100%);display:flex;flex-direction:column}
+.portal-form-main{max-width:880px;margin:0 auto;padding:24px 20px 48px;width:100%;flex:1}
+.portal-topbar .brand-mini.tampil{display:flex}
+@media (max-width:1020px){.portal-form-main{padding-bottom:110px}}
+@media (max-width:640px){
+  .prow{flex-wrap:wrap;row-gap:8px}
+  .prow .siapa{flex:1 1 calc(100% - 58px)}
+  .prow .siapa b{white-space:normal}
+  .prow .st{margin-left:54px}
+  .prow a.btn{margin-left:auto}
+  .prow .chev{margin-left:auto}
 }

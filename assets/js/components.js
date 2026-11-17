@@ -77,7 +77,7 @@ function renderHeader(){
   try { const s = JSON.parse(localStorage.getItem('hisa_session') || 'null'); if (s && s.user) sesiUser = s.user; } catch(e){}
   const akunHref = sesiUser ? '/pendataan/akun/' : '/pendataan/';
   const akunLabel = sesiUser ? 'Akun Saya' : 'Portal Alumni';
-  const chipIsi = sesiUser ? (sesiUser.Foto ? `<img src="${sesiUser.Foto}" alt="" style="width:26px;height:26px;border-radius:50%">` : '') + `<span>${String(sesiUser.Nama || 'Akun').split(' ')[0]}</span>` : '';
+  const chipIsi = sesiUser ? `<span>${String(sesiUser.Nama || 'Akun').split(' ')[0]}</span>` : '';
   const chipStyle = sesiUser ? 'display:inline-flex;align-items:center;gap:8px;font-weight:700' : 'display:none';
   return `
   <header class="site-header">
@@ -184,7 +184,7 @@ const BOTTOM_NAV = [
   {label:'Beranda', href:'/', icon:'home', match:['/']},
   {label:'Berita', href:'/berita/', icon:'news', match:['/berita/']},
   {label:'HISANIYAH TV', href:'https://youtube.com/@hisaniyahtv', icon:'tv', match:['/tv/']},
-  {label:'Alumni', href:'/pendataan/masuk/', icon:'users', match:['/pendataan/masuk','/pendataan/daftar','/pendataan/lupa-sandi','/pendataan/atur-ulang','/pendataan/verifikasi-email']},
+  {label:'Alumni', href:'/pendataan/masuk/', icon:'users', match:['/pendataan/']},
   {label:'Akun', href:'/pendataan/akun/', icon:'user', match:['/pendataan/akun']}
 ];
 function renderBottomNav(){
