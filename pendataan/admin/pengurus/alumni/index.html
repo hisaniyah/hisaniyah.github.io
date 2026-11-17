@@ -33,7 +33,6 @@
   <div class="field"><label>Jenis kelamin</label><select id="u-jk"><option value="">—</option><option>Laki-laki</option><option>Perempuan</option></select></div>
   <div class="field"><label>WhatsApp</label><input id="u-wa" maxlength="20"></div>
   <div class="field"><label>Tahun masuk</label><input id="u-masuk" type="number" min="1950" max="2100"></div>
-  <div class="field"><label>Tahun lulus</label><input id="u-lulus" type="number" min="1950" max="2100"></div>
   <div class="field"><label>KORDA</label><select id="u-korda"><option value="">— belum ada —</option></select></div>
   <div class="field"><label>Email</label><input id="u-email" type="email" maxlength="120"></div>
   <div class="field full"><label>Alamat</label><textarea id="u-alamat" rows="2" maxlength="300"></textarea></div>
@@ -94,7 +93,7 @@
     editId = id;
     $('u-nama').value = a.Nama || ''; $('u-tempat').value = a.Tempat_Lahir || ''; $('u-lahir').value = String(a.Tanggal_Lahir || '').slice(0,10);
     $('u-jk').value = a.Jenis_Kelamin || ''; $('u-wa').value = a.WhatsApp || ''; $('u-masuk').value = a.Tahun_Masuk || '';
-    $('u-lulus').value = a.tahun_lulus || ''; $('u-korda').value = a.Korda_ID || ''; $('u-email').value = a.Email || '';
+    $('u-korda').value = a.Korda_ID || ''; $('u-email').value = a.Email || '';
     $('u-alamat').value = a.Alamat || ''; $('u-kab').value = a.Kabupaten || ''; $('u-prov').value = a.Provinsi || '';
     $('u-pendidikan').value = a.Pendidikan || ''; $('u-pekerjaan').value = a.Pekerjaan || '';
     $('panel-ubah').style.display = 'block'; $('panel-ubah').scrollIntoView({ behavior: 'smooth' });
@@ -103,7 +102,7 @@
   $('form').addEventListener('submit', async e => {
     e.preventDefault();
     const d = { Nama: $('u-nama').value.trim(), Tempat_Lahir: $('u-tempat').value.trim(), Tanggal_Lahir: $('u-lahir').value, Jenis_Kelamin: $('u-jk').value,
-      WhatsApp: $('u-wa').value.trim(), Tahun_Masuk: $('u-masuk').value, tahun_lulus: $('u-lulus').value, Korda_ID: $('u-korda').value,
+      WhatsApp: $('u-wa').value.trim(), Tahun_Masuk: $('u-masuk').value, Korda_ID: $('u-korda').value,
       Email: $('u-email').value.trim(), Alamat: $('u-alamat').value.trim(), Kabupaten: $('u-kab').value.trim(), Provinsi: $('u-prov').value.trim(),
       Pendidikan: $('u-pendidikan').value.trim(), Pekerjaan: $('u-pekerjaan').value.trim() };
     try { await HisaData.apiCall('pengurus.alumni.ubah', { Alumni_ID: editId, data: d }); toast('Data alumni diperbarui'); $('panel-ubah').style.display = 'none'; semua = null; muat(); }
