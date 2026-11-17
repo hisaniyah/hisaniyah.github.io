@@ -83,7 +83,7 @@ function renderHeader(){
   <header class="site-header">
     <div class="header-in">
       <a class="brand" href="/" aria-label="HISANIYAH — Beranda">
-        <span class="brand-badge"><img src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo resmi HISANIYAH" width="60" height="60"></span>
+        <span class="brand-badge"><img src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo resmi HISANIYAH" width="60" height="60"></span>
         <span class="brand-text"><strong>HISANIYAH</strong><span>Himpunan Santri-Alumni<br>K.H Yahya Syabrawi</span></span>
       </a>
       <span class="brand-div" aria-hidden="true"></span>
@@ -115,7 +115,7 @@ function renderFooter(){
     <div class="footer-grid">
       <div>
         <div class="footer-brand">
-          <span class="brand-badge"><img src="/assets/img/logo-hisaniyah-trans-512.png" alt="Logo resmi HISANIYAH" width="52" height="52"></span>
+          <span class="brand-badge"><img src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo resmi HISANIYAH" width="52" height="52"></span>
           <span><strong>HISANIYAH</strong><span>Himpunan Santri-Alumni<br>K.H Yahya Syabrawi</span></span>
         </div>
         <p>Wadah silaturahmi, sinergi, dan pengabdian para santri dan alumni untuk kemaslahatan umat dan almamater.</p>
