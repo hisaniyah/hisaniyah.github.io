@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Halaman Tidak Ditemukan — HISANIYAH</title>
+<script>
+/* Alamat berita statis yang belum dibuatkan halamannya (berita baru dari CMS) diteruskan ke halaman baca dinamis agar tetap bisa dibuka. */
+(function () {
+  var m = location.pathname.match(/^\/berita\/([a-z0-9][a-z0-9-]*)\/?$/);
+  if (m && m[1] !== 'detail') location.replace('/berita/detail/?slug=' + m[1]);
+})();
+</script>
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
