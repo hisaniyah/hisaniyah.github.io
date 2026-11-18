@@ -127,10 +127,15 @@
       Pekerjaan: $('f-pekerjaan').value.trim(), Email: $('f-email').value.trim() };
     $('form-status').textContent = 'Menyimpan…';
     try {
-      if (id) await HisaData.apiCall('alumni.ubah', { Alumni_ID: id, data });
-      else await HisaData.apiCall('alumni.daftar', { hubungan: $('f-hub').value, data });
-      sessionStorage.setItem('hisa_toast', 'Data alumni tersimpan');
-      location.href = '/pendataan/akun/';
+      if (id) {
+        await HisaData.apiCall('alumni.ubah', { Alumni_ID: id, data });
+        sessionStorage.setItem('hisa_toast', 'Data alumni tersimpan');
+        location.href = '/pendataan/akun/';
+      } else {
+        const hasil = await HisaData.apiCall('alumni.daftar', { hubungan: $('f-hub').value, data });
+        const aid = hasil && hasil.alumni && hasil.alumni.Alumni_ID ? hasil.alumni.Alumni_ID : '';
+        location.href = '/pendataan/akun/' + (aid ? '?baru=' + encodeURIComponent(aid) : '');
+      }
     } catch(err){ $('form-status').textContent = 'Gagal menyimpan: ' + err.message; }
   });
 })();
