@@ -36,8 +36,11 @@
       <button type="button" data-cmd="insertUnorderedList">• Daftar</button>
       <button type="button" data-cmd="insertOrderedList">1. Daftar</button>
       <button type="button" id="rte-link">Tautan</button>
+      <button type="button" id="rte-foto">🖼 Sisipkan Foto</button>
       <button type="button" data-cmd="removeFormat">Bersihkan</button>
     </div><div class="rte-area" id="f-isi" contenteditable="true"></div></div>
+    <input type="file" id="f-file-isi" accept="image/*" hidden>
+    <small style="display:block;margin-top:8px;color:var(--ink-soft)">Tombol "Sisipkan Foto" menaruh foto tepat di posisi kursor dalam isi berita — bisa di atas, tengah, atau bawah teks. Bisa dipakai berkali-kali untuk banyak foto.</small>
   </div>
   <div class="field"><label>Gambar utama</label>
     <div class="upload-box" id="up-box">
@@ -55,7 +58,7 @@
         </div>
       </div>
     </div>
-    <small>Mode uji: foto tersimpan di peramban ini. Setelah Tahap 4, foto yang diunggah di sini tersimpan otomatis ke Google Drive organisasi — folder WEB Hisaniyah › Media.</small>
+    <small>Foto tersimpan otomatis ke Google Drive organisasi — folder WEB Hisaniyah › Media.</small>
   </div>
   <div class="field"><label for="f-alt">Teks alternatif gambar</label><input id="f-alt" maxlength="120" placeholder="Deskripsi singkat gambar"></div>
   <div class="field"><label for="f-tags">Kata kunci (pisahkan koma)</label><input id="f-tags" maxlength="120" placeholder="alumni, kegiatan"></div>
@@ -135,6 +138,29 @@
   ['dragleave','drop'].forEach(ev => upBox.addEventListener(ev, e => { e.preventDefault(); upBox.classList.remove('drag'); }));
   upBox.addEventListener('drop', e => acceptFile(e.dataTransfer.files && e.dataTransfer.files[0]));
   showPreview();
+  /* ===== Sisipkan foto ke isi berita (di posisi kursor) ===== */
+  const isiEl = $('f-isi'), fileIsi = $('f-file-isi');
+  let rangeIsi = null;
+  function simpanRange(){ const s = window.getSelection(); if (s.rangeCount && isiEl.contains(s.anchorNode)) rangeIsi = s.getRangeAt(0).cloneRange(); }
+  ['keyup','mouseup','focus'].forEach(ev => isiEl.addEventListener(ev, simpanRange));
+  $('rte-foto').addEventListener('click', () => { simpanRange(); fileIsi.click(); });
+  fileIsi.addEventListener('change', async () => {
+    const file = fileIsi.files[0]; fileIsi.value = '';
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { toast('Berkas harus berupa gambar'); return; }
+    if (!(HisaData.apiMode() && HisaData.sesiAdmin())) { toast('Sisipkan foto memerlukan koneksi server — masuk sebagai pengurus dulu'); return; }
+    toast('Mengunggah foto…');
+    try {
+      const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.readAsDataURL(file); });
+      const up = await HisaData.apiCall('admin.media.upload', { nama: file.name, mime: file.type, base64: b64 });
+      const img = '<img src="' + up.url_tampil + '" alt="">';
+      isiEl.focus();
+      if (rangeIsi) { const s = window.getSelection(); s.removeAllRanges(); s.addRange(rangeIsi); }
+      if (!document.execCommand('insertHTML', false, img + '<p><br></p>')) isiEl.innerHTML += img;
+      simpanRange();
+      toast('Foto disisipkan ke isi berita');
+    } catch(e){ toast('Unggah foto gagal: ' + e.message); }
+  });
   document.querySelectorAll('[data-cmd]').forEach(b => b.addEventListener('click', () => { document.execCommand(b.dataset.cmd, false, null); $('f-isi').focus(); }));
   document.querySelectorAll('[data-blk]').forEach(b => b.addEventListener('click', () => { document.execCommand('formatBlock', false, b.dataset.blk); $('f-isi').focus(); }));
   $('rte-link').addEventListener('click', () => { const u = prompt('Alamat tautan (https://…)'); if (u) document.execCommand('createLink', false, u); $('f-isi').focus(); });

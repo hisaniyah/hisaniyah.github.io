@@ -30,6 +30,7 @@
       <a href="#" data-view="kta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><circle cx="8.6" cy="11" r="1.9"/><path d="M5.8 16.6c.6-1.5 1.6-2.2 2.8-2.2s2.2.7 2.8 2.2M14.5 9.8h4M14.5 13.4h4"/></svg>KTA Alumni</a>
       <a href="#" data-view="akun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.8"/><path d="M5 20.2c.9-3.4 3.6-5.2 7-5.2s6.1 1.8 7 5.2"/></svg>Akun</a>
     </nav>
+    <div id="portal-nav-extra"></div>
     <div class="portal-side-foot">
       <nav class="portal-nav">
         <a href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Web Resmi</a>
@@ -38,12 +39,14 @@
   </aside>
   <div class="portal-main">
     <div class="portal-topbar">
+      <button class="burger" id="portal-burger" type="button" aria-label="Buka menu"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
       <span class="brand-mini"><img src="/assets/img/logo-hisaniyah-trans-256.webp" alt="">Portal Alumni</span>
       <button class="portal-keluar btn-keluar-portal" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h3.4A2.6 2.6 0 0 1 20 6.6v10.8a2.6 2.6 0 0 1-2.6 2.6H14"/><path d="M10 16.5 5 12l5-4.5M5 12h11"/></svg>Keluar</button>
     </div>
     <main class="portal-content" id="akun-box"><p style="color:var(--ink-soft);font-weight:600">Memuat akun…</p></main>
   </div>
 </div>
+<div class="portal-overlay" id="portal-overlay"></div>
 <nav class="portal-bnav" id="portal-bnav" aria-label="Menu Portal Alumni">
   <a href="#" data-view="dashboard" class="aktif"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.8 12 3.8l8.5 7V20a1.6 1.6 0 0 1-1.6 1.6h-4.4v-6.4H9.5v6.4H5.1A1.6 1.6 0 0 1 3.5 20z"/></svg>Dashboard</a>
   <a href="#" data-view="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8.2" r="3.4"/><path d="M3 19.6c.7-3.1 3-4.8 6-4.8s5.3 1.7 6 4.8"/><path d="M16.2 5.4a3.4 3.4 0 0 1 0 6.1M18.4 15.2c1.5.7 2.4 2 2.7 4"/></svg>Data Alumni</a>
@@ -54,6 +57,16 @@
 <script src="/assets/js/api.js"></script>
 <script src="/assets/js/kta-download.js?v=3"></script>
 <script src="/assets/js/foto-crop.js"></script>
+<script>
+  (function(){
+    const pb = document.getElementById('portal-burger'), psb = document.getElementById('portal-sidebar'), pov = document.getElementById('portal-overlay');
+    if (!pb || !psb) return;
+    const tutup = () => { psb.classList.remove('open'); if (pov) pov.classList.remove('tampil'); };
+    pb.addEventListener('click', () => { psb.classList.add('open'); if (pov) pov.classList.add('tampil'); });
+    if (pov) pov.addEventListener('click', tutup);
+    psb.querySelectorAll('a').forEach(a => a.addEventListener('click', tutup));
+  })();
+</script>
 <script>
 (async () => {
   const box = document.getElementById('akun-box');
@@ -111,14 +124,36 @@
           <div class="ka-qr"><img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}"><span>Pindai untuk verifikasi</span></div>
         </div>
       </div>${k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="btn btn-outline btn-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" style="padding:9px 15px">${k.alumni.foto_file_id ? '📷 Ganti Foto KTA' : '＋ Tambah Foto untuk KTA'}</button><span class="foto-kta-status" data-alumni="${esc(k.alumni.Alumni_ID)}" style="font-weight:600;color:var(--ink-soft);font-size:14px"></span><input type="file" accept="image/*" class="input-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" hidden></div>` : ''}<div style="margin:0 0 16px;display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn btn-teal btn-unduh-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" data-nama="${esc(k.alumni.Nama)}" data-nomor="${esc(k.alumni.no_anggota || '')}" data-angkatan="${esc(k.alumni.angkatan_label || '')}" data-korda="${esc(k.alumni.korda_label || '')}" data-foto="${k.alumni.foto_file_id ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(k.alumni.foto_file_id) + '&sz=w400' : ''}" data-kode="${esc(k.alumni.kode_verifikasi_qr || '')}" style="padding:10px 18px">⬇ Unduh KTA</button><a class="btn btn-orange" href="https://hisaniyah.or.id/pemesanan/" target="_blank" rel="noopener" style="padding:10px 18px">🖨️ Cetak KTA</a></div>`;
-  const tilePanel = ['super_admin', 'pengurus_pusat'].includes(u.Role)
-    ? `<a class="portal-tile" href="/pendataan/admin/"><span class="ic">${svgFile}</span>Panel Admin CMS<small>Berita &amp; pengumuman</small></a>`
-    : (u.Role === 'admin_korda'
-      ? `<a class="portal-tile" href="/pendataan/admin/pengurus/"><span class="ic">${svgUsers}</span>Panel Pengurus<small>Kelola alumni KORDA</small></a>`
-      : `<a class="portal-tile" href="/"><span class="ic">${svgGlobe}</span>Web Resmi<small>hisaniyah.or.id</small></a>`);
-  const menuPengurus = u.Role !== 'alumni' ? `
-      ${['super_admin', 'pengurus_pusat'].includes(u.Role) ? `<a class="menu-row" href="/pendataan/admin/"><span class="ic">${svgFile}</span><span class="teks"><b>Panel Admin CMS</b><span>Berita, kategori &amp; pengumuman</span></span><span class="chev">›</span></a>` : ''}
-      <a class="menu-row" href="/pendataan/admin/pengurus/"><span class="ic">${svgUsers}</span><span class="teks"><b>Panel Pengurus</b><span>Data alumni, pengguna &amp; wilayah</span></span><span class="chev">›</span></a>` : '';
+  const tilePanel = u.Role === 'alumni'
+    ? `<a class="portal-tile" href="/"><span class="ic">${svgGlobe}</span>Web Resmi<small>hisaniyah.or.id</small></a>`
+    : '';
+  const navExtra = document.getElementById('portal-nav-extra');
+  if (navExtra && u.Role !== 'alumni') {
+    const pusat = ['super_admin', 'pengurus_pusat'].includes(u.Role);
+    const svgDash = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>';
+    const svgNews = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V9"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>';
+    const svgGal = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>';
+    const svgMega = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>';
+    const svgChart = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3"/><path d="M12 10v8"/><path d="M17 6v12"/></svg>';
+    const svgPin = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+    let h = '';
+    if (pusat) {
+      h += '<nav class="portal-nav"><p class="portal-nav-label">Menu CMS</p>'
+        + `<a href="/pendataan/admin/">${svgDash}Dashboard CMS</a>`
+        + `<a href="/pendataan/admin/berita/">${svgNews}Berita</a>`
+        + `<a href="/pendataan/admin/kategori/">${svgGal}Kategori</a>`
+        + `<a href="/pendataan/admin/pengumuman/">${svgMega}Pengumuman</a>`
+        + (u.Role === 'super_admin' ? `<a href="/pendataan/admin/pimpinan/">${svgGal}Foto Pimpinan</a>` : '')
+        + '</nav>';
+    }
+    h += '<nav class="portal-nav"><p class="portal-nav-label">Menu Pengurus</p>'
+      + `<a href="/pendataan/admin/pengurus/">${svgChart}Statistik Alumni</a>`
+      + `<a href="/pendataan/admin/pengurus/alumni/">${svgUsers}Data Alumni</a>`
+      + `<a href="/pendataan/admin/pengurus/pengguna/">${svgOrang}Pengguna &amp; Peran</a>`
+      + (pusat ? `<a href="/pendataan/admin/pengurus/wilayah/">${svgPin}KORDA &amp; Angkatan</a>` : '')
+      + '</nav>';
+    navExtra.innerHTML = h;
+  }
   const baruId = new URLSearchParams(location.search).get('baru') || '';
   const baruK = baruId ? kelola.find(k => k.alumni.Alumni_ID === baruId && k.alumni.Status_Verifikasi === 'terverifikasi') : null;
   const berhasilHTML = baruK ? `
@@ -147,7 +182,7 @@
     <p class="portal-greet">Selamat Datang,<strong>${esc(u.Nama)}</strong></p>
     <div class="portal-panel">
       <h3 style="font-size:13px;font-weight:800;color:var(--teal);letter-spacing:.6px;text-transform:uppercase;margin-bottom:16px">Akses Cepat</h3>
-      <div class="portal-tiles">
+      <div class="portal-tiles${tilePanel ? '' : ' dua'}">
         <a class="portal-tile" href="/pendataan/akun/data/"><span class="ic">${svgPlus}</span>Tambah Data Alumni<small>Data diri atau keluarga</small></a>
         <a class="portal-tile" href="#" data-view-link="kta"><span class="ic">${svgCard}</span>Lihat KTA<small>Kartu anggota digital</small></a>
         ${tilePanel}
@@ -178,7 +213,6 @@
     </div>
     <div class="portal-panel" style="max-width:660px;margin-top:16px">
       <h3 style="font-size:13px;font-weight:800;color:var(--teal);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Tautan</h3>
-      ${menuPengurus}
       <a class="menu-row" href="/"><span class="ic">${svgGlobe}</span><span class="teks"><b>Web Resmi HISANIYAH</b><span>Kembali ke halaman publik hisaniyah.or.id</span></span><span class="chev">›</span></a>
       <a class="menu-row" href="https://myaccount.google.com/" target="_blank" rel="noopener"><span class="ic oranye">${svgOrang}</span><span class="teks"><b>Kelola Akun Google</b><span>Ganti nama &amp; foto akun di Google</span></span><span class="chev">›</span></a>
     </div>

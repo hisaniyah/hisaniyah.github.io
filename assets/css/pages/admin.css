@@ -55,6 +55,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:15px}
 .rte-bar button{padding:7px 11px;border-radius:8px;font-weight:700;font-size:14px;background:#fff;border:1px solid var(--line)}
 .rte-bar button:hover{border-color:var(--teal);color:var(--teal)}
 .rte-area{min-height:260px;padding:16px;font-size:16.5px;line-height:1.65;outline:none}
+.rte-area img{max-width:100%;height:auto;border-radius:10px;display:block;margin:14px auto}
 .rte-area:empty::before{content:"Tulis isi berita di sini…";color:#9DB8B8}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--teal-dark);color:#fff;font-weight:700;padding:13px 22px;border-radius:999px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:99}
 .toast.show{opacity:1;transform:translateX(-50%)}
