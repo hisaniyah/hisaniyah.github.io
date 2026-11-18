@@ -1,0 +1,16 @@
+name: sync-config
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          curl -fsSL https://hisaniyah.web.app/assets/js/config.js -o assets/js/config.js
+          git config user.name "hisaniyah"
+          git config user.email "hisaniyahru1@gmail.com"
+          git add assets/js/config.js
+          git commit -m "Alih tayang backend ke Supabase" || echo "tidak ada perubahan"
+          git push
