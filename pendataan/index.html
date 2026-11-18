@@ -22,16 +22,54 @@
   <h1 class="portal-title">Portal Alumni</h1>
   <p class="portal-sub">Kelola data alumni, keluarga, dan kartu anggota digital Anda dalam satu tempat.</p>
   <section class="portal-card" style="max-width:560px;padding:34px 38px" aria-label="Masuk atau daftar Portal Alumni">
-    <a class="portal-gbtn" href="/pendataan/masuk/" style="text-decoration:none"><span class="g-circle"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg></span>Daftar/Login Dengan Akun Google</a>
-    <p class="portal-note">Akun otomatis dibuat saat pertama kali masuk dengan Google.</p>
+    <button id="btn-google" class="portal-gbtn" type="button"><span class="g-circle"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg></span>Daftar/Login Dengan Akun Google</button>
+    <div id="gis-btn" style="display:none;justify-content:center;margin-top:16px"></div>
+    <p id="login-status" style="font-weight:600;color:var(--ink-soft)"></p>
+    <p class="portal-note">Satu tombol untuk daftar dan masuk — akun otomatis dibuat saat pertama kali masuk dengan Google.</p>
   </section>
   <p style="margin-top:22px"><a href="/" style="color:var(--teal);font-weight:700;font-size:14.5px;text-decoration:none">← Kembali ke Web Resmi</a></p>
 </main>
 <svg class="portal-wave" viewBox="0 0 1440 130" preserveAspectRatio="none" aria-hidden="true"><path fill="#BFE9E6" opacity=".7" d="M0,88 C320,60 640,96 960,84 C1200,75 1360,54 1440,44 L1440,130 L0,130 Z"/><path fill="#FE880D" d="M0,100 C320,74 640,108 960,96 C1200,87 1360,66 1440,56 L1440,130 L0,130 Z"/><path fill="#016767" d="M0,112 C320,88 640,120 960,108 C1200,99 1360,80 1440,70 L1440,130 L0,130 Z"/></svg>
+<script src="/assets/js/components.js"></script>
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/api.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-if (HisaData.getSession()) location.replace('/pendataan/akun/');
+(async () => {
+  const st = document.getElementById('login-status');
+  await HisaData.load();
+  if (HisaData.getSession()) { location.href = '/pendataan/akun/'; return; }
+  const cid = window.HISA_GIS_CLIENT_ID || '';
+  if (!cid) { st.textContent = 'Login Google belum diaktifkan pengurus.'; return; }
+  if (!HisaData.apiMode()) { st.textContent = 'Layanan akun belum terhubung ke server.'; return; }
+  let gisSiap = false;
+  const btnGoogle = document.getElementById('btn-google');
+  btnGoogle.addEventListener('click', () => {
+    if (!gisSiap) { st.textContent = 'Tunggu sebentar, menyiapkan masuk dengan Google…'; return; }
+    st.textContent = 'Membuka pilihan akun Google…';
+    google.accounts.id.prompt((n) => {
+      if (n.isNotDisplayed() || n.isSkippedMoment()) {
+        document.getElementById('gis-btn').style.display = 'flex';
+        st.textContent = 'Ketuk tombol Google di bawah ini untuk masuk.';
+      }
+    });
+  });
+  function initGIS(){
+    if (!window.google || !google.accounts || !google.accounts.id) { setTimeout(initGIS, 400); return; }
+    google.accounts.id.initialize({ client_id: cid, callback: async (resp) => {
+      st.textContent = 'Memeriksa akun Google Anda…';
+      try {
+        const hasil = await HisaData.apiCall('auth.login', { id_token: resp.credential });
+        HisaData.setSession({ token: hasil.token, user: hasil.user });
+        st.textContent = 'Berhasil masuk. Mengalihkan…';
+        location.href = '/pendataan/akun/';
+      } catch(e){ st.textContent = 'Gagal masuk: ' + e.message; }
+    } });
+    google.accounts.id.renderButton(document.getElementById('gis-btn'), { theme: 'outline', size: 'large', text: 'signin_with', shape: 'pill', width: 280 });
+    gisSiap = true;
+  }
+  initGIS();
+})();
 </script>
 </body>
 </html>
