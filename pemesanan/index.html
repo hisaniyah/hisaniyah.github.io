@@ -51,6 +51,9 @@
   #sukses { display: none; text-align: center; }
   #sukses .centang { font-size: 52px; }
   #sukses .id { font-size: 24px; font-weight: 800; color: #016767; margin: 8px 0; }
+  .rincian-sukses { text-align: left; background: #f6fafa; border: 1px solid #dde7e7; border-radius: 12px; padding: 14px 16px; margin: 16px 0 4px; font-size: 16px; }
+  .rincian-sukses .baris { display: flex; justify-content: space-between; padding: 3px 0; gap: 12px; }
+  .rincian-sukses .baris span { color: #5f7373; }
   .kecil { font-size: 13.5px; color: #5f7373; margin-top: 5px; }
 </style>
 </head>
@@ -140,7 +143,13 @@
     <h1>Pemesanan Terkirim!</h1>
     <p class="lead">Nomor pesanan Anda:</p>
     <div class="id" id="idSukses"></div>
-    <p class="lead">Simpan nomor ini. Admin akan memverifikasi pembayaran dan menghubungi Anda lewat WhatsApp.</p>
+    <div class="rincian-sukses">
+      <div class="baris"><span>Nama</span><b id="suksesNama"></b></div>
+      <div class="baris"><span>Jenis Kartu</span><b id="suksesJenis"></b></div>
+      <div class="baris"><span>Harga Kartu</span><b id="suksesHarga"></b></div>
+    </div>
+    <p class="lead"><b>Simpan nomor pesanan ini</b> sebagai bukti pemesanan Anda.</p>
+    <button type="button" class="btn-kirim" onclick="location.reload()">Selesai</button>
   </div>
 </div>
 
@@ -248,6 +257,9 @@
         var s = document.getElementById('sukses');
         s.style.display = 'block';
         document.getElementById('idSukses').textContent = res.id;
+        document.getElementById('suksesNama').textContent = nama;
+        document.getElementById('suksesJenis').textContent = jenisDipilih === 'E-Money' ? 'Kartu E-Money' : 'Kartu Biasa';
+        document.getElementById('suksesHarga').textContent = rp(res.harga);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       })
       .catch(function (err) {
