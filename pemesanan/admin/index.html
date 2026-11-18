@@ -29,6 +29,14 @@
   .toolbar input, .toolbar select { border: 1.5px solid #cfdddd; border-radius: 9px; padding: 9px 11px; font-size: 13.5px; font-family: inherit; }
   .toolbar input { flex: 1; min-width: 170px; }
   .tabel-bungkus { overflow-x: auto; }
+  .berkas-sel { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .thumb { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 1.5px solid #cfdddd; cursor: zoom-in; background: #f2f7f7; }
+  .thumb-muat { font-size: 12px; color: #7a8a8a; }
+  .btn-lihat { background: #eef4f4; color: #014d4d; border: 1.5px solid #cfdddd; border-radius: 8px; padding: 6px 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  #overlay { display: none; position: fixed; inset: 0; background: rgba(10,25,25,.93); z-index: 60; flex-direction: column; align-items: center; justify-content: center; padding: 18px; }
+  #overlay img { max-width: 96vw; max-height: 80vh; border-radius: 10px; background: #fff; }
+  #ovKet { color: #fff; margin-top: 12px; font-size: 14.5px; text-align: center; }
+  #ovTutup { position: absolute; top: 14px; right: 14px; background: #FE880D; color: #14201f; border: none; border-radius: 9px; padding: 10px 16px; font-size: 14px; font-weight: 800; cursor: pointer; }
   @media (max-width: 720px) {
     .layout { flex-direction: column; }
     aside { width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 14px; }
@@ -195,15 +203,17 @@
         '<td><b>' + esc(d.nama) + '</b><br><small>' + esc(d.id) + '</small></td>' +
         '<td>' + esc(d.alamat) + '</td><td>' + esc(d.wa) + '</td><td>' + esc(d.jenis) + '</td>' +
         '<td>' + rp(d.harga) + '</td>' +
-        '<td><a class="tautan" href="' + esc(d.ktaUrl) + '" target="_blank">KTA</a>' +
-        (d.fotoUrl ? '<a class="tautan" href="' + esc(d.fotoUrl) + '" target="_blank">Foto</a>' : '') +
-        '<a class="tautan" href="' + esc(d.buktiUrl) + '" target="_blank">Bukti</a></td>' +
+        '<td><div class="berkas-sel">' +
+        (d.buktiId ? '<img class="thumb" id="th-' + esc(d.id) + '" alt="Bukti transfer ' + esc(d.id) + '" style="display:none" onclick="perbesar(this)"><span class="thumb-muat" id="tm-' + esc(d.id) + '">Bukti: memuat…</span>' : '<span class="thumb-muat">Tidak ada bukti</span>') +
+        (d.ktaId ? '<button type="button" class="btn-lihat" onclick="lihatKta(\'' + esc(d.ktaId) + '\')">Lihat KTA</button>' : '') +
+        '</div></td>' +
         '<td><select id="st-' + esc(d.id) + '">' + opsi + '</select></td>' +
         '<td><input class="resi" id="resi-' + esc(d.id) + '" value="' + esc(d.resi) + '" placeholder="No. resi"></td>' +
         '<td><button class="btn" onclick="simpanBaris(\'' + esc(d.id) + '\')">Simpan</button></td></tr>';
     }).join('') || '<tr><td colspan="11">Tidak ada data.</td></tr>';
     document.getElementById('infoHalaman').textContent = 'Halaman ' + halaman + ' dari ' + totalHal;
     document.getElementById('infoJumlah').textContent = 'Menampilkan ' + potong.length + ' dari ' + list.length + ' data';
+    muatThumb(potong);
   }
 
   function pindahHalaman(delta) { halaman += delta; if (halaman < 1) halaman = 1; renderTabel(); }
@@ -217,7 +227,54 @@
   }
 
 
+  var cacheBerkas = {};
+  function ambilBerkas(fileId) {
+    if (cacheBerkas[fileId]) return Promise.resolve(cacheBerkas[fileId]);
+    return apiAdmin({ aksi: 'admin.file', key: KEY, fileId: fileId }).then(function (res) {
+      var url = 'data:' + res.mime + ';base64,' + res.base64;
+      cacheBerkas[fileId] = url;
+      return url;
+    });
+  }
+  function muatThumb(list) {
+    list.forEach(function (d) {
+      if (!d.buktiId) return;
+      ambilBerkas(d.buktiId).then(function (url) {
+        var img = document.getElementById('th-' + d.id);
+        var mu = document.getElementById('tm-' + d.id);
+        if (img) { img.src = url; img.style.display = 'block'; }
+        if (mu) mu.style.display = 'none';
+      }).catch(function () {
+        var mu = document.getElementById('tm-' + d.id);
+        if (mu) mu.textContent = 'Bukti: gagal dimuat';
+      });
+    });
+  }
+  function perbesar(img) {
+    if (!img.src) return;
+    document.getElementById('ovImg').src = img.src;
+    document.getElementById('ovKet').textContent = img.alt || '';
+    document.getElementById('overlay').style.display = 'flex';
+  }
+  function lihatKta(fileId) {
+    document.getElementById('ovImg').removeAttribute('src');
+    document.getElementById('ovKet').textContent = 'Memuat KTA…';
+    document.getElementById('overlay').style.display = 'flex';
+    ambilBerkas(fileId).then(function (url) {
+      document.getElementById('ovImg').src = url;
+      document.getElementById('ovKet').textContent = 'Kartu Tanda Anggota (KTA)';
+    }).catch(function (e) {
+      document.getElementById('ovKet').textContent = 'Gagal memuat: ' + e.message;
+    });
+  }
+  function tutupOverlay() { document.getElementById('overlay').style.display = 'none'; }
+
   muat();
 </script>
+<div id="overlay" onclick="if(event.target===this)tutupOverlay()">
+  <button id="ovTutup" onclick="tutupOverlay()">✕ Tutup</button>
+  <img id="ovImg" alt="Pratinjau berkas">
+  <div id="ovKet"></div>
+</div>
 </body>
 </html>
