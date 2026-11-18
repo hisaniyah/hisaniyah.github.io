@@ -73,12 +73,8 @@ function renderHeader(){
     const sub = n.drop ? n.drop.map(d=>`<a class="sub" href="${d.href}">${d.label}</a>`).join('') : '';
     return `<a href="${n.href}">${n.label}</a>${sub}`;
   }).join('');
-  let sesiUser = null;
-  try { const s = JSON.parse(localStorage.getItem('hisa_session') || 'null'); if (s && s.user) sesiUser = s.user; } catch(e){}
-  const akunHref = sesiUser ? '/pendataan/akun/' : '/pendataan/';
-  const akunLabel = sesiUser ? 'Akun Saya' : 'Portal Alumni';
-  const chipIsi = sesiUser ? `<span>${String(sesiUser.Nama || 'Akun').split(' ')[0]}</span>` : '';
-  const chipStyle = sesiUser ? 'display:inline-flex;align-items:center;gap:8px;font-weight:700' : 'display:none';
+  const akunHref = '/pendataan/';
+  const akunLabel = 'Portal Alumni';
   return `
   <header class="site-header">
     <div class="header-in">
@@ -90,7 +86,6 @@ function renderHeader(){
       <nav class="main-nav" aria-label="Navigasi utama"><ul>${items}</ul></nav>
       <div class="header-actions">
         <button class="search-btn" id="btn-search" aria-label="Cari di website">${icon('search')}</button>
-        <a class="akun-chip" data-akun-chip href="${akunHref}" style="${chipStyle}">${chipIsi}</a>
         <a class="cta-daftar" data-cta-akun href="${akunHref}">${icon('user')}<span>${akunLabel}</span></a>
         <button class="burger" id="btn-burger" aria-label="Buka menu">${icon('menu')}</button>
       </div>
@@ -184,8 +179,7 @@ const BOTTOM_NAV = [
   {label:'Beranda', href:'/', icon:'home', match:['/']},
   {label:'Berita', href:'/berita/', icon:'news', match:['/berita/']},
   {label:'HISANIYAH TV', href:'https://youtube.com/@hisaniyahtv', icon:'tv', match:['/tv/']},
-  {label:'Alumni', href:'/pendataan/masuk/', icon:'users', match:['/pendataan/']},
-  {label:'Akun', href:'/pendataan/akun/', icon:'user', match:['/pendataan/akun']}
+  {label:'Portal Alumni', href:'/pendataan/', icon:'users', match:['/pendataan/']}
 ];
 function renderBottomNav(){
   const path = location.pathname;
@@ -196,4 +190,4 @@ function renderBottomNav(){
   return `<nav class="bottom-nav" aria-label="Navigasi bawah">${items}</nav>`;
 }
 
-/* Keadaan masuk (chip akun + label tombol) kini ditentukan langsung di renderHeader() saat header digambar — tidak lagi ditukar sesudahnya. */
+/* Header web publik selalu menampilkan SATU tombol "Portal Alumni" ke /pendataan/ (keputusan tuan besar 18 Nov 2026) — tanpa chip nama & tanpa tombol "Akun Saya", baik sudah masuk maupun belum. Halaman /pendataan/ sendiri meneruskan pengguna yang sudah masuk lurus ke dashboardnya. */
