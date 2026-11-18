@@ -29,6 +29,21 @@
   .jenis small { display: block; color: #5f7373; font-size: 13.5px; margin-top: 2px; }
   .jenis .rp { font-weight: 800; color: #016767; font-size: 20px; }
   .jenis.aktif { border-color: #FE880D; background: #fff7ee; }
+  .jenis-grid { grid-template-columns: 1fr; }
+  .jenis { position: relative; }
+  .petunjuk-pilih { font-size: 14.5px; color: #4c6060; margin: -6px 0 16px; }
+  .mini-kartu { width: 74px; height: 48px; border-radius: 7px; background: #016767; position: relative; margin-bottom: 10px; }
+  .mini-kartu.biasa { background: #5f7373; }
+  .mini-kartu .chip { position: absolute; left: 8px; top: 9px; width: 15px; height: 11px; border-radius: 2px; background: #FE880D; }
+  .mini-kartu.biasa .chip { background: #d9e4e4; }
+  .mini-kartu .merek { position: absolute; left: 8px; bottom: 7px; font-size: 7.5px; color: #fff; font-weight: 700; letter-spacing: .6px; }
+  .mini-kartu .gelombang { position: absolute; right: 7px; top: 8px; font-size: 10px; color: #fff; }
+  .jenis .cek { position: absolute; top: 12px; right: 12px; width: 26px; height: 26px; border-radius: 50%; border: 2.5px solid #b9c8c8; color: transparent; font-size: 16px; font-weight: 900; text-align: center; line-height: 23px; }
+  .jenis.aktif .cek { background: #FE880D; border-color: #FE880D; color: #14201f; }
+  .jenis .lencana { display: none; position: absolute; top: -11px; left: 12px; background: #FE880D; color: #14201f; font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
+  .jenis.aktif .lencana { display: inline-block; }
+  .kta-grup { display: flex; align-items: stretch; margin-bottom: 4px; }
+  .kta-awalan { flex: none; display: flex; align-items: center; background: #e7efef; border: 1.5px solid #b9cbcb; border-right: none; border-radius: 10px 0 0 10px; padding: 0 12px; font-size: 17px; font-weight: 800; color: #4c6060; letter-spacing: 1px; }
   .info-bayar { border: 2px solid #FE880D; background: #fffaf3; border-radius: 12px; padding: 14px; }
   .info-bayar .baris { display: flex; justify-content: space-between; font-size: 16.5px; padding: 4px 0; }
   .info-bayar .rek { margin-top: 10px; border-top: 1px dashed #e5c9a8; padding-top: 10px; font-size: 16px; }
@@ -81,13 +96,20 @@
 
     <div class="kartu">
       <h2>🎴 Pilih Jenis Kartu</h2>
+      <p class="petunjuk-pilih">Ketuk salah satu kartu untuk memilihnya.</p>
       <div class="jenis-grid">
         <div class="jenis aktif" id="jenisEmoney" onclick="pilihJenis('E-Money')">
+          <span class="lencana">✓ TERPILIH</span>
+          <span class="cek">✓</span>
+          <div class="mini-kartu"><span class="chip"></span><span class="merek">HISANIYAH</span><span class="gelombang">)))</span></div>
           <b>Kartu E-Money</b>
           <small>Flazz / e-Money / TapCash</small>
           <span class="rp" id="rpEmoney">Rp 60.000</span>
         </div>
         <div class="jenis" id="jenisBiasa" onclick="pilihJenis('Biasa')">
+          <span class="lencana">✓ TERPILIH</span>
+          <span class="cek">✓</span>
+          <div class="mini-kartu biasa"><span class="chip"></span><span class="merek">HISANIYAH</span></div>
           <b>Kartu Biasa</b>
           <small>Tanpa fungsi e-money</small>
           <span class="rp" id="rpBiasa">Rp 10.000</span>
@@ -125,6 +147,11 @@
       <h2>👤 Data Pemesan</h2>
       <label class="lbl">Nama Lengkap <span class="wajib">*</span></label>
       <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+      <label class="lbl">Nomor KTA <span class="wajib">*</span></label>
+      <div class="kta-grup">
+        <span class="kta-awalan">HIS-2026-</span>
+        <input type="text" id="kta4" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="4 angka terakhir" style="border-radius:0 10px 10px 0; letter-spacing:4px; font-weight:700">
+      </div>
       <label class="lbl">Alamat Lengkap <span class="wajib">*</span></label>
       <textarea id="alamat" placeholder="Masukkan alamat lengkap untuk pengiriman (contoh: Jl. Mawar No. 10, RT 03 RW 02, Gondanglegi, Kab. Malang)"></textarea>
       <label class="lbl">No. WhatsApp <span class="wajib">*</span></label>
@@ -250,6 +277,8 @@
     var alamat = document.getElementById('alamat').value.trim();
     var wa = document.getElementById('wa').value.trim();
     if (!nama || !alamat || !wa) return tampilError('Nama, alamat, dan No. WhatsApp wajib diisi semua.');
+    var kta4 = document.getElementById('kta4').value.replace(/\D/g, '');
+    if (kta4.length !== 4) return tampilError('Isi 4 angka terakhir Nomor KTA Anda.');
     if (!berkas.kta || !berkas.bukti) return tampilError('Upload KTA dan bukti transfer wajib diisi.');
     var btn = document.getElementById('btnKirim');
     btn.disabled = true; btn.textContent = '⏳ Mengirim…';
@@ -259,7 +288,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
-            aksi: 'pesan', nama: nama, alamat: alamat, wa: wa, jenis: jenisDipilih,
+            aksi: 'pesan', nama: nama, alamat: alamat, wa: wa, jenis: jenisDipilih, kta4: kta4,
             files: { kta: { base64: b64[0] }, bukti: { base64: b64[1] } }
           })
         }).then(function (r) { return r.json(); });
