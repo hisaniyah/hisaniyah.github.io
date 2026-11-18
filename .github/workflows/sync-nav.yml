@@ -1,0 +1,22 @@
+name: sync-nav
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ambil components.js dari cermin Firebase
+        run: |
+          set -e
+          curl -fsSL "https://hisaniyah.web.app/assets/js/components.js" -o assets/js/components.js
+          echo "components.js $(stat -c%s assets/js/components.js) byte"
+          grep -c "Portal Alumni" assets/js/components.js
+          if grep -q "data-akun-chip" assets/js/components.js; then echo "GAGAL: chip akun lama masih ada"; exit 1; fi
+          git config user.name "hisaniyah"
+          git config user.email "hisaniyahru1@gmail.com"
+          git add assets/js/components.js
+          git commit -m "Header & navigasi bawah: satu pintu Portal Alumni" || echo "tidak ada perubahan"
+          git push
