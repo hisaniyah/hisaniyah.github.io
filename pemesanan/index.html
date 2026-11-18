@@ -85,23 +85,23 @@
         <div class="jenis aktif" id="jenisEmoney" onclick="pilihJenis('E-Money')">
           <b>Kartu E-Money</b>
           <small>Flazz / e-Money / TapCash</small>
-          <span class="rp" id="rpEmoney">Rp …</span>
+          <span class="rp" id="rpEmoney">Rp 60.000</span>
         </div>
         <div class="jenis" id="jenisBiasa" onclick="pilihJenis('Biasa')">
           <b>Kartu Biasa</b>
           <small>Tanpa fungsi e-money</small>
-          <span class="rp" id="rpBiasa">Rp …</span>
+          <span class="rp" id="rpBiasa">Rp 10.000</span>
         </div>
       </div>
 
       <div class="info-bayar" style="margin-top:14px">
-        <div class="baris"><span>💳 Kartu E-Money</span><b id="infoEmoney">Rp …</b></div>
-        <div class="baris"><span>💳 Kartu Biasa</span><b id="infoBiasa">Rp …</b></div>
+        <div class="baris"><span>💳 Kartu E-Money</span><b id="infoEmoney">Rp 60.000</b></div>
+        <div class="baris"><span>💳 Kartu Biasa</span><b id="infoBiasa">Rp 10.000</b></div>
         <div class="rek">
           Pembayaran transfer ke:<br>
-          <b id="bankNama">…</b><br>
-          <span class="norek" id="noRek">…</span><button type="button" class="btn-salin" onclick="salinRek()">Salin</button><br>
-          <span class="atas-nama">a.n. <b id="atasNama">…</b></span>
+          <b id="bankNama">BNI</b><br>
+          <span class="norek" id="noRek">1175576769</span><button type="button" class="btn-salin" onclick="salinRek()">Salin</button><br>
+          <span class="atas-nama">a.n. <b id="atasNama">Abdur Rofik</b></span>
         </div>
       </div>
       <div class="catatan-ongkir">Harga di atas belum termasuk ongkos kirim (ongkir).</div>
@@ -183,28 +183,10 @@
   function rp(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
 
   var API = 'https://script.google.com/macros/s/AKfycbxce3dB2NoynMSWRi1WOHiX9kIiPaVS42xDU16thpBIjRWet4KQNxBZ6wacr35rKoDmDA/exec';
-  var infoCoba = 0;
-  function muatInfo() {
-    fetch(API + '?aksi=info').then(function (r) { return r.json(); }).then(function (info) {
-      INFO = info;
-      document.getElementById('rpEmoney').textContent = rp(info.harga_emoney);
-      document.getElementById('rpBiasa').textContent = rp(info.harga_biasa);
-      document.getElementById('infoEmoney').textContent = rp(info.harga_emoney);
-      document.getElementById('infoBiasa').textContent = rp(info.harga_biasa);
-      document.getElementById('bankNama').textContent = info.bank;
-      document.getElementById('noRek').textContent = info.no_rekening;
-      document.getElementById('atasNama').textContent = info.atas_nama;
-    }).catch(function () {
-      // Gagal memuat (mis. server sedang berganti versi): coba lagi otomatis.
-      infoCoba++;
-      if (infoCoba <= 8) setTimeout(muatInfo, 3000);
-      else {
-        document.getElementById('rpEmoney').textContent = 'Rp —';
-        document.getElementById('rpBiasa').textContent = 'Rp —';
-      }
-    });
-  }
-  muatInfo();
+  // Harga & rekening DITANAM (keputusan tuan besar 19 Nov 2026): fitur ubah
+  // harga/rekening dari admin dihapus; perubahan lewat Jhon dengan edit berkas ini.
+  // Nilai di bawah HARUS sama dengan sheet Pengaturan (harga yang dicatat server).
+  INFO = { harga_emoney: 60000, harga_biasa: 10000, bank: 'BNI', no_rekening: '1175576769', atas_nama: 'Abdur Rofik' };
 
   function pilihJenis(j) {
     jenisDipilih = j;
