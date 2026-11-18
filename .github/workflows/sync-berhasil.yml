@@ -1,0 +1,23 @@
+name: sync-berhasil
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ambil 2 berkas dari cermin Firebase
+        run: |
+          set -e
+          curl -fsSL "https://hisaniyah.web.app/pendataan/akun/index.html" -o pendataan/akun/index.html
+          curl -fsSL "https://hisaniyah.web.app/pendataan/akun/data/index.html" -o pendataan/akun/data/index.html
+          echo "akun $(stat -c%s pendataan/akun/index.html) byte; data $(stat -c%s pendataan/akun/data/index.html) byte"
+          grep -c "Pendaftaran Berhasil" pendataan/akun/index.html
+          grep -c "baru=" pendataan/akun/data/index.html
+          git config user.name "hisaniyah"
+          git config user.email "hisaniyahru1@gmail.com"
+          git add pendataan/akun/index.html pendataan/akun/data/index.html
+          git commit -m "Layar berhasil + KTA setelah pendaftaran baru" || echo "tidak ada perubahan"
+          git push
