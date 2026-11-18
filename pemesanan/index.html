@@ -51,9 +51,15 @@
   #sukses { display: none; text-align: center; }
   #sukses .centang { font-size: 52px; }
   #sukses .id { font-size: 24px; font-weight: 800; color: #016767; margin: 8px 0; }
-  .rincian-sukses { text-align: left; background: #f6fafa; border: 1px solid #dde7e7; border-radius: 12px; padding: 14px 16px; margin: 16px 0 4px; font-size: 16px; }
+  .rincian-sukses { text-align: left; background: #f6fafa; color: #14201f; border: 1px solid #dde7e7; border-radius: 12px; padding: 14px 16px; margin: 16px 0 4px; font-size: 16px; }
   .rincian-sukses .baris { display: flex; justify-content: space-between; padding: 3px 0; gap: 12px; }
-  .rincian-sukses .baris span { color: #5f7373; }
+  .rincian-sukses .baris span { color: #4c6060; }
+  .rincian-sukses .baris b { color: #14201f; }
+
+  #dobel { display: none; text-align: center; }
+  #dobel .centang { font-size: 52px; }
+  #dobel .id { font-size: 24px; font-weight: 800; color: #016767; margin: 8px 0; }
+  .chip-status { display: inline-block; background: #fff3e2; color: #8a4d00; border: 1.5px solid #FE880D; font-weight: 700; font-size: 14.5px; padding: 6px 14px; border-radius: 999px; margin-top: 6px; }
   .kecil { font-size: 13.5px; color: #5f7373; margin-top: 5px; }
 </style>
 </head>
@@ -150,6 +156,20 @@
     </div>
     <p class="lead"><b>Simpan nomor pesanan ini</b> sebagai bukti pemesanan Anda.</p>
     <button type="button" class="btn-kirim" onclick="location.reload()">Selesai</button>
+  </div>
+  <div class="kartu" id="dobel">
+    <div class="centang">📋</div>
+    <h1>Pesanan Anda Sudah Tercatat</h1>
+    <p class="lead">Nama, nomor WhatsApp, dan jenis kartu ini sudah memiliki pesanan yang sedang diproses:</p>
+    <div class="id" id="idDobel"></div>
+    <div><span class="chip-status" id="statusDobel"></span></div>
+    <div class="rincian-sukses">
+      <div class="baris"><span>Nama</span><b id="dobelNama"></b></div>
+      <div class="baris"><span>Jenis Kartu</span><b id="dobelJenis"></b></div>
+      <div class="baris"><span>Harga Kartu</span><b id="dobelHarga"></b></div>
+    </div>
+    <p class="lead"><b>Tidak perlu memesan ulang.</b> Simpan nomor pesanan di atas sebagai bukti pemesanan Anda.</p>
+    <button type="button" class="btn-kirim" onclick="location.reload()">Isi Form untuk Orang Lain</button>
   </div>
 </div>
 
@@ -253,6 +273,18 @@
       })
       .then(function (res) {
         if (!res || !res.ok) throw new Error((res && res.error) || 'Jawaban server tidak dikenal.');
+        if (res.dobel) {
+          document.getElementById('formArea').style.display = 'none';
+          document.getElementById('dobel').style.display = 'block';
+          document.getElementById('idDobel').textContent = res.id;
+          document.getElementById('statusDobel').textContent = 'Status: ' + (res.status === 'Menunggu' ? 'Menunggu Verifikasi' : 'Sedang Diproses');
+          document.getElementById('dobelNama').textContent = res.nama;
+          document.getElementById('dobelJenis').textContent = res.jenis === 'E-Money' ? 'Kartu E-Money' : 'Kartu Biasa';
+          document.getElementById('dobelHarga').textContent = rp(res.harga);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+
         document.getElementById('formArea').style.display = 'none';
         var s = document.getElementById('sukses');
         s.style.display = 'block';
