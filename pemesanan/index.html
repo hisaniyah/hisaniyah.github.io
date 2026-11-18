@@ -183,19 +183,28 @@
   function rp(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
 
   var API = 'https://script.google.com/macros/s/AKfycbxce3dB2NoynMSWRi1WOHiX9kIiPaVS42xDU16thpBIjRWet4KQNxBZ6wacr35rKoDmDA/exec';
-  fetch(API + '?aksi=info').then(function (r) { return r.json(); }).then(function (info) {
-    INFO = info;
-    document.getElementById('rpEmoney').textContent = rp(info.harga_emoney);
-    document.getElementById('rpBiasa').textContent = rp(info.harga_biasa);
-    document.getElementById('infoEmoney').textContent = rp(info.harga_emoney);
-    document.getElementById('infoBiasa').textContent = rp(info.harga_biasa);
-    document.getElementById('bankNama').textContent = info.bank;
-    document.getElementById('noRek').textContent = info.no_rekening;
-    document.getElementById('atasNama').textContent = info.atas_nama;
-  }).catch(function () {
-    document.getElementById('rpEmoney').textContent = 'Rp —';
-    document.getElementById('rpBiasa').textContent = 'Rp —';
-  });
+  var infoCoba = 0;
+  function muatInfo() {
+    fetch(API + '?aksi=info').then(function (r) { return r.json(); }).then(function (info) {
+      INFO = info;
+      document.getElementById('rpEmoney').textContent = rp(info.harga_emoney);
+      document.getElementById('rpBiasa').textContent = rp(info.harga_biasa);
+      document.getElementById('infoEmoney').textContent = rp(info.harga_emoney);
+      document.getElementById('infoBiasa').textContent = rp(info.harga_biasa);
+      document.getElementById('bankNama').textContent = info.bank;
+      document.getElementById('noRek').textContent = info.no_rekening;
+      document.getElementById('atasNama').textContent = info.atas_nama;
+    }).catch(function () {
+      // Gagal memuat (mis. server sedang berganti versi): coba lagi otomatis.
+      infoCoba++;
+      if (infoCoba <= 8) setTimeout(muatInfo, 3000);
+      else {
+        document.getElementById('rpEmoney').textContent = 'Rp —';
+        document.getElementById('rpBiasa').textContent = 'Rp —';
+      }
+    });
+  }
+  muatInfo();
 
   function pilihJenis(j) {
     jenisDipilih = j;
