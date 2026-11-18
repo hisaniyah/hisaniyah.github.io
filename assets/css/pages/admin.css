@@ -11,6 +11,10 @@ body{background:linear-gradient(180deg,#F2FBFD 0%,var(--bg-soft) 100%);min-heigh
 .admin-overlay{position:fixed;inset:0;background:rgba(6,40,40,.45);opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:55}
 .admin-overlay.tampil{opacity:1;pointer-events:auto}
 .mode-banner{background:#FFF3DF;color:#7A4A00;font-weight:600;font-size:14.5px;padding:11px 20px;text-align:center;border-bottom:1px solid #F3D9A4}
+.admin-tabs{display:flex;gap:8px;margin:2px 0 18px;flex-wrap:wrap}
+.admin-tab{padding:10px 20px;border-radius:999px;border:1.6px solid var(--line);background:#fff;font-weight:700;color:var(--ink-soft);cursor:pointer;font-family:inherit;font-size:14.5px}
+.admin-tab:hover{border-color:var(--teal);color:var(--teal)}
+.admin-tab.aktif{background:var(--teal);border-color:var(--teal);color:#fff}
 .admin-wrap{margin:0;padding:0;display:grid;grid-template-columns:266px 1fr;gap:0;align-items:stretch}
 .admin-side{background:linear-gradient(180deg,var(--teal-dark) 0%,var(--teal) 100%);color:#fff;padding:20px 14px;position:sticky;top:109px;height:calc(100vh - 109px);overflow-y:auto;display:flex;flex-direction:column;gap:4px}
 .admin-side a{display:flex;gap:11px;align-items:center;padding:12px 13px;border-radius:12px;font-weight:600;color:#EAF6F5;text-decoration:none}

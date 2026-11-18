@@ -2,7 +2,6 @@
 const ADMIN_NAV = [
   {label:'Dashboard CMS', href:'/pendataan/admin/', icon:'chart', match:'/pendataan/admin/', cms:true},
   {label:'Berita', href:'/pendataan/admin/berita/', icon:'news', match:'/pendataan/admin/berita/', cms:true},
-  {label:'Kategori', href:'/pendataan/admin/kategori/', icon:'gallery', match:'/pendataan/admin/kategori/', cms:true},
   {label:'Pengumuman', href:'/pendataan/admin/pengumuman/', icon:'mega', match:'/pendataan/admin/pengumuman/', cms:true},
   {label:'Foto Pimpinan', href:'/pendataan/admin/pimpinan/', icon:'gallery', match:'/pendataan/admin/pimpinan/', cms:true, super:true},
   {label:'Statistik Alumni', href:'/pendataan/admin/pengurus/', icon:'chart', match:'/pendataan/admin/pengurus/'},

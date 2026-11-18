@@ -20,6 +20,11 @@
   <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
   <main class="admin-main"><h1>Berita</h1>
 <p class="admin-sub">Tulis, ubah, terbitkan, atau hapus berita. Berita berstatus <b>Terbit</b> langsung tampil di website.</p>
+<div class="admin-tabs" role="tablist">
+  <button type="button" class="admin-tab aktif" data-tab="berita">Daftar Berita</button>
+  <button type="button" class="admin-tab" data-tab="kategori">Kelola Kategori</button>
+</div>
+<div id="tab-berita">
 <div class="panel">
   <div class="toolbar">
     <input type="search" id="q" placeholder="Cari judul berita…" aria-label="Cari berita">
@@ -27,6 +32,16 @@
     <a class="btn btn-orange" href="/pendataan/admin/berita/editor/" style="padding:11px 20px">+ Tulis Berita</a>
   </div>
   <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Judul</th><th>Kategori</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead><tbody id="rows"><tr><td>Memuat…</td></tr></tbody></table></div>
+</div>
+</div>
+<div id="tab-kategori" style="display:none">
+<div class="panel"><h2 id="k-form-title">Tambah Kategori</h2>
+<form id="k-form" class="form-grid">
+  <div class="field"><label for="k-nama">Nama kategori *</label><input id="k-nama" required maxlength="60"></div>
+  <div class="field"><label for="k-urutan">Urutan tampil</label><input id="k-urutan" type="number" min="0" max="99" value="1"></div>
+  <div class="field full" style="display:flex;gap:10px"><button class="btn btn-teal" type="submit" style="padding:11px 22px">Simpan Kategori</button><button class="abtn" type="button" id="k-batal" style="display:none;padding:11px 18px">Batal Ubah</button></div>
+</form></div>
+<div class="panel"><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Nama</th><th>Urutan</th><th>Jumlah Berita</th><th>Aksi</th></tr></thead><tbody id="k-rows"></tbody></table></div></div>
 </div></main>
 </div>
 <script src="/assets/js/components.js"></script>
@@ -59,9 +74,44 @@
   rows.addEventListener('click', e => {
     const t = e.target.closest('[data-toggle]'), d = e.target.closest('[data-del]');
     if (t) { const b = HisaData.cache.berita.find(x => x.Berita_ID === t.dataset.toggle); b.status = b.status === 'terbit' ? 'draf' : 'terbit'; HisaData.save(); toast('Status diubah: ' + b.judul); render(); }
-    if (d) { const b = HisaData.cache.berita.find(x => x.Berita_ID === d.dataset.del); if (confirm('Hapus berita "' + b.judul + '"? Tindakan ini tidak dapat dibatalkan.')) { HisaData.hapusBerita(b.Berita_ID); toast('Berita dihapus'); render(); } }
+    if (d) { const b = HisaData.cache.berita.find(x => x.Berita_ID === d.dataset.del); if (confirm('Hapus berita "' + b.judul + '"? Tindakan ini tidak dapat dibatalkan.')) { HisaData.hapusBerita(b.Berita_ID); toast('Berita dihapus'); render(); renderKat(); } }
   });
   render();
+  /* ===== Tab Kelola Kategori (menu Kategori dilipat ke sini, 19 Nov 2026) ===== */
+  const kRows = document.getElementById('k-rows');
+  let editKat = '';
+  function renderKat(){
+    kRows.innerHTML = [...HisaData.cache.kategori].sort((a,b) => (a.urutan||0) - (b.urutan||0)).map(k => {
+      const n = HisaData.cache.berita.filter(b => b.Kategori_ID === k.Kategori_ID).length;
+      return `<tr><td><strong>${esc(k.nama)}</strong><br><small style="color:var(--ink-soft)">/${esc(k.slug)}</small></td><td>${k.urutan ?? ''}</td><td>${n}</td>
+      <td><div class="row-actions"><button class="abtn" data-kedit="${esc(k.Kategori_ID)}">Ubah</button><button class="abtn danger" data-kdel="${esc(k.Kategori_ID)}">Hapus</button></div></td></tr>`;
+    }).join('') || '<tr><td colspan="4">Belum ada kategori.</td></tr>';
+  }
+  kRows.addEventListener('click', e => {
+    const ed = e.target.closest('[data-kedit]'), del = e.target.closest('[data-kdel]');
+    if (ed) { const k = HisaData.cache.kategori.find(x => x.Kategori_ID === ed.dataset.kedit); editKat = k.Kategori_ID;
+      document.getElementById('k-nama').value = k.nama; document.getElementById('k-urutan').value = k.urutan ?? 1;
+      document.getElementById('k-form-title').textContent = 'Ubah Kategori'; document.getElementById('k-batal').style.display = ''; }
+    if (del) { const k = HisaData.cache.kategori.find(x => x.Kategori_ID === del.dataset.kdel);
+      const n = HisaData.cache.berita.filter(b => b.Kategori_ID === k.Kategori_ID).length;
+      if (n) { toast('Kategori masih dipakai ' + n + ' berita — pindahkan dulu beritanya'); return; }
+      if (confirm('Hapus kategori "' + k.nama + '"?')) { HisaData.hapusKategori(k.Kategori_ID); toast('Kategori dihapus'); renderKat(); render(); } }
+  });
+  document.getElementById('k-batal').addEventListener('click', () => { editKat = ''; document.getElementById('k-form').reset(); document.getElementById('k-form-title').textContent = 'Tambah Kategori'; document.getElementById('k-batal').style.display = 'none'; });
+  document.getElementById('k-form').addEventListener('submit', e => {
+    e.preventDefault();
+    HisaData.upsertKategori({ Kategori_ID: editKat, nama: document.getElementById('k-nama').value.trim(), urutan: parseInt(document.getElementById('k-urutan').value || '1', 10) });
+    toast('Kategori disimpan'); editKat = ''; e.target.reset(); document.getElementById('k-form-title').textContent = 'Tambah Kategori'; document.getElementById('k-batal').style.display = 'none'; renderKat(); render();
+  });
+  function aktifTab(t){
+    document.querySelectorAll('.admin-tab').forEach(x => x.classList.toggle('aktif', x.dataset.tab === t));
+    document.getElementById('tab-berita').style.display = t === 'berita' ? '' : 'none';
+    document.getElementById('tab-kategori').style.display = t === 'kategori' ? '' : 'none';
+    history.replaceState(null, '', t === 'kategori' ? '?tab=kategori' : location.pathname);
+  }
+  document.querySelectorAll('.admin-tab').forEach(x => x.addEventListener('click', () => aktifTab(x.dataset.tab)));
+  renderKat();
+  if (new URLSearchParams(location.search).get('tab') === 'kategori') aktifTab('kategori');
 })();
 </script>
 </body>
