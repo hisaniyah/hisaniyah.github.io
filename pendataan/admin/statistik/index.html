@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistik Web — Admin HISANIYAH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/variables.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+<header class="admin-top" id="admin-top"></header>
+<div class="admin-wrap">
+  <nav class="admin-side" id="admin-side" aria-label="Menu admin"></nav>
+  <main class="admin-main"><h1>Statistik Web</h1>
+<p class="admin-sub">Jumlah tayang halaman publik hisaniyah.or.id — dihitung pencatat bawaan situs, tanpa data pribadi pengunjung. Angka ini khusus pengurus pusat, tidak ditampilkan ke publik.</p>
+<div id="isi"><div class="panel"><p>Memuat statistik…</p></div></div>
+</main>
+</div>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin.js"></script>
+<script>renderAdminShell('/pendataan/admin/statistik/');</script>
+<script>
+(async () => {
+  const box = document.getElementById('isi');
+  const { esc, fmtDate } = HisaData;
+  const angka = n => Number(n || 0).toLocaleString('id-ID');
+  try {
+    const d = await HisaData.apiCall('admin.statistik.web', {});
+    const r = d.ringkasan || {};
+    const maks = Math.max(1, ...d.harian.map(h => Number(h.tayang || 0)));
+    box.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat"><b>${angka(r.hari_ini)}</b><span>Tayang hari ini<br>(${angka(r.unik_hari_ini)} pengunjung unik)</span></div>
+      <div class="stat"><b>${angka(r.hari_7)}</b><span>Tayang 7 hari terakhir</span></div>
+      <div class="stat"><b>${angka(r.hari_30)}</b><span>Tayang 30 hari terakhir</span></div>
+      <div class="stat"><b>${angka(r.total)}</b><span>Total tayang<br>(${angka(r.unik_total)} unik)</span></div>
+    </div>
+    <div class="panel"><h2>Tayang 30 Hari Terakhir</h2>
+      <div class="grafik">${d.harian.map(h => `<div class="bar" style="height:${Math.max(3, Math.round(Number(h.tayang || 0) / maks * 100))}%" title="${esc(fmtDate(h.tanggal))}: ${angka(h.tayang)} tayang, ${angka(h.unik)} unik"></div>`).join('')}</div>
+      <p style="color:var(--ink-soft);font-size:13px;margin-top:8px">${esc(fmtDate(d.harian[0].tanggal))} — ${esc(fmtDate(d.harian[d.harian.length - 1].tanggal))} · arahkan kursor ke batang untuk angka per hari</p>
+    </div>
+    <div class="panel"><h2>Halaman Terpopuler</h2>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Halaman</th><th>Tayang</th><th>Pengunjung Unik</th></tr></thead><tbody>
+      ${d.halaman.map(h => `<tr><td>${esc(h.path)}</td><td>${angka(h.tayang)}</td><td>${angka(h.unik)}</td></tr>`).join('') || '<tr><td colspan="3">Belum ada tayang tercatat.</td></tr>'}
+      </tbody></table></div>
+    </div>
+    <div class="panel"><h2>Berita Terpopuler</h2>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Judul</th><th>Status</th><th>7 Hari</th><th>30 Hari</th><th>Total Dilihat</th></tr></thead><tbody>
+      ${d.berita.map(b => `<tr><td><strong>${esc(b.judul)}</strong><br><small style="color:var(--ink-soft)">/${esc(b.slug)}</small></td><td><span class="badge ${b.status === 'terbit' ? 'terbit' : 'draf'}">${b.status === 'terbit' ? 'Terbit' : 'Draf'}</span></td><td>${angka(b.tayang_7)}</td><td>${angka(b.tayang_30)}</td><td>${angka(b.dilihat)}</td></tr>`).join('') || '<tr><td colspan="5">Belum ada berita.</td></tr>'}
+      </tbody></table></div>
+      <p style="color:var(--ink-soft);font-size:13px;margin-top:8px">Urutan "Berita Populer" di website mengikuti kolom 7 Hari, diisi dari 30 Hari bila kurang dari lima.</p>
+    </div>`;
+  } catch (e) {
+    box.innerHTML = '<div class="panel"><h2>Belum dapat dimuat</h2><p style="color:var(--ink-soft)">' + esc(e.message || 'Statistik web hanya untuk Super Admin & Pengurus Pusat.') + '</p></div>';
+  }
+})();
+</script>
+</body>
+</html>

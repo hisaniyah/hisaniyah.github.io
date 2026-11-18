@@ -3,6 +3,7 @@ const ADMIN_NAV = [
   {label:'Dashboard CMS', href:'/pendataan/admin/', icon:'chart', match:'/pendataan/admin/', cms:true},
   {label:'Berita', href:'/pendataan/admin/berita/', icon:'news', match:'/pendataan/admin/berita/', cms:true},
   {label:'Pengumuman', href:'/pendataan/admin/pengumuman/', icon:'mega', match:'/pendataan/admin/pengumuman/', cms:true},
+  {label:'Statistik Web', href:'/pendataan/admin/statistik/', icon:'chart', match:'/pendataan/admin/statistik/', cms:true, pusat:true},
   {label:'Foto Pimpinan', href:'/pendataan/admin/pimpinan/', icon:'gallery', match:'/pendataan/admin/pimpinan/', cms:true, super:true},
   {label:'Statistik Alumni', href:'/pendataan/admin/pengurus/', icon:'chart', match:'/pendataan/admin/pengurus/'},
   {label:'Data Alumni', href:'/pendataan/admin/pengurus/alumni/', icon:'users', match:'/pendataan/admin/pengurus/alumni/'},
@@ -24,6 +25,7 @@ function renderAdminShell(activeMatch){
     const tampil = ADMIN_NAV.filter(n => {
       if (!role) return true;
       if (n.cms && role === 'admin_korda') return false;
+      if (!n.cms && role === 'penulis') return false;
       if (n.pusat && !pusat) return false;
       if (n.super && role !== 'super_admin') return false;
       return true;
@@ -70,13 +72,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const main = document.querySelector('.admin-main');
     if (!main) return;
     const halamanPengurus = location.pathname.includes('/admin/pengurus');
+    const peran = ses ? ses.user.Role : '';
+    const bolehPengurus = ['super_admin', 'pengurus_pusat', 'admin_korda'].includes(peran);
+    const bolehCMS = ['super_admin', 'pengurus_pusat', 'penulis'].includes(peran);
     if (!ses) {
       main.innerHTML = '<h1>Panel Admin CMS</h1><div class="panel"><h2>Masuk dulu sebagai pengurus</h2><p style="color:var(--ink-soft);margin-bottom:14px">Panel ini sekarang terhubung ke database HISANIYAH. Masuk dengan akun Google pengurus untuk melanjutkan.</p><a class="btn btn-teal" href="/pendataan/masuk/">Masuk dengan Google</a></div>';
-    } else if (!HisaData.sesiPengurus()) {
-      main.innerHTML = '<h1>Panel Admin CMS</h1><div class="panel"><h2>Akses ditolak</h2><p style="color:var(--ink-soft)">Akun ' + HisaData.esc(ses.user.Email) + ' bukan pengurus.</p></div>';
-    } else if (!halamanPengurus && !HisaData.sesiAdmin()) {
-      if (ses.user.Role === 'admin_korda') location.href = '/pendataan/admin/pengurus/';
-      main.innerHTML = '<h1>Panel Pengurus</h1><div class="panel"><h2>Khusus Pengurus Pusat</h2><p style="color:var(--ink-soft)">CMS berita dikelola Pengurus Pusat. Sebagai Admin KORDA, gunakan menu Pengurus di samping.</p></div>';
+    } else if (halamanPengurus && !bolehPengurus) {
+      main.innerHTML = '<h1>Panel Pengurus</h1><div class="panel"><h2>Khusus Pengurus</h2><p style="color:var(--ink-soft)">Halaman ini untuk pengurus HISANIYAH. Penulis/Media mengelola berita lewat menu CMS di samping.</p></div>';
+    } else if (!halamanPengurus && !bolehCMS) {
+      if (peran === 'admin_korda') {
+        location.href = '/pendataan/admin/pengurus/';
+        main.innerHTML = '<h1>Panel Pengurus</h1><div class="panel"><h2>Khusus Pengurus Pusat</h2><p style="color:var(--ink-soft)">CMS berita dikelola Pengurus Pusat. Sebagai Admin KORDA, gunakan menu Pengurus di samping.</p></div>';
+      } else {
+        main.innerHTML = '<h1>Panel Admin CMS</h1><div class="panel"><h2>Akses ditolak</h2><p style="color:var(--ink-soft)">Akun ' + HisaData.esc(ses.user.Email) + ' bukan pengurus.</p></div>';
+      }
     } else {
       const info = document.createElement('p');
       info.style.cssText = 'color:var(--ink-soft);font-weight:600;margin-bottom:14px';

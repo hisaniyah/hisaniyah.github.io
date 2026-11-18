@@ -27,10 +27,10 @@ const HisaData = (() => {
   }
   const API_URL = (typeof window !== 'undefined' && window.HISA_API_URL) || '';
   const SES_KEY = 'hisa_session';
-    /* Cache data PUBLIK antar-halaman (Fase A optimasi, 17 Nov 2026): hanya hasil
+  /* Cache data PUBLIK antar-halaman (Fase A optimasi, 17 Nov 2026): hanya hasil
      public.bootstrap (berita/kategori/pengumuman/master) — TANPA token & data pribadi.
      TTL 5 menit; bila server gagal/timeout, cache lama dipakai sebagai cadangan. */
-    const PUB_KEY = 'hisa_pub_v1';
+  const PUB_KEY = 'hisa_pub_v1';
   const PUB_TTL = 5 * 60 * 1000;
   const API_TIMEOUT = 6000;
   function pubCacheRead(){ try { const raw = localStorage.getItem(PUB_KEY); if (!raw) return null; const o = JSON.parse(raw); return (o && o.data && o.ts) ? o : null; } catch(e){ return null; } }
@@ -43,6 +43,7 @@ const HisaData = (() => {
   function apiMode(){ return !!API_URL; }
   function sesiAdmin(){ const s = getSession(); return s && ['super_admin','pengurus_pusat'].includes(s.user && s.user.Role); }
   function sesiPengurus(){ const s = getSession(); return s && ['super_admin','pengurus_pusat','admin_korda'].includes(s.user && s.user.Role); }
+  function sesiCMS(){ const s = getSession(); return s && ['super_admin','pengurus_pusat','penulis'].includes(s.user && s.user.Role); }
   /* Tulis tembus ke backend bila admin masuk (Tahap 5). Kegagalan dicatat, tidak menggagalkan UI. */
   function tulisAPI(action, payload){
     const ses = getSession();
@@ -78,6 +79,29 @@ const HisaData = (() => {
   /* --- kueri publik --- */
   function kategoriNama(id){ const k = (cache?.kategori || []).find(x => x.Kategori_ID === id); return k ? k.nama : ''; }
   function terbit(){ return [...(cache?.berita || [])].filter(b => b.status === 'terbit').sort((a,b) => (b.publish_at || '').localeCompare(a.publish_at || '')); }
+  /* Berita Populer (keputusan tuan besar 17 Nov 2026): terbanyak ditayangkan
+     dalam 7 hari terakhir; kekurangan diisi dari 30 hari terakhir; berita yang
+     sedang dibaca dikecualikan. Selama belum ada data tayang sama sekali,
+     kembali ke urutan lama (unggulan dulu, lalu terbaru). Angka tayang hanya
+     dipakai mengurutkan — tidak pernah ditampilkan ke publik. */
+  function populer(excludeId, n){
+    n = n || 5;
+    const items = terbit().filter(b => b.Berita_ID !== excludeId);
+    const adaTayang = items.some(b => (b.tayang_7 || 0) > 0 || (b.tayang_30 || 0) > 0);
+    if (!adaTayang) {
+      return [...items].sort((a,b) => (b.unggulan ? 1 : 0) - (a.unggulan ? 1 : 0) || (b.publish_at || '').localeCompare(a.publish_at || '')).slice(0, n);
+    }
+    const byPublish = (a,b) => (b.publish_at || '').localeCompare(a.publish_at || '');
+    const out = [...items].sort((a,b) => (b.tayang_7 || 0) - (a.tayang_7 || 0) || byPublish(a,b)).filter(b => (b.tayang_7 || 0) > 0).slice(0, n);
+    if (out.length < n) {
+      const sisa30 = items.filter(b => !out.includes(b)).sort((a,b) => (b.tayang_30 || 0) - (a.tayang_30 || 0) || byPublish(a,b));
+      for (const b of sisa30) { if (out.length >= n) break; if ((b.tayang_30 || 0) > 0) out.push(b); }
+    }
+    if (out.length < n) {
+      for (const b of items) { if (out.length >= n) break; if (!out.includes(b)) out.push(b); }
+    }
+    return out;
+  }
   function pengumumanAktif(){ return (cache?.pengumuman || []).filter(p => p.is_published); }
   /* --- CRUD admin --- */
   function upsertBerita(rec){
@@ -89,29 +113,29 @@ const HisaData = (() => {
     const i = cache.berita.findIndex(b => b.Berita_ID === rec.Berita_ID);
     if (i >= 0) cache.berita[i] = rec; else cache.berita.unshift(rec);
     save();
-    if (sesiAdmin()) tulisAPI('admin.berita.save', rec);
+    if (sesiCMS()) tulisAPI('admin.berita.save', rec);
     return rec;
   }
-  function hapusBerita(id){ cache.berita = cache.berita.filter(b => b.Berita_ID !== id); save(); if (sesiAdmin()) tulisAPI('admin.berita.delete', { Berita_ID: id }); }
+  function hapusBerita(id){ cache.berita = cache.berita.filter(b => b.Berita_ID !== id); save(); if (sesiCMS()) tulisAPI('admin.berita.delete', { Berita_ID: id }); }
   function upsertKategori(rec){
     if (!rec.Kategori_ID) rec.Kategori_ID = uid('KT');
     rec.slug = slugify(rec.slug || rec.nama);
     const i = cache.kategori.findIndex(k => k.Kategori_ID === rec.Kategori_ID);
     if (i >= 0) cache.kategori[i] = rec; else cache.kategori.push(rec);
     save();
-    if (sesiAdmin()) tulisAPI('admin.kategori.save', rec);
+    if (sesiCMS()) tulisAPI('admin.kategori.save', rec);
     return rec;
   }
-  function hapusKategori(id){ cache.kategori = cache.kategori.filter(k => k.Kategori_ID !== id); save(); if (sesiAdmin()) tulisAPI('admin.kategori.delete', { Kategori_ID: id }); }
+  function hapusKategori(id){ cache.kategori = cache.kategori.filter(k => k.Kategori_ID !== id); save(); if (sesiCMS()) tulisAPI('admin.kategori.delete', { Kategori_ID: id }); }
   function upsertPengumuman(rec){
     if (!rec.Pengumuman_ID) { rec.Pengumuman_ID = uid('PG'); rec.published_at = new Date().toISOString().slice(0,10); }
     const i = cache.pengumuman.findIndex(p => p.Pengumuman_ID === rec.Pengumuman_ID);
     if (i >= 0) cache.pengumuman[i] = rec; else cache.pengumuman.unshift(rec);
     save();
-    if (sesiAdmin()) tulisAPI('admin.pengumuman.save', rec);
+    if (sesiCMS()) tulisAPI('admin.pengumuman.save', rec);
     return rec;
   }
-  function hapusPengumuman(id){ cache.pengumuman = cache.pengumuman.filter(p => p.Pengumuman_ID !== id); save(); if (sesiAdmin()) tulisAPI('admin.pengumuman.delete', { Pengumuman_ID: id }); }
+  function hapusPengumuman(id){ cache.pengumuman = cache.pengumuman.filter(p => p.Pengumuman_ID !== id); save(); if (sesiCMS()) tulisAPI('admin.pengumuman.delete', { Pengumuman_ID: id }); }
   function exportJSON(){ return JSON.stringify(cache, null, 1); }
   function importJSON(text){ const obj = JSON.parse(text); if (!obj || !Array.isArray(obj.berita) || !Array.isArray(obj.kategori)) throw new Error('Format berkas tidak sesuai'); cache = obj; save(); }
   /* ===== Media gambar (mode uji lokal: IndexedDB peramban) =====
@@ -135,8 +159,8 @@ const HisaData = (() => {
       return `<img src="${esc(b.gambar_utama_file_id)}" alt="${esc(b.alt_gambar || b.judul)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover">`;
     return `<span class="thumb-ph" style="background:${esc(b.gambar_grad || 'linear-gradient(135deg,#016767,#0E8A84)')}"><span><span data-ic="${esc(b.gambar_ikon || 'news')}"></span><br>${esc(label || b.judul)}</span></span>`;
   }
-  return { esc, slugify, fmtDate, sanitize, load, save, isLocalMode, resetLocal, kategoriNama, apiCall, apiMode, getSession, setSession, clearSession, sesiAdmin, sesiPengurus, clearPubCache: pubCacheClear,
-           terbit, pengumumanAktif, upsertBerita, hapusBerita, upsertKategori, hapusKategori,
+  return { esc, slugify, fmtDate, sanitize, load, save, isLocalMode, resetLocal, kategoriNama, apiCall, apiMode, getSession, setSession, clearSession, sesiAdmin, sesiPengurus, sesiCMS, clearPubCache: pubCacheClear,
+           terbit, populer, pengumumanAktif, upsertBerita, hapusBerita, upsertKategori, hapusKategori,
            upsertPengumuman, hapusPengumuman, exportJSON, importJSON, thumbHTML,
            mediaPut, mediaURL, mediaDel, hydrateMedia,
            get cache(){ return cache; } };

@@ -84,7 +84,7 @@
     location.replace('/pendataan/akun/data/');
     return;
   }
-  const peran = { super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', alumni: 'Alumni' }[u.Role] || u.Role;
+  const peran = { super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', penulis: 'Penulis/Media', alumni: 'Alumni' }[u.Role] || u.Role;
   const stLabel = s => ({ menunggu: 'Menunggu Verifikasi', terverifikasi: 'Terverifikasi', ditolak: 'Nonaktif', perlu_perbaikan: 'Perlu Perbaikan' }[s] || s);
   const kelola = me.kelola || [];
   const diri = kelola.filter(k => k.relasi.Hubungan === 'Diri Sendiri');
@@ -137,20 +137,23 @@
     const svgChart = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3"/><path d="M12 10v8"/><path d="M17 6v12"/></svg>';
     const svgPin = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
     let h = '';
-    if (pusat) {
+    if (pusat || u.Role === 'penulis') {
       h += '<nav class="portal-nav"><p class="portal-nav-label">Menu CMS</p>'
         + `<a href="/pendataan/admin/">${svgDash}Dashboard CMS</a>`
         + `<a href="/pendataan/admin/berita/">${svgNews}Berita</a>`
         + `<a href="/pendataan/admin/pengumuman/">${svgMega}Pengumuman</a>`
+        + (pusat ? `<a href="/pendataan/admin/statistik/">${svgChart}Statistik Web</a>` : '')
         + (u.Role === 'super_admin' ? `<a href="/pendataan/admin/pimpinan/">${svgGal}Foto Pimpinan</a>` : '')
         + '</nav>';
     }
-    h += '<nav class="portal-nav"><p class="portal-nav-label">Menu Pengurus</p>'
-      + `<a href="/pendataan/admin/pengurus/">${svgChart}Statistik Alumni</a>`
-      + `<a href="/pendataan/admin/pengurus/alumni/">${svgUsers}Data Alumni</a>`
-      + `<a href="/pendataan/admin/pengurus/pengguna/">${svgOrang}Pengguna &amp; Peran</a>`
-      + (pusat ? `<a href="/pendataan/admin/pengurus/wilayah/">${svgPin}KORDA &amp; Angkatan</a>` : '')
-      + '</nav>';
+    if (u.Role !== 'penulis') {
+      h += '<nav class="portal-nav"><p class="portal-nav-label">Menu Pengurus</p>'
+        + `<a href="/pendataan/admin/pengurus/">${svgChart}Statistik Alumni</a>`
+        + `<a href="/pendataan/admin/pengurus/alumni/">${svgUsers}Data Alumni</a>`
+        + `<a href="/pendataan/admin/pengurus/pengguna/">${svgOrang}Pengguna &amp; Peran</a>`
+        + (pusat ? `<a href="/pendataan/admin/pengurus/wilayah/">${svgPin}KORDA &amp; Angkatan</a>` : '')
+        + '</nav>';
+    }
     navExtra.innerHTML = h;
   }
   const baruId = new URLSearchParams(location.search).get('baru') || '';

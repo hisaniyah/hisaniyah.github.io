@@ -89,7 +89,12 @@
   await HisaData.load();
   const { esc, sanitize } = HisaData;
   const id = new URLSearchParams(location.search).get('id');
-  const rec = id ? HisaData.cache.berita.find(b => b.Berita_ID === id) : null;
+  let rec = id ? HisaData.cache.berita.find(b => b.Berita_ID === id) : null;
+  if (id && !rec) {
+    /* Draf tidak ada di data publik — ambil dari daftar server (penulis hanya
+       menerima miliknya; berita orang lain tetap "tidak ditemukan"). */
+    try { const semua = await HisaData.apiCall('admin.berita.list', {}); rec = semua.find(b => b.Berita_ID === id) || null; } catch (e) {}
+  }
   if (id && !rec) { alert('Berita tidak ditemukan'); location.href = '/pendataan/admin/berita/'; return; }
   document.getElementById('ed-title').textContent = rec ? 'Ubah Berita' : 'Tulis Berita';
   const kat = document.getElementById('f-kat');
@@ -114,7 +119,7 @@
   async function acceptFile(file){
     if (!file) return;
     if (!/^image\//.test(file.type)) { toast('Berkas harus berupa gambar'); return; }
-    if (HisaData.apiMode() && HisaData.sesiAdmin()) {
+    if (HisaData.apiMode() && HisaData.sesiCMS()) {
       toast('Mengunggah ke Drive…');
       const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.readAsDataURL(file); });
       try {
@@ -148,7 +153,7 @@
     const file = fileIsi.files[0]; fileIsi.value = '';
     if (!file) return;
     if (!/^image\//.test(file.type)) { toast('Berkas harus berupa gambar'); return; }
-    if (!(HisaData.apiMode() && HisaData.sesiAdmin())) { toast('Sisipkan foto memerlukan koneksi server — masuk sebagai pengurus dulu'); return; }
+    if (!(HisaData.apiMode() && HisaData.sesiCMS())) { toast('Sisipkan foto memerlukan koneksi server — masuk sebagai pengurus dulu'); return; }
     toast('Mengunggah foto…');
     try {
       const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.readAsDataURL(file); });

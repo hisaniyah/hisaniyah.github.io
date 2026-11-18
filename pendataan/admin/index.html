@@ -27,8 +27,8 @@
   <div class="stat"><b id="st-peng">–</b><span>Pengumuman aktif</span></div>
 </div>
 <div class="panel"><h2>Berita Terbaru</h2><div id="recent"><p>Memuat…</p></div></div>
-<div class="panel"><h2>Data &amp; Cadangan</h2>
-<p style="color:var(--ink-soft);margin-bottom:14px" id="backup-desc">Data CMS tersimpan di database organisasi (Google Sheets). Unduh cadangan JSON secara berkala sebagai arsip tambahan; backup resmi berkala tersimpan di folder Drive organisasi.</p>
+<div class="panel" id="panel-cadangan"><h2>Data &amp; Cadangan</h2>
+<p style="color:var(--ink-soft);margin-bottom:14px" id="backup-desc">Data CMS tersimpan di database organisasi (Supabase). Unduh cadangan JSON secara berkala sebagai arsip tambahan; backup resmi berkala tersimpan di folder Drive organisasi.</p>
 <div class="row-actions">
   <button class="abtn solid" id="btn-export">Unduh Cadangan (JSON)</button>
   <label class="abtn" style="cursor:pointer">Impor Cadangan<input type="file" id="file-import" accept="application/json" hidden></label>
@@ -47,13 +47,22 @@
   await HisaData.load();
   const c = HisaData.cache;
   const { esc, fmtDate } = HisaData;
-  document.getElementById('st-total').textContent = c.berita.length;
-  document.getElementById('st-terbit').textContent = c.berita.filter(b => b.status === 'terbit').length;
-  document.getElementById('st-draf').textContent = c.berita.filter(b => b.status !== 'terbit').length;
+  const ses = HisaData.getSession();
+  const isPenulis = !!(ses && ses.user && ses.user.Role === 'penulis');
+  let daftar = c.berita;
+  if (isPenulis) {
+    /* Penulis: angka & daftar hanya dari berita miliknya (daftar server);
+       panel cadangan tidak relevan untuk peran ini. */
+    document.getElementById('panel-cadangan').style.display = 'none';
+    try { daftar = await HisaData.apiCall('admin.berita.list', {}); } catch (e) {}
+  }
+  document.getElementById('st-total').textContent = daftar.length;
+  document.getElementById('st-terbit').textContent = daftar.filter(b => b.status === 'terbit').length;
+  document.getElementById('st-draf').textContent = daftar.filter(b => b.status !== 'terbit').length;
   document.getElementById('st-peng').textContent = c.pengumuman.filter(p => p.is_published).length;
   document.getElementById('mode-info').textContent = HisaData.apiMode() ? 'Status: terhubung ke database HISANIYAH — semua perubahan tersimpan di server organisasi.' : 'Status: mode lokal — data tersimpan di peramban ini.';
   if (!HisaData.apiMode()) document.getElementById('backup-desc').textContent = 'Pada mode lokal, seluruh data CMS tersimpan di peramban ini. Unduh cadangan secara berkala.';
-  document.getElementById('recent').innerHTML = [...c.berita].sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||'')).slice(0,5).map(b => `
+  document.getElementById('recent').innerHTML = [...daftar].sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||'')).slice(0,5).map(b => `
     <div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">
       <span class="badge ${b.status === 'terbit' ? 'terbit' : 'draf'}">${b.status === 'terbit' ? 'Terbit' : 'Draf'}</span>
       <strong style="flex:1">${esc(b.judul)}</strong>

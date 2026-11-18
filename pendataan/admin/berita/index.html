@@ -31,7 +31,7 @@
     <select id="f-status" aria-label="Saring status"><option value="">Semua status</option><option value="terbit">Terbit</option><option value="draf">Draf</option></select>
     <a class="btn btn-orange" href="/pendataan/admin/berita/editor/" style="padding:11px 20px">+ Tulis Berita</a>
   </div>
-  <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Judul</th><th>Kategori</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead><tbody id="rows"><tr><td>Memuat…</td></tr></tbody></table></div>
+  <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Judul</th><th>Kategori</th><th>Status</th><th>Dilihat</th><th>Tanggal</th><th>Aksi</th></tr></thead><tbody id="rows"><tr><td>Memuat…</td></tr></tbody></table></div>
 </div>
 </div>
 <div id="tab-kategori" style="display:none">
@@ -54,27 +54,46 @@
   await HisaData.load();
   const { esc, fmtDate } = HisaData;
   const rows = document.getElementById('rows');
+  /* Daftar berita kini dari server (admin.berita.list): memuat draf juga,
+     penulis hanya menerima berita miliknya, dan tiap baris membawa jumlah
+     tayang (kolom Dilihat). Bila server tak terjangkau, jatuh ke data publik
+     terakhir tanpa angka tayang. */
+  let items = [];
+  try { items = await HisaData.apiCall('admin.berita.list', {}); }
+  catch (e) { items = (HisaData.cache.berita || []).map(b => ({ ...b, dilihat: null })); }
   function render(){
     const q = document.getElementById('q').value.toLowerCase();
     const fs = document.getElementById('f-status').value;
-    const items = HisaData.cache.berita.filter(b => (!q || b.judul.toLowerCase().includes(q)) && (!fs || b.status === fs));
-    rows.innerHTML = items.map(b => `<tr>
+    const tampil = items.filter(b => (!q || b.judul.toLowerCase().includes(q)) && (!fs || b.status === fs));
+    rows.innerHTML = tampil.map(b => `<tr>
       <td><strong>${esc(b.judul)}</strong>${b.unggulan ? ' <span class="badge terbit">Unggulan</span>' : ''}<br><small style="color:var(--ink-soft)">/${esc(b.slug)}</small></td>
       <td>${esc(HisaData.kategoriNama(b.Kategori_ID))}</td>
       <td><span class="badge ${b.status === 'terbit' ? 'terbit' : 'draf'}">${b.status === 'terbit' ? 'Terbit' : 'Draf'}</span></td>
+      <td>${b.dilihat == null ? '–' : Number(b.dilihat).toLocaleString('id-ID')}</td>
       <td>${esc(fmtDate(b.publish_at))}</td>
       <td><div class="row-actions">
         <a class="abtn" href="/pendataan/admin/berita/editor/?id=${encodeURIComponent(b.Berita_ID)}">Ubah</a>
         <button class="abtn" data-toggle="${esc(b.Berita_ID)}">${b.status === 'terbit' ? 'Jadikan Draf' : 'Terbitkan'}</button>
         <button class="abtn danger" data-del="${esc(b.Berita_ID)}">Hapus</button>
-      </div></td></tr>`).join('') || '<tr><td colspan="5">Tidak ada berita yang cocok.</td></tr>';
+      </div></td></tr>`).join('') || '<tr><td colspan="6">Tidak ada berita yang cocok.</td></tr>';
   }
   document.getElementById('q').addEventListener('input', render);
   document.getElementById('f-status').addEventListener('change', render);
-  rows.addEventListener('click', e => {
+  rows.addEventListener('click', async e => {
     const t = e.target.closest('[data-toggle]'), d = e.target.closest('[data-del]');
-    if (t) { const b = HisaData.cache.berita.find(x => x.Berita_ID === t.dataset.toggle); b.status = b.status === 'terbit' ? 'draf' : 'terbit'; HisaData.save(); toast('Status diubah: ' + b.judul); render(); }
-    if (d) { const b = HisaData.cache.berita.find(x => x.Berita_ID === d.dataset.del); if (confirm('Hapus berita "' + b.judul + '"? Tindakan ini tidak dapat dibatalkan.')) { HisaData.hapusBerita(b.Berita_ID); toast('Berita dihapus'); render(); renderKat(); } }
+    if (t) {
+      const b = items.find(x => x.Berita_ID === t.dataset.toggle); if (!b) return;
+      const baru = b.status === 'terbit' ? 'draf' : 'terbit';
+      try { const r = await HisaData.apiCall('admin.berita.save', { ...b, status: baru }); Object.assign(b, r); HisaData.clearPubCache(); toast('Status diubah: ' + b.judul); render(); }
+      catch (err) { toast('Gagal mengubah status: ' + err.message); }
+    }
+    if (d) {
+      const b = items.find(x => x.Berita_ID === d.dataset.del); if (!b) return;
+      if (confirm('Hapus berita "' + b.judul + '"? Tindakan ini tidak dapat dibatalkan.')) {
+        try { await HisaData.apiCall('admin.berita.delete', { Berita_ID: b.Berita_ID }); items = items.filter(x => x.Berita_ID !== b.Berita_ID); HisaData.clearPubCache(); toast('Berita dihapus'); render(); renderKat(); }
+        catch (err) { toast('Gagal menghapus: ' + err.message); }
+      }
+    }
   });
   render();
   /* ===== Tab Kelola Kategori (menu Kategori dilipat ke sini, 19 Nov 2026) ===== */
@@ -82,7 +101,7 @@
   let editKat = '';
   function renderKat(){
     kRows.innerHTML = [...HisaData.cache.kategori].sort((a,b) => (a.urutan||0) - (b.urutan||0)).map(k => {
-      const n = HisaData.cache.berita.filter(b => b.Kategori_ID === k.Kategori_ID).length;
+      const n = items.filter(b => b.Kategori_ID === k.Kategori_ID).length;
       return `<tr><td><strong>${esc(k.nama)}</strong><br><small style="color:var(--ink-soft)">/${esc(k.slug)}</small></td><td>${k.urutan ?? ''}</td><td>${n}</td>
       <td><div class="row-actions"><button class="abtn" data-kedit="${esc(k.Kategori_ID)}">Ubah</button><button class="abtn danger" data-kdel="${esc(k.Kategori_ID)}">Hapus</button></div></td></tr>`;
     }).join('') || '<tr><td colspan="4">Belum ada kategori.</td></tr>';
@@ -93,7 +112,7 @@
       document.getElementById('k-nama').value = k.nama; document.getElementById('k-urutan').value = k.urutan ?? 1;
       document.getElementById('k-form-title').textContent = 'Ubah Kategori'; document.getElementById('k-batal').style.display = ''; }
     if (del) { const k = HisaData.cache.kategori.find(x => x.Kategori_ID === del.dataset.kdel);
-      const n = HisaData.cache.berita.filter(b => b.Kategori_ID === k.Kategori_ID).length;
+      const n = items.filter(b => b.Kategori_ID === k.Kategori_ID).length;
       if (n) { toast('Kategori masih dipakai ' + n + ' berita — pindahkan dulu beritanya'); return; }
       if (confirm('Hapus kategori "' + k.nama + '"?')) { HisaData.hapusKategori(k.Kategori_ID); toast('Kategori dihapus'); renderKat(); render(); } }
   });

@@ -44,13 +44,13 @@
       box.innerHTML = `<div class="panel"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Pengguna</th><th>Peran</th><th>Penugasan</th><th>Terakhir Masuk</th><th>Status</th>${superAdmin ? '<th>Atur</th>' : ''}</tr></thead><tbody>
       ${users.map(u => `<tr>
         <td><b>${esc(u.Nama)}</b><br><span style="color:var(--ink-soft)">${esc(u.Email)}</span></td>
-        <td>${esc({ super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', alumni: 'Alumni' }[u.Role] || u.Role)}</td>
+        <td>${esc({ super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', penulis: 'Penulis/Media', alumni: 'Alumni' }[u.Role] || u.Role)}</td>
         <td>${u.penugasan ? esc(u.penugasan.jabatan) + (u.penugasan.korda_label ? ' — ' + esc(u.penugasan.korda_label) : '') : '-'}</td>
         <td>${esc(String(u.terakhir_login || '-').slice(0, 16).replace('T', ' '))}</td>
         <td>${u.Status_Akun === 'aktif' ? '<span class="badge">Aktif</span>' : '<span class="badge" style="background:#FDE3E3;color:#B03A3A">Nonaktif</span>'}</td>
         ${superAdmin ? `<td><div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
           <select data-role="${esc(u.User_ID)}" style="font-family:inherit;padding:8px;border:1.6px solid var(--line);border-radius:9px">
-            ${['alumni','admin_korda','pengurus_pusat','super_admin'].map(r => `<option value="${r}"${u.Role === r ? ' selected' : ''}>${r}</option>`).join('')}
+            ${['alumni','penulis','admin_korda','pengurus_pusat','super_admin'].map(r => `<option value="${r}"${u.Role === r ? ' selected' : ''}>${r}</option>`).join('')}
           </select>
           <select data-korda="${esc(u.User_ID)}" style="font-family:inherit;padding:8px;border:1.6px solid var(--line);border-radius:9px">${kordaOpts(u.penugasan ? u.penugasan.Korda_ID : '')}</select>
           <button class="abtn" data-simpan="${esc(u.User_ID)}">Simpan</button>

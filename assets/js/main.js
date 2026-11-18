@@ -39,3 +39,33 @@ document.addEventListener('DOMContentLoaded', () => {
   if (input) input.addEventListener('input', runSearch);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
 });
+
+/* Pencatat tayang statistik bawaan (19 Nov 2026): satu catatan kecil per
+   tayang halaman publik, dilepas tanpa menunggu respons. Anti dobel: satu
+   halaman dihitung "unik" maksimal 1x per hari per perangkat (localStorage).
+   Tanpa data pribadi — hanya path, slug berita, dan penanda unik. Halaman
+   portal/admin tidak dicatat (main.js tidak dimuat di sana). */
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const url = window.HISA_API_URL;
+    if (!url) return;
+    let path = location.pathname;
+    if (path === '/index.html') path = '/';
+    if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+    if (path.startsWith('/pendataan')) return;
+    let slug = '';
+    const m = path.match(/^\/berita\/([^\/]+)$/);
+    if (m) slug = decodeURIComponent(m[1]);
+    if (path === '/berita/detail') slug = new URLSearchParams(location.search).get('slug') || '';
+    const tgl = new Date();
+    const kunci = 'hisa_stat_' + tgl.getFullYear() + '-' + String(tgl.getMonth() + 1).padStart(2, '0') + '-' + String(tgl.getDate()).padStart(2, '0') + '_' + path;
+    let unik = false;
+    try { if (!localStorage.getItem(kunci)) { unik = true; localStorage.setItem(kunci, '1'); } } catch (e) {}
+    const body = JSON.stringify({ action: 'public.statistik.catat', token: '', payload: { path: path, slug: slug, unik: unik } });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(url, new Blob([body], { type: 'text/plain;charset=utf-8' }));
+    } else {
+      fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body, keepalive: true }).catch(() => {});
+    }
+  } catch (e) {}
+});
