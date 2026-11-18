@@ -72,7 +72,6 @@
     </div>
     <button id="navDash" class="aktif" onclick="tampil('dash')">🏠 Dashboard</button>
     <button id="navData" onclick="tampil('data')">🛒 Data Pesanan</button>
-    <button id="navHarga" onclick="tampil('harga')">🏷️ Pengaturan Harga</button>
   </aside>
 
   <main>
@@ -89,7 +88,6 @@
         <div class="baris-info"><span>Kartu E-Money</span><b id="infoEmoney">–</b></div>
         <div class="baris-info"><span>Kartu Biasa</span><b id="infoBiasa">–</b></div>
         <div class="baris-info"><span>Rekening Transfer</span><b id="infoRek">–</b></div>
-        <button class="btn" style="margin-top:10px" onclick="tampil('harga')">✏️ Ubah Harga</button>
       </div>
       <div class="panel">
         <h3>Pesanan Terbaru</h3>
@@ -122,24 +120,6 @@
       </div>
     </section>
 
-    <section id="hal-harga" class="hal">
-      <h1>Pengaturan Harga Kartu</h1>
-      <div class="panel">
-        <p style="font-size:13.5px;color:#5a6b6b">Atur harga pencetakan kartu anggota dan rekening transfer. Perubahan langsung digunakan pada form pemesanan.</p>
-        <div class="dua">
-          <div><label class="lbl">Harga Kartu E-Money *</label><input type="number" id="inEmoney" min="0" step="500"></div>
-          <div><label class="lbl">Harga Kartu Biasa *</label><input type="number" id="inBiasa" min="0" step="500"></div>
-        </div>
-        <div class="dua">
-          <div><label class="lbl">Bank</label><input type="text" id="inBank"></div>
-          <div><label class="lbl">Atas Nama</label><input type="text" id="inAtasNama"></div>
-        </div>
-        <label class="lbl">Nomor Rekening</label>
-        <input type="text" id="inNoRek">
-        <button class="btn oranye" style="margin-top:16px" onclick="simpanPengaturan()">💾 Simpan Perubahan</button>
-        <span id="notifSimpan" style="margin-left:10px;color:#157347;font-weight:700"></span>
-      </div>
-    </section>
   </main>
 </div>
 
@@ -163,12 +143,11 @@
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
 
   function tampil(hal) {
-    ['dash', 'data', 'harga'].forEach(function (h) {
+    ['dash', 'data'].forEach(function (h) {
       document.getElementById('hal-' + h).classList.toggle('tampil', h === hal);
     });
     document.getElementById('navDash').classList.toggle('aktif', hal === 'dash');
     document.getElementById('navData').classList.toggle('aktif', hal === 'data');
-    document.getElementById('navHarga').classList.toggle('aktif', hal === 'harga');
   }
 
   function muat() {
@@ -183,11 +162,6 @@
       document.getElementById('infoEmoney').textContent = rp(res.pengaturan.harga_emoney);
       document.getElementById('infoBiasa').textContent = rp(res.pengaturan.harga_biasa);
       document.getElementById('infoRek').textContent = res.pengaturan.bank + ' ' + res.pengaturan.no_rekening + ' a.n. ' + res.pengaturan.atas_nama;
-      document.getElementById('inEmoney').value = res.pengaturan.harga_emoney;
-      document.getElementById('inBiasa').value = res.pengaturan.harga_biasa;
-      document.getElementById('inBank').value = res.pengaturan.bank;
-      document.getElementById('inNoRek').value = res.pengaturan.no_rekening;
-      document.getElementById('inAtasNama').value = res.pengaturan.atas_nama;
       document.getElementById('tabelRingkas').innerHTML = DATA.slice(0, 5).map(function (d) {
         return '<tr><td>' + esc(String(d.tanggal).substring(0, 10)) + '</td><td>' + esc(d.nama) +
           '</td><td>' + esc(d.jenis) + '</td><td><span class="chip ' + esc(d.status) + '">' + esc(d.status) + '</span></td></tr>';
@@ -242,18 +216,6 @@
       .catch(function (e) { alert('Gagal: ' + e.message); });
   }
 
-  function simpanPengaturan() {
-    apiAdmin(Object.assign({ aksi: 'admin.pengaturan', key: KEY }, {
-        harga_emoney: document.getElementById('inEmoney').value,
-        harga_biasa: document.getElementById('inBiasa').value,
-        bank: document.getElementById('inBank').value,
-        no_rekening: document.getElementById('inNoRek').value,
-        atas_nama: document.getElementById('inAtasNama').value
-      })).then(function () {
-      document.getElementById('notifSimpan').textContent = '✓ Tersimpan';
-      muat();
-    }).catch(function (e) { alert('Gagal: ' + e.message); });
-  }
 
   muat();
 </script>
