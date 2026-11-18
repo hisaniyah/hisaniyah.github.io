@@ -202,7 +202,8 @@
         return '<option ' + (s === d.status ? 'selected' : '') + '>' + s + '</option>';
       }).join('');
       return '<tr><td>' + (awal + i + 1) + '</td><td style="white-space:nowrap">' + esc(String(d.tanggal).substring(0, 10)) + '</td>' +
-        '<td><b>' + esc(d.nama) + '</b><br><small>' + esc(d.id) + '</small></td>' +
+        '<td><b>' + esc(d.nama) + '</b><br><small>' + esc(d.id) + '</small>' +
+        (d.noKta ? '<br><small>KTA: ' + esc(d.noKta) + '</small>' : '') + '</td>' +
         '<td>' + esc(d.alamat) + '</td><td>' + esc(d.wa) + '</td><td>' + esc(d.jenis) + '</td>' +
         '<td>' + rp(d.harga) + '</td>' +
         '<td><div class="berkas-sel">' +
