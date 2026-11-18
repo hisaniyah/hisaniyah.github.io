@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemesanan Kartu Anggota — HISANIYAH</title>
+<meta name="description" content="Form pemesanan kartu anggota (KTA) fisik HISANIYAH — Himpunan Santri-Alumni K.H. Yahya Syabrawi.">
+<link rel="icon" href="/assets/img/logo-hisaniyah-trans-256.webp">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f2f5f5; color: #14201f; font-size: 17px; line-height: 1.55; }
+  .bungkus { max-width: 560px; margin: 0 auto; padding: 0 14px 40px; }
+  header { background: #015454; color: #fff; padding: 20px 18px 26px; border-radius: 0 0 22px 22px; margin: 0 -14px; }
+  header .nama { font-size: 28px; font-weight: 800; letter-spacing: 2px; }
+  header .sub { font-size: 11.5px; letter-spacing: 1.2px; opacity: .9; margin-top: 2px; }
+  header .pil { display: inline-block; background: #fff; color: #015454; font-weight: 700; font-size: 15px; padding: 7px 14px; border-radius: 999px; margin-top: 14px; }
+  .kartu { background: #fff; border: 1px solid #dde7e7; border-radius: 14px; padding: 22px; margin-top: 18px; }
+  h1 { font-size: 26px; color: #014d4d; line-height: 1.3; }
+  .lead { font-size: 16px; color: #3d4f4f; margin-top: 6px; }
+  h2 { font-size: 19px; color: #014d4d; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  label.lbl { display: block; font-size: 16.5px; font-weight: 700; margin: 14px 0 6px; }
+  label.lbl:first-of-type { margin-top: 0; }
+  .wajib { color: #d33; }
+  input[type=text], textarea { width: 100%; border: 1.5px solid #b9cbcb; border-radius: 10px; padding: 14px 13px; font-size: 17px; font-family: inherit; background: #fbfdfe; }
+  input[type=text]:focus, textarea:focus { outline: none; border-color: #016767; }
+  textarea { min-height: 74px; resize: vertical; }
+  .jenis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .jenis { border: 2px solid #b9cbcb; border-radius: 12px; padding: 16px; cursor: pointer; font-size: 16.5px; }
+  .jenis small { display: block; color: #5f7373; font-size: 13.5px; margin-top: 2px; }
+  .jenis .rp { font-weight: 800; color: #016767; font-size: 20px; }
+  .jenis.aktif { border-color: #FE880D; background: #fff7ee; }
+  .info-bayar { border: 2px solid #FE880D; background: #fffaf3; border-radius: 12px; padding: 14px; }
+  .info-bayar .baris { display: flex; justify-content: space-between; font-size: 16.5px; padding: 4px 0; }
+  .info-bayar .rek { margin-top: 10px; border-top: 1px dashed #e5c9a8; padding-top: 10px; font-size: 16px; }
+  .info-bayar .norek { font-size: 23px; font-weight: 800; letter-spacing: 1px; color: #014d4d; }
+  .btn-salin { background: #015454; color: #fff; border: none; border-radius: 8px; padding: 9px 15px; font-size: 14px; cursor: pointer; margin-left: 8px; }
+  .catatan-ongkir { background: #fdecec; color: #9c1f1f; border-radius: 10px; padding: 12px; font-size: 15.5px; margin-top: 12px; text-align: center; font-weight: 600; }
+  .btn-upload { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; background: #015454; color: #fff; border: none; border-radius: 12px; padding: 19px; font-size: 18px; min-height: 62px; font-weight: 700; cursor: pointer; }
+  .btn-upload:active { background: #014d4d; }
+  .upload-ok { display: none; margin-top: 10px; text-align: center; }
+  .upload-ok img { max-width: 100%; max-height: 190px; border-radius: 10px; border: 1px solid #dde8e8; }
+  .upload-ok .ok { color: #14713f; font-weight: 700; font-size: 15px; margin-top: 6px; }
+  .upload-ok .ganti { background: none; border: none; color: #016767; text-decoration: underline; font-size: 15px; cursor: pointer; margin-left: 8px; }
+  .langkah { display: inline-flex; background: #015454; color: #fff; width: 30px; height: 30px; border-radius: 50%; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; flex: none; }
+  .penting { background: #fff8e1; border-radius: 12px; padding: 16px 18px; font-size: 15.5px; color: #54470f; }
+  .penting b { display: block; margin-bottom: 5px; }
+  .penting li { margin-left: 17px; margin-top: 3px; }
+  .btn-kirim { width: 100%; background: #014d4d; color: #fff; border: none; border-radius: 12px; padding: 19px; font-size: 18.5px; font-weight: 800; cursor: pointer; margin-top: 16px; }
+  .btn-kirim:disabled { opacity: .55; }
+  .error { display: none; background: #fdecec; color: #9c1f1f; border-radius: 10px; padding: 12px 14px; font-size: 15.5px; margin-top: 14px; }
+  #sukses { display: none; text-align: center; }
+  #sukses .centang { font-size: 52px; }
+  #sukses .id { font-size: 24px; font-weight: 800; color: #016767; margin: 8px 0; }
+  .kecil { font-size: 13.5px; color: #5f7373; margin-top: 5px; }
+</style>
+</head>
+<body>
+<div class="bungkus">
+  <header>
+    <div class="nama">HISANIYAH</div>
+    <div class="sub">HIMPUNAN SANTRI-ALUMNI K.H. YAHYA SYABRAWI</div>
+    <span class="pil">🖨️ Pemesanan Kartu</span>
+  </header>
+
+  <div id="formArea">
+    <div class="kartu">
+      <h1>Form Pemesanan<br>Kartu Anggota HISANIYAH</h1>
+      <p class="lead">Isi data, upload KTA dan bukti transfer, kemudian kirim pemesanan.</p>
+    </div>
+
+    <div class="kartu">
+      <h2>🎴 Pilih Jenis Kartu</h2>
+      <div class="jenis-grid">
+        <div class="jenis aktif" id="jenisEmoney" onclick="pilihJenis('E-Money')">
+          <b>Kartu E-Money</b>
+          <small>Flazz / e-Money / TapCash</small>
+          <span class="rp" id="rpEmoney">Rp …</span>
+        </div>
+        <div class="jenis" id="jenisBiasa" onclick="pilihJenis('Biasa')">
+          <b>Kartu Biasa</b>
+          <small>Tanpa fungsi e-money</small>
+          <span class="rp" id="rpBiasa">Rp …</span>
+        </div>
+      </div>
+
+      <div class="info-bayar" style="margin-top:14px">
+        <div class="baris"><span>💳 Kartu E-Money</span><b id="infoEmoney">Rp …</b></div>
+        <div class="baris"><span>💳 Kartu Biasa</span><b id="infoBiasa">Rp …</b></div>
+        <div class="rek">
+          Pembayaran transfer ke:<br>
+          <b id="bankNama">…</b><br>
+          <span class="norek" id="noRek">…</span><button type="button" class="btn-salin" onclick="salinRek()">Salin</button><br>
+          <span class="kecil">a.n. <span id="atasNama">…</span></span>
+        </div>
+      </div>
+      <div class="catatan-ongkir">Harga di atas belum termasuk ongkos kirim (ongkir).</div>
+    </div>
+
+    <div class="kartu">
+      <h2><span class="langkah">1</span> Upload KTA <span class="wajib">*</span></h2>
+      <p class="kecil" style="margin:0 0 10px">File KTA digital Anda (hasil Unduh KTA dari Portal Alumni).</p>
+      <input type="file" id="fileKta" accept="image/*" hidden>
+      <button type="button" class="btn-upload" onclick="document.getElementById('fileKta').click()">⬆️ Pilih File KTA</button>
+      <div class="upload-ok" id="okKta"><img id="imgKta"><div><span class="ok">✓ Berhasil dipilih</span><button type="button" class="ganti" onclick="document.getElementById('fileKta').click()">Ganti</button></div></div>
+
+      <h2 style="margin-top:22px"><span class="langkah">2</span> Upload Bukti Transfer <span class="wajib">*</span></h2>
+      <p class="kecil" style="margin:0 0 10px">Bukti pembayaran harga kartu sesuai jenis yang dipilih.</p>
+      <input type="file" id="fileBukti" accept="image/*" hidden>
+      <button type="button" class="btn-upload" onclick="document.getElementById('fileBukti').click()">⬆️ Pilih Bukti Transfer</button>
+      <div class="upload-ok" id="okBukti"><img id="imgBukti"><div><span class="ok">✓ Berhasil dipilih</span><button type="button" class="ganti" onclick="document.getElementById('fileBukti').click()">Ganti</button></div></div>
+    </div>
+
+    <div class="kartu">
+      <h2>👤 Data Pemesan</h2>
+      <label class="lbl">Nama Lengkap <span class="wajib">*</span></label>
+      <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+      <label class="lbl">Alamat Lengkap <span class="wajib">*</span></label>
+      <textarea id="alamat" placeholder="Masukkan alamat lengkap untuk pengiriman (contoh: Jl. Mawar No. 10, RT 03 RW 02, Gondanglegi, Kab. Malang)"></textarea>
+      <label class="lbl">No. WhatsApp <span class="wajib">*</span></label>
+      <input type="text" id="wa" inputmode="tel" placeholder="08xxxxxxxxxx">
+    </div>
+
+    <div class="kartu penting">
+      <b>⚠️ Catatan Penting:</b>
+      <ul>
+        <li>Pastikan data yang diisi sudah benar.</li>
+        <li>File KTA harus jelas dan terbaca.</li>
+        <li>Bukti transfer harus valid dan terbaca.</li>
+        <li>Harga belum termasuk ongkos kirim (ongkir).</li>
+        <li>Pesanan diproses setelah pembayaran diverifikasi admin.</li>
+      </ul>
+    </div>
+
+    <div class="error" id="kotakError"></div>
+    <button type="button" class="btn-kirim" id="btnKirim" onclick="kirim()">✈️ Kirim Pemesanan</button>
+  </div>
+
+  <div class="kartu" id="sukses">
+    <div class="centang">✅</div>
+    <h1>Pemesanan Terkirim!</h1>
+    <p class="lead">Nomor pesanan Anda:</p>
+    <div class="id" id="idSukses"></div>
+    <p class="lead">Simpan nomor ini. Admin akan memverifikasi pembayaran dan menghubungi Anda lewat WhatsApp.</p>
+  </div>
+</div>
+
+<script>
+  var INFO = null;
+  var jenisDipilih = 'E-Money';
+  var berkas = { kta: null, bukti: null };
+
+  function rp(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
+
+  var API = 'https://script.google.com/macros/s/AKfycbxce3dB2NoynMSWRi1WOHiX9kIiPaVS42xDU16thpBIjRWet4KQNxBZ6wacr35rKoDmDA/exec';
+  fetch(API + '?aksi=info').then(function (r) { return r.json(); }).then(function (info) {
+    INFO = info;
+    document.getElementById('rpEmoney').textContent = rp(info.harga_emoney);
+    document.getElementById('rpBiasa').textContent = rp(info.harga_biasa);
+    document.getElementById('infoEmoney').textContent = rp(info.harga_emoney);
+    document.getElementById('infoBiasa').textContent = rp(info.harga_biasa);
+    document.getElementById('bankNama').textContent = info.bank;
+    document.getElementById('noRek').textContent = info.no_rekening;
+    document.getElementById('atasNama').textContent = info.atas_nama;
+  }).catch(function () {
+    document.getElementById('rpEmoney').textContent = 'Rp —';
+    document.getElementById('rpBiasa').textContent = 'Rp —';
+  });
+
+  function pilihJenis(j) {
+    jenisDipilih = j;
+    document.getElementById('jenisEmoney').classList.toggle('aktif', j === 'E-Money');
+    document.getElementById('jenisBiasa').classList.toggle('aktif', j === 'Biasa');
+  }
+
+  function salinRek() {
+    var t = document.getElementById('noRek').textContent.replace(/\s/g, '');
+    if (navigator.clipboard) navigator.clipboard.writeText(t);
+    alert('Nomor rekening tersalin: ' + t);
+  }
+
+  function pasangUpload(idFile, idOk, idImg, kunci) {
+    document.getElementById(idFile).addEventListener('change', function (ev) {
+      var f = ev.target.files[0];
+      if (!f) return;
+      berkas[kunci] = f;
+      var r = new FileReader();
+      r.onload = function () {
+        document.getElementById(idImg).src = r.result;
+        document.getElementById(idOk).style.display = 'block';
+      };
+      r.readAsDataURL(f);
+    });
+  }
+  pasangUpload('fileKta', 'okKta', 'imgKta', 'kta');
+  pasangUpload('fileBukti', 'okBukti', 'imgBukti', 'bukti');
+
+  /* Kecilkan gambar otomatis (maks 1400px, JPEG 0.85) agar upload ringan & tidak ditolak ukuran. */
+  function kompres(file) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
+        var maks = 1400, w = img.width, h = img.height;
+        var skala = Math.min(1, maks / Math.max(w, h));
+        var cv = document.createElement('canvas');
+        cv.width = Math.round(w * skala); cv.height = Math.round(h * skala);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        URL.revokeObjectURL(url);
+        resolve(cv.toDataURL('image/jpeg', 0.85).split(',')[1]);
+      };
+      img.onerror = function () {
+        var r = new FileReader();
+        r.onload = function () { resolve(String(r.result).split(',')[1]); };
+        r.readAsDataURL(file);
+      };
+      img.src = url;
+    });
+  }
+
+  function tampilError(pesan) {
+    var k = document.getElementById('kotakError');
+    k.textContent = pesan; k.style.display = 'block';
+    k.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function kirim() {
+    var nama = document.getElementById('nama').value.trim();
+    var alamat = document.getElementById('alamat').value.trim();
+    var wa = document.getElementById('wa').value.trim();
+    if (!nama || !alamat || !wa) return tampilError('Nama, alamat, dan No. WhatsApp wajib diisi semua.');
+    if (!berkas.kta || !berkas.bukti) return tampilError('Upload KTA dan bukti transfer wajib diisi.');
+    var btn = document.getElementById('btnKirim');
+    btn.disabled = true; btn.textContent = '⏳ Mengirim…';
+    Promise.all([kompres(berkas.kta), kompres(berkas.bukti)])
+      .then(function (b64) {
+        return fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            aksi: 'pesan', nama: nama, alamat: alamat, wa: wa, jenis: jenisDipilih,
+            files: { kta: { base64: b64[0] }, bukti: { base64: b64[1] } }
+          })
+        }).then(function (r) { return r.json(); });
+      })
+      .then(function (res) {
+        if (!res || !res.ok) throw new Error((res && res.error) || 'Jawaban server tidak dikenal.');
+        document.getElementById('formArea').style.display = 'none';
+        var s = document.getElementById('sukses');
+        s.style.display = 'block';
+        document.getElementById('idSukses').textContent = res.id;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function (err) {
+        btn.disabled = false; btn.textContent = '✈️ Kirim Pemesanan';
+        tampilError('Gagal mengirim: ' + err.message + ' — periksa koneksi lalu coba lagi.');
+      });
+  }
+</script>
+</body>
+</html>
