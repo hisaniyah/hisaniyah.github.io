@@ -105,7 +105,7 @@
         <span class="st ${esc(k.alumni.Status_Verifikasi)}">${esc(stLabel(k.alumni.Status_Verifikasi))}</span>
         ${mode === 'ringkas' ? '<span class="chev">›</span>' : (k.relasi.is_pengelola_utama ? `<a class="btn btn-outline" href="/pendataan/akun/data/?id=${encodeURIComponent(k.alumni.Alumni_ID)}" style="padding:8px 15px;flex:none">Edit</a>` : '')}
       </div>`;
-  const blokKTA = (k) => `
+  const blokKTA = (k) => { const namaKTA = HisaData.rapikanNama(k.alumni.Nama || ''); return `
       <div class="kartu-anggota">
         <div class="ka-head">
           <img class="logo" src="/assets/img/logo-hisaniyah-trans-256.webp" alt="Logo HISANIYAH">
@@ -113,17 +113,17 @@
           <span class="ka-badge">KARTU ANGGOTA</span>
         </div>
         <div class="ka-body">
-          <div class="ka-foto" data-slot-foto="${esc(k.alumni.Alumni_ID)}">${k.alumni.foto_file_id ? `<img src="https://drive.google.com/thumbnail?id=${encodeURIComponent(k.alumni.foto_file_id)}&sz=w200" alt="Foto ${esc(k.alumni.Nama)}">` : `<span>${esc(inisialNama(k.alumni.Nama))}</span>`}</div>
+          <div class="ka-foto" data-slot-foto="${esc(k.alumni.Alumni_ID)}">${k.alumni.foto_file_id ? `<img src="https://drive.google.com/thumbnail?id=${encodeURIComponent(k.alumni.foto_file_id)}&sz=w200" alt="Foto ${esc(namaKTA)}">` : `<span>${esc(inisialNama(namaKTA))}</span>`}</div>
           <div class="ka-info">
             <span class="ka-label">Nama Anggota</span>
-            <h4 class="${(k.alumni.Nama || '').length > 28 ? 'sangat-panjang' : (k.alumni.Nama || '').length > 18 ? 'panjang' : ''}">${esc(k.alumni.Nama)}</h4>
+            <h4 class="${namaKTA.length > 28 ? 'sangat-panjang' : namaKTA.length > 18 ? 'panjang' : ''}">${esc(namaKTA)}</h4>
             <span class="ka-label">Nomor Anggota</span>
             <p class="ka-nomor">${esc(k.alumni.no_anggota || '-')}</p>
             <p class="ka-meta">${k.alumni.angkatan_label ? `<span>${esc(k.alumni.angkatan_label)}</span>` : ''}${k.alumni.korda_label ? `<span>${esc(k.alumni.korda_label)}</span>` : ''}</p>
           </div>
           <div class="ka-qr"><img class="qr" alt="Kode QR verifikasi" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent('https://hisaniyah.or.id/verifikasi/?kode=' + k.alumni.kode_verifikasi_qr)}"><span>Pindai untuk verifikasi</span></div>
         </div>
-      </div>${k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="btn btn-outline btn-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" style="padding:9px 15px">${k.alumni.foto_file_id ? '📷 Ganti Foto KTA' : '＋ Tambah Foto untuk KTA'}</button><span class="foto-kta-status" data-alumni="${esc(k.alumni.Alumni_ID)}" style="font-weight:600;color:var(--ink-soft);font-size:14px"></span><input type="file" accept="image/*" class="input-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" hidden></div>` : ''}<div style="margin:0 0 16px;display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn btn-teal btn-unduh-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" data-nama="${esc(k.alumni.Nama)}" data-nomor="${esc(k.alumni.no_anggota || '')}" data-angkatan="${esc(k.alumni.angkatan_label || '')}" data-korda="${esc(k.alumni.korda_label || '')}" data-foto="${k.alumni.foto_file_id ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(k.alumni.foto_file_id) + '&sz=w400' : ''}" data-kode="${esc(k.alumni.kode_verifikasi_qr || '')}" style="padding:10px 18px">⬇ Unduh KTA</button><a class="btn btn-orange" href="https://hisaniyah.or.id/pemesanan/" target="_blank" rel="noopener" style="padding:10px 18px">🖨️ Cetak KTA</a></div>`;
+      </div>${k.relasi.is_pengelola_utama ? `<div style="margin:-4px 0 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="btn btn-outline btn-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" style="padding:9px 15px">${k.alumni.foto_file_id ? '📷 Ganti Foto KTA' : '＋ Tambah Foto untuk KTA'}</button><span class="foto-kta-status" data-alumni="${esc(k.alumni.Alumni_ID)}" style="font-weight:600;color:var(--ink-soft);font-size:14px"></span><input type="file" accept="image/*" class="input-foto-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" hidden></div>` : ''}<div style="margin:0 0 16px;display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn btn-teal btn-unduh-kta" data-alumni="${esc(k.alumni.Alumni_ID)}" data-nama="${esc(namaKTA)}" data-nomor="${esc(k.alumni.no_anggota || '')}" data-angkatan="${esc(k.alumni.angkatan_label || '')}" data-korda="${esc(k.alumni.korda_label || '')}" data-foto="${k.alumni.foto_file_id ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(k.alumni.foto_file_id) + '&sz=w400' : ''}" data-kode="${esc(k.alumni.kode_verifikasi_qr || '')}" style="padding:10px 18px">⬇ Unduh KTA</button><a class="btn btn-orange" href="https://hisaniyah.or.id/pemesanan/" target="_blank" rel="noopener" style="padding:10px 18px">🖨️ Cetak KTA</a></div>`; };
   const tilePanel = u.Role === 'alumni'
     ? `<a class="portal-tile" href="/"><span class="ic">${svgGlobe}</span>Web Resmi<small>hisaniyah.or.id</small></a>`
     : '';

@@ -209,7 +209,7 @@
   async function unduhKTA(btn) {
     var d = {
       alumni: btn.getAttribute('data-alumni') || '',
-      nama: btn.getAttribute('data-nama') || '',
+      nama: (typeof HisaData !== 'undefined' && HisaData.rapikanNama) ? HisaData.rapikanNama(btn.getAttribute('data-nama') || '') : (btn.getAttribute('data-nama') || ''),
       nomor: btn.getAttribute('data-nomor') || '',
       angkatan: btn.getAttribute('data-angkatan') || '',
       korda: btn.getAttribute('data-korda') || '',

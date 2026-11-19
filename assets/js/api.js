@@ -78,6 +78,38 @@ const HisaData = (() => {
   function uid(prefix){ return prefix + Date.now().toString(36).toUpperCase() + Math.floor(Math.random()*99); }
   /* --- kueri publik --- */
   function kategoriNama(id){ const k = (cache?.kategori || []).find(x => x.Kategori_ID === id); return k ? k.nama : ''; }
+  /* Perapian huruf besar-kecil nama (keputusan tuan besar 19 Nov 2026) — cermin
+     aturan backend rapikanNama_; menjadi pengaman tampilan KTA bila masih ada
+     data lama yang belum terrapikan di database. */
+  const GELAR_DEPAN_KTA = { kh:'KH.', h:'H.', hj:'Hj.', ust:'Ust.', ustadz:'Ustadz', ustadzah:'Ustadzah', gus:'Gus', dr:'Dr.', drs:'Drs.', dra:'Dra.', prof:'Prof.', kyai:'Kyai', nyai:'Nyai', ir:'Ir.' };
+  const GELAR_BELAKANG_KTA = { sag:'S.Ag', mag:'M.Ag', spd:'S.Pd', mpd:'M.Pd', spdi:'S.Pd.I', mpdi:'M.Pd.I', sh:'S.H', mh:'M.H', shi:'S.H.I', mhi:'M.H.I', se:'S.E', me:'M.E', ssos:'S.Sos', msos:'M.Sos', skom:'S.Kom', mkom:'M.Kom', ssi:'S.Si', msi:'M.Si', shum:'S.Hum', mhum:'M.Hum', sfil:'S.Fil', mfil:'M.Fil', ma:'M.A', msc:'M.Sc', lc:'Lc', amd:'A.Md', spsi:'S.Psi', skm:'S.K.M', mkes:'M.Kes', mm:'M.M', st:'S.T', mt:'M.T', mkn:'M.Kn' };
+  function kunciNamaKTA(t){ return String(t || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+  function kapitalKataKTA(p){ let seen = false; return p.split('').map(ch => { if (/\p{L}/u.test(ch)) { const r = seen ? ch.toLowerCase() : ch.toUpperCase(); seen = true; return r; } return ch; }).join(''); }
+  function rapikanKataKTA(kata){ if (!kata) return kata; if (kata.includes('.')) return kata.split('.').map(s => s ? rapikanKataKTA(s) : s).join('.'); return kata.split('-').map(p => kapitalKataKTA(p.replace(/’/g, "'"))).join('-'); }
+  function rapikanNama(nama){
+    const s = String(nama ?? '').replace(/\s+/g, ' ').trim().replace(/,(?=\S)/g, ', ');
+    if (!s) return s;
+    const mentah = s.split(' '); const tokens = []; let i = 0;
+    while (i < mentah.length) {
+      const t = mentah[i];
+      if (/^[A-Za-z]\.?,?$/.test(t)) {
+        let j = i + 1, gab = kunciNamaKTA(t);
+        while (j < mentah.length && (gab + kunciNamaKTA(mentah[j])) in GELAR_BELAKANG_KTA) { gab += kunciNamaKTA(mentah[j]); j += 1; }
+        if (j > i + 1) { tokens.push(gab + (mentah.slice(i, j).some(x => x.endsWith(',')) ? ',' : '')); i = j; continue; }
+      }
+      tokens.push(t); i += 1;
+    }
+    const idxKoma = tokens.findIndex(t => t.endsWith(','));
+    return tokens.map((t, k) => {
+      const koma = t.endsWith(','); const inti = koma ? t.slice(0, -1) : t; const key = kunciNamaKTA(inti);
+      const zonaGelar = idxKoma >= 0 && k > idxKoma; const terakhir = k === tokens.length - 1;
+      let baru;
+      if (key in GELAR_BELAKANG_KTA && (zonaGelar || inti.includes('.') || inti === key || terakhir)) baru = GELAR_BELAKANG_KTA[key] + (terakhir && !koma ? '' : '.');
+      else if (key in GELAR_DEPAN_KTA && !zonaGelar) baru = GELAR_DEPAN_KTA[key];
+      else baru = rapikanKataKTA(inti);
+      return baru + (koma ? ',' : '');
+    }).join(' ');
+  }
   function terbit(){ return [...(cache?.berita || [])].filter(b => b.status === 'terbit').sort((a,b) => (b.publish_at || '').localeCompare(a.publish_at || '')); }
   /* Berita Populer (keputusan tuan besar 17 Nov 2026): terbanyak ditayangkan
      dalam 7 hari terakhir; kekurangan diisi dari 30 hari terakhir; berita yang
@@ -159,7 +191,7 @@ const HisaData = (() => {
       return `<img src="${esc(b.gambar_utama_file_id)}" alt="${esc(b.alt_gambar || b.judul)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover">`;
     return `<span class="thumb-ph" style="background:${esc(b.gambar_grad || 'linear-gradient(135deg,#016767,#0E8A84)')}"><span><span data-ic="${esc(b.gambar_ikon || 'news')}"></span><br>${esc(label || b.judul)}</span></span>`;
   }
-  return { esc, slugify, fmtDate, sanitize, load, save, isLocalMode, resetLocal, kategoriNama, apiCall, apiMode, getSession, setSession, clearSession, sesiAdmin, sesiPengurus, sesiCMS, clearPubCache: pubCacheClear,
+  return { esc, slugify, fmtDate, sanitize, load, save, isLocalMode, resetLocal, kategoriNama, rapikanNama, apiCall, apiMode, getSession, setSession, clearSession, sesiAdmin, sesiPengurus, sesiCMS, clearPubCache: pubCacheClear,
            terbit, populer, pengumumanAktif, upsertBerita, hapusBerita, upsertKategori, hapusKategori,
            upsertPengumuman, hapusPengumuman, exportJSON, importJSON, thumbHTML,
            mediaPut, mediaURL, mediaDel, hydrateMedia,
