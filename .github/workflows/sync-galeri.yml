@@ -1,0 +1,22 @@
+name: sync-galeri
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Salin berkas dari cermin Firebase
+        run: |
+          set -e
+          for f in galeri/index.html assets/css/pages/inner.css; do
+            mkdir -p "$(dirname "$f")"
+            curl -fsSL "https://hisaniyah.web.app/$f" -o "$f"
+          done
+          git config user.name "hisaniyah"
+          git config user.email "hisaniyahru1@gmail.com"
+          git add -A
+          git commit -m "Sinkron penampil foto galeri" || echo "tidak ada perubahan"
+          git push
