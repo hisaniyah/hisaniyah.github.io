@@ -41,8 +41,19 @@
   async function muat(){
     try {
       const users = await HisaData.apiCall('pengurus.pengguna.list', {});
-      box.innerHTML = `<div class="panel"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Pengguna</th><th>Peran</th><th>Penugasan</th><th>Terakhir Masuk</th><th>Status</th>${superAdmin ? '<th>Atur</th>' : ''}</tr></thead><tbody>
-      ${users.map(u => `<tr>
+      box.innerHTML = `<div class="panel"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+        <input id="cariPengguna" type="search" placeholder="Cari nama atau email…" aria-label="Cari pengguna" style="flex:1;min-width:210px;font-family:inherit;padding:9px 12px;border:1.6px solid var(--line);border-radius:9px">
+        <select id="saringPeran" aria-label="Saring peran" style="font-family:inherit;padding:9px;border:1.6px solid var(--line);border-radius:9px">
+          <option value="">Semua Peran</option>
+          <option value="super_admin">Super Admin</option>
+          <option value="pengurus_pusat">Pengurus Pusat</option>
+          <option value="admin_korda">Admin KORDA</option>
+          <option value="penulis">Penulis/Media</option>
+          <option value="alumni">Alumni</option>
+        </select>
+      </div>
+      <p id="hitungPengguna" style="color:var(--ink-soft);margin:0 0 10px"></p><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Pengguna</th><th>Peran</th><th>Penugasan</th><th>Terakhir Masuk</th><th>Status</th>${superAdmin ? '<th>Atur</th>' : ''}</tr></thead><tbody>
+      ${users.map(u => `<tr data-peran="${esc(u.Role)}" data-cari="${esc((u.Nama + ' ' + u.Email).toLowerCase())}">
         <td><b>${esc(u.Nama)}</b><br><span style="color:var(--ink-soft)">${esc(u.Email)}</span></td>
         <td>${esc({ super_admin: 'Super Admin', pengurus_pusat: 'Pengurus Pusat', admin_korda: 'Admin KORDA', penulis: 'Penulis/Media', alumni: 'Alumni' }[u.Role] || u.Role)}</td>
         <td>${u.penugasan ? esc(u.penugasan.jabatan) + (u.penugasan.korda_label ? ' — ' + esc(u.penugasan.korda_label) : '') : '-'}</td>
@@ -57,6 +68,7 @@
           <button class="abtn" data-aktif="${esc(u.User_ID)}" data-on="${u.Status_Akun === 'aktif' ? '0' : '1'}">${u.Status_Akun === 'aktif' ? 'Nonaktifkan' : 'Aktifkan'}</button>
         </div></td>` : ''}
       </tr>`).join('')}
+      <tr id="barisKosong" style="display:none"><td colspan="${superAdmin ? 6 : 5}" style="text-align:center;color:var(--ink-soft);padding:18px">Tidak ada pengguna yang cocok dengan pencarian atau saringan.</td></tr>
       </tbody></table></div>${superAdmin ? '' : '<p style="color:var(--ink-soft);margin-top:10px">Anda masuk sebagai Pengurus Pusat: daftar ini hanya-lihat. Pengaturan peran adalah wewenang Super Admin.</p>'}</div>`;
       box.querySelectorAll('[data-simpan]').forEach(b => b.addEventListener('click', async () => {
         const id = b.dataset.simpan;
@@ -69,6 +81,25 @@
         try { await HisaData.apiCall('pengurus.nonaktif', { User_ID: b.dataset.aktif, aktif: b.dataset.on === '1' }); toast('Status akun diperbarui'); muat(); }
         catch(e){ toast('Gagal: ' + e.message); }
       }));
+      const inpCari = box.querySelector('#cariPengguna');
+      const selPeran = box.querySelector('#saringPeran');
+      const hitung = box.querySelector('#hitungPengguna');
+      function saring(){
+        const q = (inpCari.value || '').trim().toLowerCase();
+        const r = selPeran.value;
+        let n = 0;
+        box.querySelectorAll('tbody tr[data-peran]').forEach(tr => {
+          const cocok = (!q || tr.dataset.cari.includes(q)) && (!r || tr.dataset.peran === r);
+          tr.style.display = cocok ? '' : 'none';
+          if (cocok) n++;
+        });
+        const kosong = box.querySelector('#barisKosong');
+        if (kosong) kosong.style.display = n ? 'none' : '';
+        hitung.textContent = 'Menampilkan ' + n + ' dari ' + users.length + ' pengguna';
+      }
+      inpCari.addEventListener('input', saring);
+      selPeran.addEventListener('change', saring);
+      saring();
     } catch(e){ gagal(e); }
   }
   muat();
