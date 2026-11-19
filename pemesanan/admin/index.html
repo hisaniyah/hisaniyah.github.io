@@ -122,10 +122,7 @@
           </table>
         </div>
         <div class="paginasi">
-          <button onclick="pindahHalaman(-1)">‹</button>
-          <span id="infoHalaman"></span>
-          <button onclick="pindahHalaman(1)">›</button>
-          <span id="infoJumlah" style="margin-left:8px;color:#7a8a8a"></span>
+          <span id="infoJumlah" style="color:#7a8a8a"></span>
         </div>
       </div>
     </section>
@@ -147,7 +144,6 @@
     });
   }
   var DATA = [];
-  var halaman = 1, PER_HAL = 10;
 
   function rp(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
@@ -176,7 +172,6 @@
         return '<tr><td>' + esc(String(d.tanggal).substring(0, 10)) + '</td><td>' + esc(d.nama) +
           '</td><td>' + esc(d.jenis) + '</td><td><span class="chip ' + esc(d.status) + '">' + esc(d.status) + '</span></td></tr>';
       }).join('') || '<tr><td colspan="4">Belum ada pesanan.</td></tr>';
-      halaman = 1;
       renderTabel();
     }).catch(function (e) { alert('Gagal memuat: ' + e.message); });
   }
@@ -193,15 +188,11 @@
 
   function renderTabel() {
     var list = tersaring();
-    var totalHal = Math.max(1, Math.ceil(list.length / PER_HAL));
-    if (halaman > totalHal) halaman = totalHal;
-    var awal = (halaman - 1) * PER_HAL;
-    var potong = list.slice(awal, awal + PER_HAL);
-    document.getElementById('tabelData').innerHTML = potong.map(function (d, i) {
+    document.getElementById('tabelData').innerHTML = list.map(function (d, i) {
       var opsi = ['Menunggu', 'Diproses', 'Selesai', 'Dibatalkan'].map(function (s) {
         return '<option ' + (s === d.status ? 'selected' : '') + '>' + s + '</option>';
       }).join('');
-      return '<tr><td>' + (awal + i + 1) + '</td><td style="white-space:nowrap">' + esc(String(d.tanggal).substring(0, 10)) + '</td>' +
+      return '<tr><td>' + (i + 1) + '</td><td style="white-space:nowrap">' + esc(String(d.tanggal).substring(0, 10)) + '</td>' +
         '<td><b>' + esc(d.nama) + '</b><br><small>' + esc(d.id) + '</small>' +
         (d.noKta ? '<br><small>KTA: ' + esc(d.noKta) + '</small>' : '') + '</td>' +
         '<td>' + esc(d.alamat) + '</td><td>' + esc(d.wa) + '</td><td>' + esc(d.jenis) + '</td>' +
@@ -214,12 +205,9 @@
         '<td><input class="resi" id="resi-' + esc(d.id) + '" value="' + esc(d.resi) + '" placeholder="No. resi"></td>' +
         '<td><button class="btn" onclick="simpanBaris(\'' + esc(d.id) + '\')">Simpan</button></td></tr>';
     }).join('') || '<tr><td colspan="11">Tidak ada data.</td></tr>';
-    document.getElementById('infoHalaman').textContent = 'Halaman ' + halaman + ' dari ' + totalHal;
-    document.getElementById('infoJumlah').textContent = 'Menampilkan ' + potong.length + ' dari ' + list.length + ' data';
-    muatThumb(potong);
+    document.getElementById('infoJumlah').textContent = 'Menampilkan semua ' + list.length + ' data';
+    muatThumb(list);
   }
-
-  function pindahHalaman(delta) { halaman += delta; if (halaman < 1) halaman = 1; renderTabel(); }
 
   function simpanBaris(id) {
     var status = document.getElementById('st-' + id).value;
