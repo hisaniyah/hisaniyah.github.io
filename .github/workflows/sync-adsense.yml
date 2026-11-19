@@ -1,0 +1,22 @@
+name: sync-adsense
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Salin berkas dari cermin Firebase
+        run: |
+          set -e
+          for f in ads.txt berita/index.html berita/majelis-sholawat-haul-akbar-39/index.html berita/mubes-pengurus-korda-hisaniyah-2026/index.html berita/pengurus-baru-hisaniyah-dilantik-siap-bekerja-keras-lakukan-banyak-terobosan/index.html berita/pentas-kenangan-reuni-nasional-haul-akbar-39/index.html berita/peresmian-gedung-baru-mabna-kh-yahya-syabrowi/index.html berita/puncak-haul-akbar-39-enam-ribu-jamaah/index.html berita/ramah-tamah-guru-dosen-pembuka-haul-akbar-39/index.html berita/sejarah-berdirinya-hisaniyah/index.html berita/seminar-fiqhun-nisa-haul-akbar-39/index.html berita/tahlil-bersama-masyarakat-haul-akbar-39/index.html berita/tawasul-khotmil-quran-haul-akbar-39/index.html berita/upacara-hari-santri-2026-raudlatul-ulum-1/index.html berita/ziarah-makam-masyayikh-haul-akbar-39/index.html galeri/index.html index.html kebijakan-privasi/index.html kegiatan/index.html kepengurusan/index.html korda/index.html profil/index.html program/index.html sejarah/index.html tv/index.html verifikasi/index.html visi-misi/index.html; do
+            mkdir -p "$(dirname "$f")"
+            curl -fsSL "https://hisaniyah.web.app/$f" -o "$f"
+          done
+          git config user.name "hisaniyah"
+          git config user.email "hisaniyahru1@gmail.com"
+          git add -A
+          git commit -m "AdSense: skrip penautan + ads.txt" || echo "tidak ada perubahan"
+          git push
