@@ -45,11 +45,12 @@ const HisaData = (() => {
   function sesiPengurus(){ const s = getSession(); return s && ['super_admin','pengurus_pusat','admin_korda'].includes(s.user && s.user.Role); }
   function sesiCMS(){ const s = getSession(); return s && ['super_admin','pengurus_pusat','penulis'].includes(s.user && s.user.Role); }
   /* Tulis tembus ke backend bila admin masuk (Tahap 5). Kegagalan dicatat, tidak menggagalkan UI. */
-  function tulisAPI(action, payload){
+  function tulisAPI(action, payload, ketat){
     const ses = getSession();
-    if (!API_URL || !ses) return Promise.resolve(null);
+    if (!API_URL || !ses) return ketat ? Promise.reject(new Error('Tidak ada sesi server')) : Promise.resolve(null);
     pubCacheClear(); // data publik berubah -> cache antar-halaman tidak boleh basi
-    return apiCall(action, payload, ses.token).catch(e => { console.warn('Tulis API gagal:', action, e.message); return null; });
+    const p = apiCall(action, payload, ses.token);
+    return ketat ? p : p.catch(e => { console.warn('Tulis API gagal:', action, e.message); return null; });
   }
   async function apiCall(action, payload, token){
     if (!token) { const ses = getSession(); token = ses ? ses.token : ''; }
@@ -145,8 +146,12 @@ const HisaData = (() => {
     const i = cache.berita.findIndex(b => b.Berita_ID === rec.Berita_ID);
     if (i >= 0) cache.berita[i] = rec; else cache.berita.unshift(rec);
     save();
-    if (sesiCMS()) tulisAPI('admin.berita.save', rec);
-    return rec;
+    // PERBAIKAN 19 Nov 2026: kembalikan janji tulis server (mode ketat)
+    // agar pemanggil (editor berita) bisa MENUNGGU kepastian tersimpan
+    // sebelum menyatakan berhasil. Sebelumnya fire-and-forget lalu halaman
+    // berpindah seketika: kiriman batal di jalan, toast tetap "diterbitkan".
+    if (sesiCMS()) return tulisAPI('admin.berita.save', rec, true).then(() => rec);
+    return Promise.resolve(rec);
   }
   function hapusBerita(id){ cache.berita = cache.berita.filter(b => b.Berita_ID !== id); save(); if (sesiCMS()) tulisAPI('admin.berita.delete', { Berita_ID: id }); }
   function upsertKategori(rec){
