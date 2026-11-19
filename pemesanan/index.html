@@ -282,7 +282,12 @@
     if (!berkas.kta || !berkas.bukti) return tampilError('Upload KTA dan bukti transfer wajib diisi.');
     var btn = document.getElementById('btnKirim');
     btn.disabled = true; btn.textContent = '⏳ Mengirim…';
-    Promise.all([kompres(berkas.kta), kompres(berkas.bukti)])
+    var batasWaktu = new Promise(function (_, tolak) {
+      setTimeout(function () {
+        tolak(new Error('Pengiriman terlalu lama (lebih dari 60 detik) dan pesanan BELUM terkirim.'));
+      }, 60000);
+    });
+    Promise.race([Promise.all([kompres(berkas.kta), kompres(berkas.bukti)])
       .then(function (b64) {
         return fetch(API, {
           method: 'POST',
@@ -292,7 +297,7 @@
             files: { kta: { base64: b64[0] }, bukti: { base64: b64[1] } }
           })
         }).then(function (r) { return r.json(); });
-      })
+      }), batasWaktu])
       .then(function (res) {
         if (!res || !res.ok) throw new Error((res && res.error) || 'Jawaban server tidak dikenal.');
         if (res.dobel) {
@@ -318,7 +323,11 @@
       })
       .catch(function (err) {
         btn.disabled = false; btn.textContent = '✈️ Kirim Pemesanan';
-        tampilError('Gagal mengirim: ' + err.message + ' — periksa koneksi lalu coba lagi.');
+        if (err.message.indexOf('BELUM terkirim') >= 0) {
+          tampilError(err.message + ' Periksa koneksi internet Anda, lalu tekan tombol Kirim lagi.');
+        } else {
+          tampilError('Gagal mengirim: ' + err.message + ' — periksa koneksi lalu coba lagi.');
+        }
       });
   }
 </script>
