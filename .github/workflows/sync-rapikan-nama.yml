@@ -1,0 +1,22 @@
+name: sync-rapikan-nama
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Salin berkas dari cermin Firebase
+        run: |
+          set -e
+          for f in assets/js/api.js assets/js/kta-download.js pendataan/akun/index.html; do
+            mkdir -p "$(dirname "$f")"
+            curl -fsSL "https://hisaniyah.web.app/$f" -o "$f"
+          done
+          git config user.name "hisaniyah"
+          git config user.email "hisaniyahru1@gmail.com"
+          git add -A
+          git commit -m "Sinkron perapian nama KTA" || echo "tidak ada perubahan"
+          git push
