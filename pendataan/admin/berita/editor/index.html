@@ -182,13 +182,25 @@
       meta_title: $('f-judul').value.trim(), meta_description: $('f-ringkas').value.trim(), alt_gambar: $('f-alt').value.trim(),
       created_at: rec ? rec.created_at : '' };
   }
-  $('form').addEventListener('submit', e => {
+  $('form').addEventListener('submit', async e => {
     e.preventDefault();
     const r = collect();
     if (!r.judul || !r.ringkasan || !$('f-isi').textContent.trim()) { toast('Judul, ringkasan, dan isi berita wajib diisi'); return; }
     if (rec && rec.gambar_media_id && rec.gambar_media_id !== r.gambar_media_id) HisaData.mediaDel(rec.gambar_media_id);
     if (r.unggulan) HisaData.cache.berita.forEach(b => { if (b.Berita_ID !== r.Berita_ID) b.unggulan = false; });
-    HisaData.upsertBerita(r);
+    // PERBAIKAN 19 Nov 2026: tunggu server BENAR-BENAR menyimpan sebelum
+    // menyatakan diterbitkan & berpindah halaman (sebelumnya toast sukses
+    // muncul seketika padahal kiriman bisa batal di jalan).
+    const tombol = document.querySelectorAll('[data-status]');
+    tombol.forEach(b => { b.disabled = true; });
+    toast('Menyimpan ke server…');
+    try {
+      await HisaData.upsertBerita(r);
+    } catch (err) {
+      tombol.forEach(b => { b.disabled = false; });
+      toast('GAGAL tersimpan di server: ' + err.message + ' — berita BELUM terbit. Periksa koneksi, lalu coba lagi.');
+      return;
+    }
     sessionStorage.setItem('hisa_toast', r.status === 'terbit' ? 'Berita diterbitkan: ' + r.judul : 'Draf disimpan: ' + r.judul);
     location.href = '/pendataan/admin/berita/';
   });
