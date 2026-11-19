@@ -244,25 +244,14 @@
   pasangUpload('fileBukti', 'okBukti', 'imgBukti', 'bukti');
 
   /* Kecilkan gambar otomatis (maks 1400px, JPEG 0.85) agar upload ringan & tidak ditolak ukuran. */
+  // Foto dikirim ASLI tanpa kompres (keputusan tuan besar 19 Nov 2026):
+  // file KTA adalah bahan cetak kartu, kualitasnya tidak boleh turun.
   function kompres(file) {
-    return new Promise(function (resolve) {
-      var img = new Image();
-      var url = URL.createObjectURL(file);
-      img.onload = function () {
-        var maks = 1400, w = img.width, h = img.height;
-        var skala = Math.min(1, maks / Math.max(w, h));
-        var cv = document.createElement('canvas');
-        cv.width = Math.round(w * skala); cv.height = Math.round(h * skala);
-        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
-        URL.revokeObjectURL(url);
-        resolve(cv.toDataURL('image/jpeg', 0.85).split(',')[1]);
-      };
-      img.onerror = function () {
-       var r = new FileReader();
-        r.onload = function () { resolve(String(r.result).split(',')[1]); };
-        r.readAsDataURL(file);
-      };
-      img.src = url;
+    return new Promise(function (resolve, reject) {
+      var r = new FileReader();
+      r.onload = function () { resolve(String(r.result).split(',')[1]); };
+      r.onerror = function () { reject(new Error('Berkas tidak bisa dibaca. Coba pilih ulang berkasnya.')); };
+      r.readAsDataURL(file);
     });
   }
 
@@ -280,24 +269,42 @@
     var kta4 = document.getElementById('kta4').value.replace(/\D/g, '');
     if (kta4.length !== 4) return tampilError('Isi 4 angka terakhir Nomor KTA Anda.');
     if (!berkas.kta || !berkas.bukti) return tampilError('Upload KTA dan bukti transfer wajib diisi.');
-     var btn = document.getElementById('btnKirim');
+    document.getElementById('kotakError').style.display = 'none';
+    var btn = document.getElementById('btnKirim');
     btn.disabled = true; btn.textContent = '⏳ Mengirim…';
-    var batasWaktu = new Promise(function (_, tolak) {
-      setTimeout(function () {
-        tolak(new Error('Pengiriman terlalu lama (lebih dari 60 detik) dan pesanan BELUM terkirim.'));
-      }, 60000);
-    });
-    Promise.race([Promise.all([kompres(berkas.kta), kompres(berkas.bukti)])
+    Promise.all([kompres(berkas.kta), kompres(berkas.bukti)])
       .then(function (b64) {
-        return fetch(API, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            aksi: 'pesan', nama: nama, alamat: alamat, wa: wa, jenis: jenisDipilih, kta4: kta4,
-            files: { kta: { base64: b64[0] }, bukti: { base64: b64[1] } }
-          })
-        }).then(function (r) { return r.json(); });
-      }), batasWaktu])
+        var muatan = JSON.stringify({
+          aksi: 'pesan', nama: nama, alamat: alamat, wa: wa, jenis: jenisDipilih, kta4: kta4,
+          files: { kta: { base64: b64[0] }, bukti: { base64: b64[1] } }
+        });
+        function satuKali() {
+          return fetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: muatan
+          }).then(function (r) { return r.json(); });
+        }
+        function batas(ms) {
+          return new Promise(function (_, tolak) {
+            setTimeout(function () { tolak(new Error('percobaan habis waktu')); }, ms);
+          });
+        }
+        // Kirim ulang OTOMATIS sampai 3 kali: kiriman yang putus di jalan
+        // (sinyal lemah) pulih sendiri. Aman dari dobel karena server
+        // menolak Nomor KTA + jenis yang sama dengan pesanan aktif.
+        function coba(n) {
+          btn.textContent = n > 1 ? '⏳ Mengirim… (percobaan ' + n + ' dari 3)' : '⏳ Mengirim…';
+          return Promise.race([satuKali(), batas(90000)]).catch(function (e) {
+            if (n < 3) {
+              return new Promise(function (t) { setTimeout(t, 3000); })
+                .then(function () { return coba(n + 1); });
+            }
+            throw new Error('Pengiriman gagal setelah 3 kali percobaan dan pesanan BELUM terkirim.');
+          });
+        }
+        return coba(1);
+      })
       .then(function (res) {
         if (!res || !res.ok) throw new Error((res && res.error) || 'Jawaban server tidak dikenal.');
         if (res.dobel) {
