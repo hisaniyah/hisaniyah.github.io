@@ -78,6 +78,13 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+
+  <url>
+    <loc>https://hisaniyah.or.id/berita/menakar-hisaniyah-di-atas-papan-catur-politik/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <url>
     <loc>https://hisaniyah.or.id/berita/pengurus-baru-hisaniyah-dilantik-siap-bekerja-keras-lakukan-banyak-terobosan/</loc>
     <lastmod>2026-11-17</lastmod>
@@ -86,12 +93,6 @@
   </url>
   <url>
     <loc>https://hisaniyah.or.id/berita/sejarah-berdirinya-hisaniyah/</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hisaniyah.or.id/berita/ziarah-makam-masyayikh-haul-akbar-39/</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -109,19 +110,13 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://hisaniyah.or.id/berita/ziarah-makam-masyayikh-haul-akbar-39/</loc>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://hisaniyah.or.id/berita/upacara-hari-santri-2026-raudlatul-ulum-1/</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hisaniyah.or.id/berita/tawasul-khotmil-quran-haul-akbar-39/</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hisaniyah.or.id/berita/mubes-pengurus-korda-hisaniyah-2026/</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -140,6 +135,18 @@
   </url>
   <url>
     <loc>https://hisaniyah.or.id/berita/pentas-kenangan-reuni-nasional-haul-akbar-39/</loc>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hisaniyah.or.id/berita/tawasul-khotmil-quran-haul-akbar-39/</loc>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hisaniyah.or.id/berita/mubes-pengurus-korda-hisaniyah-2026/</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
