@@ -69,3 +69,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch (e) {}
 });
+
+/* Tombol bagikan artikel (21 Nov 2026): "Salin tautan" (data-salin) dan
+   "Bagikan" bawaan HP (data-bagikan-asli) pada halaman berita statis &
+   dinamis. Tanpa penanda ini, klik berjalan seperti biasa. */
+document.addEventListener('click', (e) => {
+  if (!e.target.closest) return;
+  const salin = e.target.closest('[data-salin]');
+  const asli = e.target.closest('[data-bagikan-asli]');
+  if (!salin && !asli) return;
+  function toastBagikan(msg) {
+    let el = document.querySelector('.share-toast');
+    if (!el) { el = document.createElement('div'); el.className = 'share-toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+    el.textContent = msg;
+    el.classList.add('tampil');
+    clearTimeout(el._tb);
+    el._tb = setTimeout(() => el.classList.remove('tampil'), 2200);
+  }
+  function salinManual(teks) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = teks; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove(); return true;
+    } catch (_) { return false; }
+  }
+  function salinTeks(teks) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(teks).catch(() => salinManual(teks));
+    }
+    return Promise.resolve(salinManual(teks));
+  }
+  if (salin) { salinTeks(salin.getAttribute('data-salin')).then(() => toastBagikan('Tautan disalin')); return; }
+  const url = asli.getAttribute('data-url');
+  const judul = asli.getAttribute('data-judul') || document.title;
+  if (navigator.share) {
+    navigator.share({ title: judul, text: judul + ' \u2014 HISANIYAH', url: url }).catch(() => {});
+  } else {
+    salinTeks(url).then(() => toastBagikan('Tautan disalin'));
+  }
+});

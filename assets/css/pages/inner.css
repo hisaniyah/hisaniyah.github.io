@@ -128,3 +128,21 @@
 .lb-prev{left:14px}
 .lb-next{right:14px}
 @media (max-width:640px){.lb-nav{width:42px;height:42px;font-size:26px}.lb-prev{left:8px}.lb-next{right:8px}}
+
+/* Tombol bagikan artikel (21 Nov 2026, Paket A: atas + bawah artikel) */
+.share-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0 2px}
+.share-bar.bawah{border-top:1px solid #dcebea;padding-top:18px;margin:28px 0 4px;max-width:760px}
+.share-label{font-weight:700;font-size:14px;color:#3f5f5c;margin-right:2px}
+.share-btn{width:38px;height:38px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;color:#fff;background:#016767;border:none;cursor:pointer;text-decoration:none;transition:transform .12s ease,box-shadow .12s ease}
+.share-btn svg{width:18px;height:18px;display:block}
+.share-btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(1,60,60,.18)}
+.share-btn.wa{background:#25D366}
+.share-btn.fb{background:#1877F2}
+.share-btn.x{background:#111111}
+.share-btn.tg{background:#229ED9}
+.share-btn.salin{background:#e8f4f3;color:#016767;border:1px solid #bcd9d6}
+.share-btn.asli{width:auto;padding:0 15px;gap:7px;background:#FE880D;font-family:inherit;font-weight:700;font-size:14px}
+.share-btn.asli svg{width:16px;height:16px}
+.share-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(16px);background:#014F4F;color:#fff;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:300;box-shadow:0 8px 24px rgba(1,50,50,.28)}
+.share-toast.tampil{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:820px){.share-toast{bottom:88px}}
