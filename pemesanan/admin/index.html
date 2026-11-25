@@ -30,6 +30,8 @@
   .toolbar { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 13px; }
   .toolbar input, .toolbar select { border: 1.5px solid #cfdddd; border-radius: 10px; padding: 10px 12px; min-height: 42px; font-size: 13.5px; font-family: inherit; background: #fff; }
   .toolbar input { flex: 1; min-width: 170px; }
+  .total-bar { background: #e6f2f2; border: 1.5px solid #bcd8d8; color: #014d4d; border-radius: 10px; padding: 11px 14px; font-size: 15px; margin-bottom: 13px; }
+  .total-bar b { font-size: 17px; }
   .tabel-bungkus { overflow-x: auto; }
   .berkas-sel { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
   .thumb { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 1.5px solid #cfdddd; cursor: zoom-in; background: #f2f7f7; }
@@ -123,8 +125,12 @@
           <select id="filterStatus" onchange="renderTabel()">
             <option value="">Semua Status</option><option>Menunggu</option><option>Diproses</option><option>Selesai</option><option>Dibatalkan</option>
           </select>
+          <select id="filterJenis" onchange="renderTabel()">
+            <option value="">Semua Jenis</option><option>E-Money</option><option>Biasa</option>
+          </select>
           <button class="btn" onclick="muat()">↻ Muat Ulang</button>
         </div>
+        <div class="total-bar" id="totalFilter">Total: – pesanan</div>
         <div class="tabel-bungkus">
           <table>
             <thead><tr><th>No</th><th>Tanggal</th><th>Nama</th><th>Alamat</th><th>No. WA</th><th>Jenis</th><th>Harga</th><th>File</th><th>Status</th><th>Resi</th><th>Aksi</th></tr></thead>
@@ -235,10 +241,12 @@
   function tersaring() {
     var q = document.getElementById('cari').value.toLowerCase();
     var st = document.getElementById('filterStatus').value;
+    var jn = document.getElementById('filterJenis').value;
     return DATA.filter(function (d) {
       if (st && d.status !== st) return false;
+      if (jn && d.jenis !== jn) return false;
       if (!q) return true;
-      return (d.nama + ' ' + d.wa + ' ' + d.id + ' ' + d.alamat).toLowerCase().indexOf(q) >= 0;
+      return (d.nama + ' ' + d.wa + ' ' + d.id + ' ' + d.alamat + ' ' + (d.noKta || '')).toLowerCase().indexOf(q) >= 0;
     });
   }
 
@@ -261,7 +269,12 @@
         '<td><input class="resi" id="resi-' + esc(d.id) + '" value="' + esc(d.resi) + '" placeholder="No. resi"></td>' +
         '<td><button class="btn" onclick="simpanBaris(\'' + esc(d.id) + '\')">Simpan</button></td></tr>';
     }).join('') || '<tr><td colspan="11">Tidak ada data.</td></tr>';
-    document.getElementById('infoJumlah').textContent = 'Menampilkan semua ' + list.length + ' data';
+    document.getElementById('infoJumlah').textContent = 'Menampilkan ' + list.length + ' data sesuai filter';
+    // Total mengikuti filter (perintah tuan besar 26 Nov 2026): jumlah pesanan
+    // + jumlah rupiah dari daftar yang sedang tampil, di atas daftar pesanan.
+    var totalRp = list.reduce(function (s, d) { return s + (Number(d.harga) || 0); }, 0);
+    document.getElementById('totalFilter').innerHTML =
+      'Total sesuai filter: <b>' + list.length + ' pesanan</b> · <b>' + rp(totalRp) + '</b>';
     muatThumb(list);
   }
 
