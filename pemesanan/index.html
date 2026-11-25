@@ -186,6 +186,11 @@
     <p class="lead"><b>Simpan nomor pesanan ini</b> sebagai bukti pemesanan Anda.</p>
     <button type="button" class="btn-kirim" onclick="location.reload()">Selesai</button>
   </div>
+  <div class="kartu" id="ditutup" style="display:none;text-align:center">
+    <div style="font-size:52px">🔒</div>
+    <h1>Pemesanan KTA Sedang Ditutup</h1>
+    <p class="lead">Saat ini pemesanan kartu anggota HISANIYAH sedang tidak dibuka. Silakan hubungi admin HISANIYAH untuk informasi lebih lanjut.</p>
+  </div>
   <div class="kartu" id="dobel">
     <div class="centang">📋</div>
     <h1>Pesanan Anda Sudah Tercatat</h1>
@@ -214,6 +219,21 @@
   // harga/rekening dari admin dihapus; perubahan lewat Jhon dengan edit berkas ini.
   // Nilai di bawah HARUS sama dengan sheet Pengaturan (harga yang dicatat server).
   INFO = { harga_emoney: 60000, harga_biasa: 10000, bank: 'BNI', no_rekening: '1175576769', atas_nama: 'Abdur Rofik' };
+
+  // Saklar buka/tutup pemesanan (V10): tanya status ke server saat halaman
+  // dibuka. Bila DITUTUP, form disembunyikan dan diganti pemberitahuan.
+  // Bila pertanyaan gagal (koneksi), form tetap tampil seperti biasa —
+  // server tetap menolak pesanan baru selama pemesanan ditutup.
+  fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ aksi: 'info' })
+  }).then(function (r) { return r.json(); }).then(function (info) {
+    if (info && info.aktif === false) {
+      document.getElementById('formArea').style.display = 'none';
+      document.getElementById('ditutup').style.display = 'block';
+    }
+  }).catch(function () {});
 
   function pilihJenis(j) {
     jenisDipilih = j;
