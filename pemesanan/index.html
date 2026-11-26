@@ -88,7 +88,12 @@
     <span class="pil">🖨️ Pemesanan Kartu</span>
   </header>
 
-  <div id="formArea">
+  <div class="kartu" id="memeriksa" style="text-align:center">
+    <div style="font-size:44px">⏳</div>
+    <p class="lead"><b>Memeriksa status pemesanan…</b></p>
+  </div>
+
+  <div id="formArea" style="display:none">
     <div class="kartu">
       <h1>Form Pemesanan<br>Kartu Anggota HISANIYAH</h1>
       <p class="lead">Isi data, upload KTA dan bukti transfer, kemudian kirim pemesanan.</p>
@@ -224,16 +229,27 @@
   // dibuka. Bila DITUTUP, form disembunyikan dan diganti pemberitahuan.
   // Bila pertanyaan gagal (koneksi), form tetap tampil seperti biasa —
   // server tetap menolak pesanan baru selama pemesanan ditutup.
+  var gerbangSelesai = false;
+  function bukaGerbang(ditutup) {
+    if (gerbangSelesai) return;
+    gerbangSelesai = true;
+    document.getElementById('memeriksa').style.display = 'none';
+    if (ditutup) {
+      document.getElementById('ditutup').style.display = 'block';
+    } else {
+      document.getElementById('formArea').style.display = 'block';
+    }
+  }
+  // Bila server lambat menjawab (>8 detik), form dibuka seperti biasa
+  // (server tetap menolak pesanan selama pemesanan ditutup).
+  setTimeout(function () { bukaGerbang(false); }, 8000);
   fetch(API, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ aksi: 'info' })
   }).then(function (r) { return r.json(); }).then(function (info) {
-    if (info && info.aktif === false) {
-      document.getElementById('formArea').style.display = 'none';
-      document.getElementById('ditutup').style.display = 'block';
-    }
-  }).catch(function () {});
+    bukaGerbang(!!(info && info.aktif === false));
+  }).catch(function () { bukaGerbang(false); });
 
   function pilihJenis(j) {
     jenisDipilih = j;
