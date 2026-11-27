@@ -80,6 +80,12 @@
   </url>
 
   <url>
+    <loc>https://hisaniyah.or.id/berita/hisaniyah-gandeng-bni-kartu-anggota-e-money-tapcash/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://hisaniyah.or.id/berita/menakar-hisaniyah-di-atas-papan-catur-politik/</loc>
     <lastmod>2026-11-21</lastmod>
     <changefreq>monthly</changefreq>
@@ -128,25 +134,25 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://hisaniyah.or.id/berita/majelis-sholawat-haul-akbar-39/</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://hisaniyah.or.id/berita/pentas-kenangan-reuni-nasional-haul-akbar-39/</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://hisaniyah.or.id/berita/tawasul-khotmil-quran-haul-akbar-39/</loc>
+    <loc>https://hisaniyah.or.id/berita/majelis-sholawat-haul-akbar-39/</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://hisaniyah.or.id/berita/mubes-pengurus-korda-hisaniyah-2026/</loc>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hisaniyah.or.id/berita/tawasul-khotmil-quran-haul-akbar-39/</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
