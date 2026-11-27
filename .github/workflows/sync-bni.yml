@@ -1,0 +1,57 @@
+name: Sync BNI TapCash
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync files from Firebase mirror
+        shell: bash
+        run: |
+          set -e
+          mkdir -p assets/img/berita
+          curl -fsSL https://hisaniyah.web.app/assets/img/berita/hisaniyah-bni-tapcash.jpg -o assets/img/berita/hisaniyah-bni-tapcash.jpg
+          mkdir -p assets/js
+          curl -fsSL https://hisaniyah.web.app/assets/js/berita-statis.js -o assets/js/berita-statis.js
+          mkdir -p berita/hisaniyah-gandeng-bni-kartu-anggota-e-money-tapcash
+          curl -fsSL https://hisaniyah.web.app/berita/hisaniyah-gandeng-bni-kartu-anggota-e-money-tapcash/index.html -o berita/hisaniyah-gandeng-bni-kartu-anggota-e-money-tapcash/index.html
+          mkdir -p berita/majelis-sholawat-haul-akbar-39
+          curl -fsSL https://hisaniyah.web.app/berita/majelis-sholawat-haul-akbar-39/index.html -o berita/majelis-sholawat-haul-akbar-39/index.html
+          mkdir -p berita/menakar-hisaniyah-di-atas-papan-catur-politik
+          curl -fsSL https://hisaniyah.web.app/berita/menakar-hisaniyah-di-atas-papan-catur-politik/index.html -o berita/menakar-hisaniyah-di-atas-papan-catur-politik/index.html
+          mkdir -p berita/mubes-pengurus-korda-hisaniyah-2026
+          curl -fsSL https://hisaniyah.web.app/berita/mubes-pengurus-korda-hisaniyah-2026/index.html -o berita/mubes-pengurus-korda-hisaniyah-2026/index.html
+          mkdir -p berita/pengurus-baru-hisaniyah-dilantik-siap-bekerja-keras-lakukan-banyak-terobosan
+          curl -fsSL https://hisaniyah.web.app/berita/pengurus-baru-hisaniyah-dilantik-siap-bekerja-keras-lakukan-banyak-terobosan/index.html -o berita/pengurus-baru-hisaniyah-dilantik-siap-bekerja-keras-lakukan-banyak-terobosan/index.html
+          mkdir -p berita/pentas-kenangan-reuni-nasional-haul-akbar-39
+          curl -fsSL https://hisaniyah.web.app/berita/pentas-kenangan-reuni-nasional-haul-akbar-39/index.html -o berita/pentas-kenangan-reuni-nasional-haul-akbar-39/index.html
+          mkdir -p berita/peresmian-gedung-baru-mabna-kh-yahya-syabrowi
+          curl -fsSL https://hisaniyah.web.app/berita/peresmian-gedung-baru-mabna-kh-yahya-syabrowi/index.html -o berita/peresmian-gedung-baru-mabna-kh-yahya-syabrowi/index.html
+          mkdir -p berita/puncak-haul-akbar-39-enam-ribu-jamaah
+          curl -fsSL https://hisaniyah.web.app/berita/puncak-haul-akbar-39-enam-ribu-jamaah/index.html -o berita/puncak-haul-akbar-39-enam-ribu-jamaah/index.html
+          mkdir -p berita/ramah-tamah-guru-dosen-pembuka-haul-akbar-39
+          curl -fsSL https://hisaniyah.web.app/berita/ramah-tamah-guru-dosen-pembuka-haul-akbar-39/index.html -o berita/ramah-tamah-guru-dosen-pembuka-haul-akbar-39/index.html
+          mkdir -p berita/sejarah-berdirinya-hisaniyah
+          curl -fsSL https://hisaniyah.web.app/berita/sejarah-berdirinya-hisaniyah/index.html -o berita/sejarah-berdirinya-hisaniyah/index.html
+          mkdir -p berita/seminar-fiqhun-nisa-haul-akbar-39
+          curl -fsSL https://hisaniyah.web.app/berita/seminar-fiqhun-nisa-haul-akbar-39/index.html -o berita/seminar-fiqhun-nisa-haul-akbar-39/index.html
+          mkdir -p berita/tahlil-bersama-masyarakat-haul-akbar-39
+          curl -fsSL https://hisaniyah.web.app/berita/tahlil-bersama-masyarakat-haul-akbar-39/index.html -o berita/tahlil-bersama-masyarakat-haul-akbar-39/index.html
+          mkdir -p berita/tawasul-khotmil-quran-haul-akbar-39
+          curl -fsSL https://hisaniyah.web.app/berita/tawasul-khotmil-quran-haul-akbar-39/index.html -o berita/tawasul-khotmil-quran-haul-akbar-39/index.html
+          mkdir -p berita/upacara-hari-santri-2026-raudlatul-ulum-1
+          curl -fsSL https://hisaniyah.web.app/berita/upacara-hari-santri-2026-raudlatul-ulum-1/index.html -o berita/upacara-hari-santri-2026-raudlatul-ulum-1/index.html
+          mkdir -p berita/ziarah-makam-masyayikh-haul-akbar-39
+          curl -fsSL https://hisaniyah.web.app/berita/ziarah-makam-masyayikh-haul-akbar-39/index.html -o berita/ziarah-makam-masyayikh-haul-akbar-39/index.html
+          curl -fsSL https://hisaniyah.web.app/sitemap.xml -o sitemap.xml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Sinkron berita BNI TapCash + halaman statis 15"
+          git push
